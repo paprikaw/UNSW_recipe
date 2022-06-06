@@ -1,0 +1,7 @@
+Week 1
+- Finished up setting Jira project as the scrum master and invited all team members + the tutor.
+- Organised meeting times with the team, selected a project and discussed a rough timeline of when we want the project proposal to be completed by. 
+- Group set up a Teams channel for primary method of communication.
+
+Week 2
+- Setup the GitHub repo, reached out to tutor to get Maintainer status and also integration with Jira site.
