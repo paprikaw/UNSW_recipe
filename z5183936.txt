@@ -1,0 +1,7 @@
+Wk1 diary
+  Progress so far;
+    1. We have selected Su Ann as our Scrum Master as she was doing her internship in Atlassian, and we all agreed on her skills on using the Jira.
+    2. Jira Project have been created by Su and the rest of us has been invited to the group.
+    3. The weekly meeting has been set on Friday 2pm, but I realise it is just 1 day after lab, may not be very useful, so I'll mention this issue of rescheduling the weekly meeting time.
+    4. A new group member joined during the weekend, and our tutor has been informed.
+    5. The topic we chose are Recipe Recommendation System.
