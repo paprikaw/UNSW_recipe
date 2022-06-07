@@ -1,1 +1,6 @@
-Echo
+Week 1
+- As the last member joinning the team due to late enrollment incident, reached to tutor and the team member/scrum master ASAP for situation catching up, Jira & Teams group successfully linked and accessed. Ready to work with the team.
+
+Week 2
+- Github classroom intialization done, diray files created.
+- Joined the scheduled weekly team meeting on 6th, initial task on Proposal was discussed, all team members was assigned with user storys tasks.
