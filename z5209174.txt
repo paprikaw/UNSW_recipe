@@ -5,3 +5,7 @@ Week 1
 
 Week 2
 - Setup the GitHub repo, reached out to tutor to get Maintainer status and also integration with Jira site.
+- Formed user stories using the project description as a group, led discussion of their details and some acceptance criteria for them.
+- Added user stories to Jira backlog, defined sprint structure and assigned some user stories to Sprint 1.
+- Began and uploaded a draft project proposal, added screenshots to the User Stories section.
+- Discussed/gave feedback on system architecture and interface/flow diagrams worked on by other team members
