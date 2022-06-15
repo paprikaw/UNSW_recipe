@@ -1,0 +1,13 @@
+Week 1
+
+1. Construct Ultimate42 team and add group in webcms3
+2. Discussing with teammates and choose the project topic(Recipe recommendation system)
+3. join the jira group
+
+Week 2
+
+1. Start to work on purposal
+2. Come up with 4 user story about the recipe explore
+3. Join the github classroom and create diary
+4. Complete System architecture with Xu Tian
+
