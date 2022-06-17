@@ -1,1 +1,14 @@
 Week 1
+1. Get groups formed and named 'Ultimate42'.
+2. Pick the project 'recipe recommedation'.
+3. Plan a weekly meeting on Monday 8:30 pm.
+
+Week 2
+1. Write 3 user stories for the need that 'Recipe explorers must be able to specify a meal-type (e.g., breakfast,lunch, dinner, entree, main, and dessert) for the type of recipe they are looking for'.
+2. Have a meeting on implementing the acceptance criteria of the user stories.
+3. Build system achitecture with Xu Bai.
+
+Week 3
+1. Finalise the project propsal.
+2. Build backend flask.
+3. meet on Saturday to finalise our proposal draft.
