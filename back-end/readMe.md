@@ -1,3 +1,10 @@
+For the python virtual environment:
+
+Go the website to https://flask.palletsprojects.com/en/2.1.x/installation/ for details to install
+
+
+For the flask environment:
+
 First of all just create a new virtualenv with this command.
   virtualenv flask
 Then open it with.
