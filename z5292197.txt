@@ -11,3 +11,7 @@ Week 2
 3. Join the github classroom and create diary
 4. Complete System architecture with Xu Tian
 
+Week 3
+
+1. Add some details for system architecture
+2. Add startup codes for project frontend
