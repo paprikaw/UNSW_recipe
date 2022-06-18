@@ -1,17 +1,33 @@
-##For the python virtual environment:
+## Steps to setup enviroment:
 
-####Go the website to https://flask.palletsprojects.com/en/2.1.x/installation/ for details to install
+In the back-end directory:
+``` 
+pip install virtualenv (if you don't already have virtualenv installed)
+``` 
+to create your new environment (called 'venv' here)
+``` 
+virtualenv venv 
+``` 
+to enter the virtual environment
+``` 
+source venv/bin/activate 
+``` 
+to install the requirements in the current environment
+``` 
+pip install -r requirements.txt 
+```
 
+If you update your module in this project, you should always do:
+``` 
+pip freeze > requirements.txt
+```
 
-##For the flask environment:
+Note:
 
-###First of all just create a new virtualenv with this command.
-####virtualenv flask
-###Then open it with.
-####cd flask
-###Now you have to activate the virtualenv with this command.
-####source bin/activate
-###Now just install flask.
-####pip install flask
+* `source venv/bin/activate` only works on current shell session, if you want to close the current python enviroment, simply restart shell. 
 
-###have the helloWorld.py inside the flask directory.
+* Do not include any actual dependencies in the repo. Virtualenv should create a enviroment folder with dependecies in it, it will automatically create a .gitignore and ingnore any package files for you.
+
+* Always remember to update requirements.txt before pushing updates to remote repo:
+
+* Only update requirements.txt when you in the right environment this.
