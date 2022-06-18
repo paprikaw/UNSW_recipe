@@ -31,3 +31,6 @@ Note:
 * Always remember to update requirements.txt before pushing updates to remote repo:
 
 * Only update requirements.txt when you in the right environment this.
+
+
+For more details, please refer to https://stackoverflow.com/a/41799834/13739428
