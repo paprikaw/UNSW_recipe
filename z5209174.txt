@@ -9,3 +9,13 @@ Week 2
 - Added user stories to Jira backlog, defined sprint structure and assigned some user stories to Sprint 1.
 - Began and uploaded a draft project proposal, added screenshots to the User Stories section.
 - Discussed/gave feedback on system architecture and interface/flow diagrams worked on by other team members
+
+Week 3
+- Worked on project proposal with the team. Wrote up the background, drawbacks of external systems, and justification for novel features. Edited others work on the proposal.
+- Revised what was to be worked on for Sprint 1, added and changed some user stories in the backlog.
+- Had team meetings to discuss progress on project proposal.
+- Finalised and submitted project proposal. 
+- Other team members worked on starting up a simple backend server with a simple frontend. 
+
+Week 4
+- 
