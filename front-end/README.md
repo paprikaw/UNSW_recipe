@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Please install yarn before running below commands
+
+Follow the install instruction: https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable
 ## Available Scripts
 
 In the project directory, you can run:
