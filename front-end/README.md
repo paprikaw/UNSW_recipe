@@ -1,10 +1,21 @@
+# Setup environment
+
+If you are running this project on lubuntu, you can run the script to install and configure node for you. In the fron-end folder:
+
+``` bash
+./setup.sh
+```
+
+If you are running this project on other platform, please make sure you have installed nodejs v16.10.0 or above and enable corepack to activate yarn.
+
+For more details of installing node and yarn:
+
+https://yarnpkg.com/getting-started/install
+
+https://github.com/nodejs/help/wiki/Installation
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-Please install yarn before running below commands
-
-Follow the install instruction: https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable
 ## Available Scripts
 
 In the project directory, you can run:
