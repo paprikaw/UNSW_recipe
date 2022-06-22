@@ -9,7 +9,7 @@ create table Accounts (
 create table Sessions (
     sessionId       serial primary key,
     token           varchar(256) not null,
-    accountId       integer not null,
+    accountId       bigint unsigned not null,
     foreign key (accountId) references Accounts(accountId)
 )
 
@@ -21,6 +21,6 @@ create table Categories (
 create table Ingredients (
     ingredientId    serial primary key,
     ingredientName  text not null,
-    categoryId      integer not null,
+    categoryId      bigint unsigned not null,
     foreign key (categoryId) references Categories(categoryId)
 )
