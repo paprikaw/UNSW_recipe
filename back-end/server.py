@@ -6,17 +6,20 @@ CORS(app)
 
 # homepage
 @app.route("/")
-def hello():
+def homepage():
+    # return categories and ingredients
     return "Hello World!"
 
 # adding new user
 @app.route("/sign_up")
 def signup():
+    # return success/fail (on email duplicate)
     return
 
 # authenticate user and create a session
 @app.route("/login")
 def login():
+    # return success/fail
     return
 
 if __name__ == "__main__":
