@@ -9,5 +9,5 @@ Week 3
 - sprint setup done by the team, further brainstorming on user stories and novel functionality.
   - Fomer novel functionality had possible difficulties in actual implementing stage.
   - proposaled new novel featuer. After trimming with team, all agreed on 'food of the (current) time'.
-- Conducted the low-fidelity prototype for the website design. prototype finalized+flow digram linked(Ruiqi).
-- Jira all parts done. propalsal work complete.
+- Conducted the low-fidelity prototype for the website design. prototype finalized+flow digram linked(Ruiqi put effort).
+- Other work done by team during the week: Jira all parts done. architacture finalized. propalsal work all complete.
