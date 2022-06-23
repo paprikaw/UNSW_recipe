@@ -13,7 +13,7 @@ def homepage():
 # adding new user
 @app.route("/sign_up")
 def signup():
-    # return success/fail
+    # return success/fail (on email duplicate)
     return
 
 # authenticate user and create a session
