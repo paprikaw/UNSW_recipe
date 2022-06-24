@@ -3,6 +3,22 @@ import requests
 import json
 from common import url, reset_server
 
+def test_homepage():
+    reset_server()
+
+    response = requests.get(url).json()
+
+    assert 'Vegetables' in response
+    assert 'Fruits' in response
+    assert 'Meat and Fish' in response
+    assert 'Eggs and Dairy' in response
+    assert 'Grains and Nuts' in response
+    assert 'Pasta and Noodles' in response
+    assert 'Baking Products' in response
+    assert 'Herbs, Seasonings and Spices' in response
+    assert 'Fats and Oils' in response
+    assert 'Condiments and Dressings' in response
+
 def test_signup_success():
     reset_server()
 

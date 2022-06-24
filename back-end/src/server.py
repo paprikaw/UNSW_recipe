@@ -1,6 +1,5 @@
 import os
 import sqlparse
-from venv import create
 from flask import Flask, request
 from flask_cors import CORS
 from sqlalchemy import create_engine, text
@@ -16,11 +15,23 @@ db_engine = create_engine(db_url)#, echo=True)
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-# homepage
-@app.route("/")
+@app.route("/", methods={'GET'})
 def homepage():
-    # return categories and ingredients
-    return "Hello World!"
+    '''
+    homepage returns the categories and their ingredients in the form:
+    {'CategoryName': ['IngredientName1', 'IngredientName2', ...], ...}
+    '''
+    response = {}
+    with db_engine.connect() as con:
+        result = con.execute(text('''
+            select Categories.categoryName, group_concat(Ingredients.ingredientName separator ',') 
+            from Categories left outer join Ingredients on Categories.categoryId = Ingredients.categoryId 
+            group by Categories.categoryName
+        ''')).fetchall()
+        for row in result:
+            response[row[0]] = [ingredient for ingredient in row[1].split(',')]
+
+    return response
 
 @app.route("/signup", methods={'POST'})
 def signup():
