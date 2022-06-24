@@ -22,7 +22,7 @@ def homepage():
     # return categories and ingredients
     return "Hello World!"
 
-@app.route("/sign_up", methods={'POST'})
+@app.route("/signup", methods={'POST'})
 def signup():
     '''
     add a new user on sign up
