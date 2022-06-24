@@ -37,7 +37,6 @@ def signup():
     with db_engine.connect() as con:
         result = con.execute(text('select * from Accounts where email = :email'), email=email).fetchall()
         if len(result) > 0:
-            # should i return error code 400 ???
             return {'error': 'Email already in use.'}
         con.execute(
             text('insert into Accounts(username, email, password) values (:username, :email, :password)'), 
