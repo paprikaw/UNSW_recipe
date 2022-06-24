@@ -1,6 +1,32 @@
--- use this file to reset the ingredients and categories tables
-delete from Ingredients;
-delete from Categories;
+-- use this file to reset database schema
+drop table if exists AccountSessions, Accounts, Ingredients, Categories;
+
+create table Accounts (
+    accountId       serial primary key,
+    username        varchar(10) not null,
+    email           varchar(320) not null,
+    password        varchar(256) not null,
+    unique (email)
+);
+
+create table AccountSessions (
+    sessionId       serial primary key,
+    token           varchar(256) not null,
+    accountId       bigint unsigned not null,
+    foreign key (accountId) references Accounts(accountId)
+);
+
+create table Categories (
+    categoryId      serial primary key,
+    categoryName    text not null
+);
+
+create table Ingredients (
+    ingredientId    serial primary key,
+    ingredientName  text not null,
+    categoryId      bigint unsigned not null,
+    foreign key (categoryId) references Categories(categoryId)
+);
 
 insert into Categories (categoryName) values ('Vegetables');
 insert into Categories (categoryName) values ('Fruits');
