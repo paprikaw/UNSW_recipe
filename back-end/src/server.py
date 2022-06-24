@@ -22,18 +22,6 @@ def homepage():
     # return categories and ingredients
     return "Hello World!"
 
-# Commented here as Template
-# @app.route('/', methods=['GET', 'POST'])
-# def home():
-#     if request.method == 'POST':
-#         name = request.form['name']
-#         phone = request.form['phoneNumber']
-#         print(name, " ", phone)
-#         db_engine = create_engine(db_url)
-#         with db_engine.connect() as con:
-#             con.execute(text('INSERT INTO Contacts VALUES (:name, :phone_number);'),[{'name':name, 'phone_number':phone}])
-#     return render_template('contactform.html') # deleted this html as it is for tech validation only
-
 @app.route("/sign_up", methods={'POST'})
 def signup():
     '''
@@ -64,14 +52,17 @@ def login():
     # return success/fail
     return {}
 
-# reset server and db
 @app.route("/reset", methods={'DELETE'})
 def reset():
+    '''
+    resets the database
+    '''
     with db_engine.connect() as con:
         with open(os.path.join(__location__, 'schema.sql')) as schema:
             queries = sqlparse.split(sqlparse.format(schema.read(), strip_comments=True, reindent=True))
             for query in queries:
                 con.execute(text(query))
+    return {}
 
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)
