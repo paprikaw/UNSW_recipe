@@ -55,6 +55,7 @@ def login():
 def reset():
     '''
     resets the database
+    returns empty dict
     '''
     with db_engine.connect() as con:
         with open(os.path.join(__location__, 'schema.sql')) as schema:
