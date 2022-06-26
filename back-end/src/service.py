@@ -1,11 +1,18 @@
 from datetime import datetime
 from flask import Flask, request
 from sqlalchemy import create_engine, text
+from hashlib import sha256
 
 def serv_login(db_engine):
+    '''
+    sign in an existing user
+    return error message on incorrect email address or incorrect password
+    return success message on success
+    '''
     payload = request.get_json()
     email = payload['email']
     passwordHash = payload['password']
+
     with db_engine.connect() as con:
         result = con.execute(text(
             'select * from Accounts where email = :email'), email=email
@@ -18,11 +25,12 @@ def serv_login(db_engine):
         if (passwordHash != pwInDb):
             return {'error': 'Password failure'}
         
-        # now = datetime.now()
-        # now.strftime("%X")
-        # accountId
-        # # con.execute(
-        # #     text('insert into AccountSessions(token, accountId) values (:sessionId, :token, :accountId)'), 
-        # #     token=token, accountId=accountId
-        # # )
-        return {'msg':'LOGIN_SUCCESS'}
+        # construct the token based on accountID and the local time
+        now = datetime.now()
+        strToBeTokenized = str(accountId) + "@" + now.strftime("%X")
+        token = sha256(strToBeTokenized.encode())
+        con.execute(
+            text('insert into AccountSessions(token, accountId) values (:token, :accountId)'), 
+                token=token.hexdigest(), accountId=accountId
+        )
+    return {'msg':'LOGIN_SUCCESS'}
