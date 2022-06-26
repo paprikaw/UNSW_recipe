@@ -18,4 +18,8 @@ Week 3
 - Other team members worked on starting up a simple backend server with a simple frontend. 
 
 Week 4
-- 
+- Came up with database schema and SQL commands to populate the database. Worked with Ruiqi to apply this to the MySQL Google Cloud Storage Server.
+- Discussed endpoints between backend and frontend with team members, and what payload we need to transfer to and from each other. 
+- Completed homepage (returns categories and ingredients to the frontend) and signup (takes user account data and stores them into database) implementations for the backend. 
+- Restructured backend folder from Tian and Xu's simple backend server implemented in Week 3.
+- Also added a /reset route in the backend server that cleans and resets the SQL database, for use during testing.
