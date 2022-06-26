@@ -41,7 +41,7 @@ def test_login_success():
     reset_server()
     user1 = json.loads(requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'}).text)
     user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
-    assert user1 == {'msg':'LOGIN_SUCCESS'}
+    assert user1['msg'] == 'LOGIN_SUCCESS'
 
 def test_login_failure_on_nonexisting_email_address():
     reset_server()
