@@ -2,6 +2,7 @@ import os
 import sqlparse
 from flask import Flask, request
 from flask_cors import CORS
+from service import serv_login
 from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
@@ -16,7 +17,7 @@ __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 @app.route("/", methods={'GET'})
-def homepage():
+def homepage(): 
     '''
     homepage returns the categories and their ingredients in the form:
     {'CategoryName': ['IngredientName1', 'IngredientName2', ...], ...}
@@ -57,10 +58,12 @@ def signup():
     return {}
 
 # authenticate user and create a session
-@app.route("/login")
+@app.route("/login", methods={'POST'})
 def login():
     # return success/fail
-    return {}
+    res = serv_login(db_engine)
+    return res
+    
 
 @app.route("/reset", methods={'DELETE'})
 def reset():
