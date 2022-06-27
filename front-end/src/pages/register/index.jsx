@@ -1,9 +1,8 @@
 
 /* The login page start up code is from: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js */
 import React from 'react';
-import { Button, Checkbox, Form, Input, Avatar, Space, Badge} from 'antd';
+import { Button, Checkbox, Form, Input, Avatar, Space} from 'antd';
 import { LockTwoTone } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
 import './index.scss';
 
 const Register = () => {
@@ -46,11 +45,6 @@ const Register = () => {
 
       <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
         <Checkbox>Remember me</Checkbox>
-        <Link to='/'>
-          <Badge dot>
-            <a href="#">Already have an account? Login</a>
-          </Badge>
-        </Link>
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 8 }} >
