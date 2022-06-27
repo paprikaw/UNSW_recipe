@@ -3,19 +3,16 @@ import useCollapse from 'react-collapsed'
 import { Card, Button, Spin, Space } from 'antd'
 import SelectButton from './selectButton'
 
-const ingredientData = {
-    'cooker': ['bahhhhhhhhnana', 'apple', 'aault', 'happy'  ,'vault', 'cault', 'dault', 'eault', 'fault', 'xault', 'zault', 'cault', 'vault', ],
-    'ingredients': ['a', 'b', 'c'],
-    'apple': ['a', 'b', 'c'],
-}
 
-const CollapseBox = (props) => {
+function CollapseBox (props) {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({});
   const newDic = {}
-  ingredientData.cooker.map(name => newDic[name] = false)
+  const {data, title} = props;
+
+  data.map(name => newDic[name] = false);
   const [stateDic, setStateDic] = useState(newDic);
   return (
-    <Card title={props.title} extra={
+    <Card title={title} extra={
             <Button type='primary' {...getToggleProps()} >
               {isExpanded ? 'Collapse' : 'Expand'}
             </Button>
@@ -28,7 +25,7 @@ const CollapseBox = (props) => {
         <Space size={[8, 16]} wrap>
           {
             stateDic ?
-          ingredientData.cooker.map(name => {
+          data.map(name => {
             return <SelectButton selectState={stateDic} setSelectState={setStateDic} buttonText={name}/>})
             :
           <Spin tip="Loading..."/>
@@ -39,7 +36,7 @@ const CollapseBox = (props) => {
         <Space size={[8, 16]} wrap>
           {
             stateDic ?
-          ingredientData.cooker.slice(0, 6).map(name => {
+          data.slice(0, 6).map(name => {
             return <SelectButton selectState={stateDic} setSelectState={setStateDic} buttonText={name}/>})
             :
           <Spin tip="Loading..."/>

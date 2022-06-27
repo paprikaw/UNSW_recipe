@@ -1,25 +1,34 @@
 import React from 'react'
-import useCollapse from 'react-collapsed'
-import { Card, Button } from 'antd'
+import { Divider, Select} from 'antd'
+import CollapseBox from './collapseBox'
 
-const ingredientData = {
-    'cooker': ['a', 'b', 'c'],
-    'ingredients': ['a', 'b', 'c'],
-    'apple': ['a', 'b', 'c'],
-}
+      // <Select
+      //   mode="multiple"
+      //   allowClear
+      //   style={{ width: '100%' }}
+      //   placeholder="Please select"
+      //   defaultValue={['a10', 'c12']}
+      // >
+      // {children}
+      // </Select>
 
 const Category = (props) => {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
+  const {Option} = Select;
+  const {data} = props;
+  const children = [];
+  for (const key in data) {
+    data[key].map(value => children.push(<Option key={value}>{value}</Option>));
+  }
+
   return (
-    <Card title={props.title} extra={
-            <Button type='primary' {...getToggleProps()} >
-              {isExpanded ? 'Collapse' : 'Expand'}
-            </Button>
-        } 
-        style={{ width: 300 }}
-        >
-      <section {...getCollapseProps()}>Collapsed content 🙈</section>
-    </Card>
+    <>
+      {Object.entries(data).map(([key, values]) => (
+        <React.Fragment key={key}>
+          <CollapseBox title={key} data={values} />
+          <Divider/>
+        </React.Fragment>
+      ))}
+     </>
   )
 }
 

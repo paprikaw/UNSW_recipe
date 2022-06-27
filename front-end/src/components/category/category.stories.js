@@ -6,10 +6,17 @@ export default {
   * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
   * to learn how to generate automatic titles
   */
-  title: 'Category',
   component: Category,
 };
 
 //👇 We create a “template” of how args map to rendering
 
-export const category = () => <Category/>;
+const Template = (args) => <Category {...args} />;
+export const category = Template.bind({});
+category.args = {
+  data: {
+      'cooker': ['a', 'b', 'c', "Banana", "Apple", ],
+      'ingredients': ['a', 'b', 'c'],
+      'apple': ['a', 'b', 'c'],
+  }
+}
