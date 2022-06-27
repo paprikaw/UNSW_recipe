@@ -3,44 +3,28 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, Avatar, Space} from 'antd';
 import { LockTwoTone } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
 import './index.scss';
+import { Link,useNavigate } from 'react-router-dom';
 
 const Login = () => {
   // const navigate = useNavigate();
-  // const context = React.useContext(StoreContext);
-  // const setToken = context.token[1];
-  // const setAuth = context.auth[1];
-  // const setList = context.list[1];
-  // const setOwner = context.owner[1];
-  // const loginSubmitHandle = (event) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   // eslint-disable-next-line no-console
-  //   const body = {
-  //     email: data.get('email1'),
-  //     password: data.get('password1'),
-  //   };
-  //   fetchPost('POST', '/user/auth/login', body, null)
-  //     .then(fetchToken => {
-  //       setToken(fetchToken.token);
-  //       console.log(fetchToken);
-  //       setAuth(true);
-  //       fetchPost('Get', '/listings', null, null)
-  //         .then(data => {
-  //           console.log(data.listings)
-  //           setList(data.listings);
-  //         })
-  //         .catch(err => {
-  //           alert(err);
-  //         })
-  //       setOwner(body.email);
-  //       navigate('/HostedList');
-  //     })
-  //     .catch(err => {
-  //       alert(err);
-  //     })
-  // }
+
+  const navigate = useNavigate();
+  async function handleOnFinsh (values) {
+    const response = await fetch('http://localhost:8080/login', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+      })
+    });
+    const data = await response.json();
+    console.log(data);
+    navigate('/home');
+  }
 
   return (
     <div>
@@ -50,13 +34,13 @@ const Login = () => {
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 8 }}
       initialValues={{ remember: true }}
-      // onFinish={onFinish}
+      onFinish={handleOnFinsh}
       //onFinishFailed={onFinishFailed}
       autoComplete="off"
   >
       <Form.Item
-        label="Username"
-        name="username"
+        label="Email"
+        name="email"
         rules={[{ required: true, message: 'Please input your username!' }]}
       >
         <Input />

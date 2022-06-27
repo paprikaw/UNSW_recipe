@@ -4,26 +4,16 @@ import axios from 'axios';
 import React, { useState } from "react";
 import Login from '@/pages/login'
 import Register from "@/pages/register";
+import Home from "@/pages/home";
 function App() {
   const [sentence, setSentence] = useState('');
-
-  axios({
-    method: 'get',
-    url: 'http://localhost:8080',
-  })
-  .then((res) => {
-    setSentence(res.data);
-    console.log(res);
-  })
-  .catch(err => {
-    console.log(err);
-  })
 
   return (
     <BrowserRouter>
       <Routes>
       <Route path="/" element={<Login />}/>
       <Route path="/register" element={<Register />}/>
+      <Route path="/home" element={<Home />}/>
     </Routes>
     </BrowserRouter>
   );
