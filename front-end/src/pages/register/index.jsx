@@ -10,19 +10,20 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  async function handelOnclik () {
+  async function handleOnFinsh (values) {
     const response = await fetch('http://localhost:8080/signup', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        email,
-        password,
-        username,
+        email: values.email,
+        password: values.password,
+        username: values.username,
       })
     });
     const data = await response.json();
+    console.log(data);
     navigate('/');
   }
 
@@ -34,8 +35,8 @@ const Register = () => {
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 8 }}
       initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
+      onFinish={handleOnFinsh}
+      // onFinishFailed={onFinishFailed}
       autoComplete="off"
   >
       <Form.Item
@@ -74,7 +75,7 @@ const Register = () => {
 
       <Form.Item wrapperCol={{ offset: 8, span: 8 }} >
         <Space size='large' >
-        <Button type="primary" onClick={handelOnclik}>
+        <Button type="primary" htmlType='submit'>
           Register
         </Button>
         </Space>
