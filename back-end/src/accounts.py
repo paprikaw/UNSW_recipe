@@ -4,7 +4,24 @@ from flask import request
 from sqlalchemy import text
 from hashlib import sha256
 
-def serv_login(db_engine):
+def signup(db_engine):
+    payload = request.get_json()
+    username = payload['username']
+    email = payload['email']
+    passwordHash = payload['password']
+
+    with db_engine.connect() as con:
+        result = con.execute(text('select * from Accounts where email = :email'), email=email).fetchall()
+        if len(result) > 0:
+            return {'error': 'Email already in use.'}
+        con.execute(
+            text('insert into Accounts(username, email, password) values (:username, :email, :password)'), 
+            username=username, email=email, password=passwordHash
+        )
+
+    return {}
+
+def login(db_engine):
     '''
     sign in an existing user
     return error message on incorrect email address or incorrect password
