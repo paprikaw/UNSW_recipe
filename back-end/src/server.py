@@ -1,8 +1,8 @@
 import os
 import sqlparse
+import accounts
 from flask import Flask, request
 from flask_cors import CORS
-from service import serv_login
 from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
@@ -41,29 +41,14 @@ def signup():
     return empty dictionary on success
     return error message on email duplicate
     '''
-    payload = request.get_json()
-    username = payload['username']
-    email = payload['email']
-    passwordHash = payload['password']
+    return accounts.signup(db_engine)
 
-    with db_engine.connect() as con:
-        result = con.execute(text('select * from Accounts where email = :email'), email=email).fetchall()
-        if len(result) > 0:
-            return {'error': 'Email already in use.'}
-        con.execute(
-            text('insert into Accounts(username, email, password) values (:username, :email, :password)'), 
-            username=username, email=email, password=passwordHash
-        )
-
-    return {}
-
-# authenticate user and create a session
 @app.route("/login", methods={'POST'})
 def login():
-    # return success/fail
-    res = serv_login(db_engine)
-    return res
-    
+    '''
+    login an existing user
+    '''
+    return accounts.login(db_engine)
 
 @app.route("/reset", methods={'DELETE'})
 def reset():
