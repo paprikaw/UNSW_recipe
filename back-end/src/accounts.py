@@ -13,13 +13,19 @@ def signup(db_engine):
     with db_engine.connect() as con:
         result = con.execute(text('select * from Accounts where email = :email'), email=email).fetchall()
         if len(result) > 0:
-            return {'error': 'Email already in use.'}
+            return {
+                'msg': 'SIGNUP_FAILURE',
+                'error': 'Email already in use'
+            }
         con.execute(
             text('insert into Accounts(username, email, password) values (:username, :email, :password)'), 
             username=username, email=email, password=passwordHash
         )
 
-    return {}
+    return {
+        'msg': 'SIGNUP_SUCCESS', 
+        'error': ''
+    }
 
 def login(db_engine):
     '''
@@ -67,3 +73,26 @@ def login(db_engine):
         returnMSG['data']['token'] = token
 
     return returnMSG
+
+def logout(db_engine):
+    token = request.get_json()['token']
+
+    with db_engine.connect() as con:
+        check_token = con.execute(
+            text('select * from AccountSessions where token = :token'), token=token
+            ).fetchall()
+        if len(check_token) == 0:
+            return {
+                'msg': 'LOGOUT_FAILURE',
+                'error': 'Invalid token'
+            }
+        
+        con.execute(
+            text('delete from AccountSessions where token = :token'),
+            token=token
+        )
+            
+    return {
+        'msg': 'LOGOUT_SUCCESS',
+        'error': ''
+    }

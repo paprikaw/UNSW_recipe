@@ -50,6 +50,13 @@ def login():
     '''
     return accounts.login(db_engine)
 
+@app.route("/logout", methods={'DELETE'})
+def logout():
+    '''
+    logout an existing user's session
+    '''
+    return accounts.logout(db_engine)
+
 @app.route("/reset", methods={'DELETE'})
 def reset():
     '''
