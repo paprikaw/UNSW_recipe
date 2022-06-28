@@ -16,7 +16,8 @@ export const category = Template.bind({});
 category.args = {
   data: {
       'cooker': ['a', 'b', 'c', "Banana", "Apple", ],
-      'ingredients': ['a', 'b', 'c'],
-      'apple': ['a', 'b', 'c'],
+      'ingredients': ['e', 'w', 'f'],
+      'apple': ['3', '2', '1'],
+      'lol': ['12312312312', 'sdadsf', 'adsfasdfsda'],
   }
 }
