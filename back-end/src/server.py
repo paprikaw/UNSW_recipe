@@ -38,7 +38,8 @@ def homepage():
 def signup():
     '''
     add a new user on sign up
-    return empty dictionary on success
+    given a new user's username, email and hashed password,
+    return success message on success
     return error message on email duplicate
     '''
     return accounts.signup(db_engine)
@@ -54,6 +55,8 @@ def login():
 def logout():
     '''
     logout an existing user's session
+    given an existing user's token, return success message on success
+    return error message on invalid token
     '''
     return accounts.logout(db_engine)
 
