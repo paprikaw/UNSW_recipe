@@ -3,7 +3,6 @@ import {  Button } from 'antd'
 
 const SelectButton = (props) => {
     const {selectState, setSelectState, buttonText} = props;
-    console.log(selectState);
     const handleClick = () => {
         if (selectState[buttonText]) {
             setSelectState({...selectState, [buttonText]: false})
