@@ -10,7 +10,7 @@ const canSendData = (method = 'get') => ['POST', 'PUT', 'DELETE'].includes(metho
  * @param {object} options
  * @returns
  */
-export default function _fetch (url, options = {}) {
+export default function fetch (url, options = {}) {
   const { method, data, token } = options;
   const opts = {
     method: method || 'GET',

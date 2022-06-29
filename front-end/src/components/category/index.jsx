@@ -1,6 +1,5 @@
  import {React, useState, useEffect} from 'react'
 import { Select} from 'antd'
-import Affix from '@uiw/react-affix'
 import CollapseBox from './collapseBox'
 import './index.scss'
 
@@ -28,7 +27,7 @@ const Category = (props) => {
   }, [opState])
 
   return (
-    <div>
+    <div className='main-component'>
       <Select
         mode="multiple"
         allowClear
@@ -36,7 +35,7 @@ const Category = (props) => {
         placeholder="Please select"
         onChange={handleOnChange}
         value={opStateList}
-        className="select"
+        className="mySelect"
       >
       {children}
       </Select>
