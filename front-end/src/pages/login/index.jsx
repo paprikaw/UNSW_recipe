@@ -23,6 +23,8 @@ const Login = () => {
     });
     const data = await response.json();
     console.log(data);
+    console.log(data.data.token);
+    localStorage.setItem('token', data.data.token);
     navigate('/home');
   }
 
