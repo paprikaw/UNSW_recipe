@@ -2,7 +2,7 @@
 import useCollapse from 'react-collapsed'
 import { Card, Button, Spin, Space } from 'antd'
 import SelectButton from './selectButton'
-
+import './index.scss'
 
 function CollapseBox (props) {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({});
@@ -10,12 +10,12 @@ function CollapseBox (props) {
   const {data, title, selectState, setSelectState} = props;
   data.map(name => newDic[name] = false);
   return (
-    <Card title={title} extra={
+    <Card title={title} hoverable={true} className={'collapse-card'}extra={
             <Button type='primary' {...getToggleProps()} >
               {isExpanded ? 'Collapse' : 'Expand'}
             </Button>
         } 
-        style={{ width: 300, margin: '0 auto' }}
+        style={{ margin: '0 auto' }}
         >
       {
         isExpanded ?
