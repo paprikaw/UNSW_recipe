@@ -1,7 +1,7 @@
 
 /* The login page start up code is from: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js */
 import React from 'react';
-import { Button, Checkbox, Form, Input, Avatar, Space} from 'antd';
+import { Button, Checkbox, Form, Input, Avatar, Space, Badge} from 'antd';
 import { LockTwoTone } from '@ant-design/icons';
 import './index.scss';
 import { Link,useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ const Login = () => {
     console.log(data.data.token);
     localStorage.setItem('token', data.data.token);
     if (data.msg === 'LOGIN_FAILURE') {
-      alert('Invalid email or password!');
+      alert('Login failed:' + data.error);
     } else {
       navigate('/home');
     }
@@ -65,17 +65,23 @@ const Login = () => {
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
-        <Space size='large'>
+        {/* <Space size='large'> */}
         <Button type="primary" htmlType="submit" offset='8' >
           login
         </Button>
-        <Link to='/register'>
+        {/* <Link to='/register'>
           <Button type="primary">
             Register
           </Button>
-        </Link>
-        </Space>
+        </Link> */}
+        {/* </Space> */}
       </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 8 }}><Link to='/register'>
+          <Badge dot>
+            <a href="#">Don't have an account? Register</a>
+          </Badge>
+        </Link></Form.Item>
     </Form>
     </div>
   );
