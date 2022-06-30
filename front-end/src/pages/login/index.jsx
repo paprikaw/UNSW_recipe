@@ -25,7 +25,11 @@ const Login = () => {
     console.log(data);
     console.log(data.data.token);
     localStorage.setItem('token', data.data.token);
-    navigate('/home');
+    if (data.msg === 'LOGIN_FAILURE') {
+      alert('Invalid email or password!');
+    } else {
+      navigate('/home');
+    }
   }
 
   return (

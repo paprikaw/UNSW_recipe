@@ -26,11 +26,19 @@ const Register = () => {
       })
       .then((data) => {
         console.log(data);
+        if (data.msg === 'SIGNUP_SUCCESS') {
+          console.log(data.msg);
+          navigate('/');
+        } else {
+          alert('something is wrong(email already used/username not valid...)');
+        }
       });
     console.log("here2");
     // const data =  response.json();
     // console.log(data);
     // navigate('/');
+    // console.log(data);
+
   }
 
   return (

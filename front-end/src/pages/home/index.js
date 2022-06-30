@@ -4,6 +4,7 @@ import { Layout, Spin, Typography } from "antd";
 import { React, useEffect, useState } from "react";
 import "./index.scss";
 import LogoutButton from '@/components/LogoutButton';
+import Abutton from '@/components/Abutton'
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
@@ -31,6 +32,7 @@ const Home = () => {
       <Header className="home-nav-bar" style={{ zIndex: 2 }}>
         Header
         <LogoutButton />
+        {/* <Abutton /> */}
       </Header>
       <Layout hasSider>
         <Sider
