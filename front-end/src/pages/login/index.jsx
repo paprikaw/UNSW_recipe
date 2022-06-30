@@ -23,7 +23,13 @@ const Login = () => {
     });
     const data = await response.json();
     console.log(data);
-    navigate('/home');
+    console.log(data.data.token);
+    localStorage.setItem('token', data.data.token);
+    if (data.msg === 'LOGIN_FAILURE') {
+      alert('Invalid email or password!');
+    } else {
+      navigate('/home');
+    }
   }
 
   return (
