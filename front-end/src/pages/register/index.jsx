@@ -1,6 +1,6 @@
 /* The login page start up code is from: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js */
 import React from "react";
-import { Button, Checkbox, Form, Input, Avatar, Space, Badge, Alert } from "antd";
+import { Button, Checkbox, Form, Input, Avatar, Space, Badge, message } from "antd";
 import { LockTwoTone } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./index.scss";
@@ -10,7 +10,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   function handleOnFinsh(values) {
-    console.log("here");
     const hashedPassword = bcrypt.hashSync(values.password, '$2a$10$CwTycUXWue0Thq9StjUM0u');
     fetch("http://localhost:8080/signup", {
       method: "POST",
@@ -27,16 +26,14 @@ const Register = () => {
         return v.json();
       })
       .then((data) => {
-        console.log(data);
         if (data.msg === 'SIGNUP_SUCCESS') {
-          console.log(data.msg);
           navigate('/');
+          message.success('Register successful!');
         } else {
           // alert('something is wrong(email already used/username not valid...)');
-          alert('Registeration failed: ' + data.error);
+          message.error(data.error + ', please try again');
         }
       });
-    console.log("here2");
     // const data =  response.json();
     // console.log(data);
     // navigate('/');
@@ -58,7 +55,7 @@ const Register = () => {
         <Form.Item
           label="Email"
           name="email"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          rules={[{ required: true, message: "Please input your email!" }]}
         >
           <Input />
         </Form.Item>
