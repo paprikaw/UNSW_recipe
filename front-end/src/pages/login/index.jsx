@@ -76,7 +76,7 @@ const Login = () => {
         {/* </Space> */}
       </Form.Item>
 
-      <Form.Item wrapperCol={{ offset: 8, span: 8 }}><Link to='/'>
+      <Form.Item wrapperCol={{ offset: 8, span: 8 }}><Link to='/register'>
           <Badge dot>
             <a href="#">Don't have an account? Register</a>
           </Badge>
