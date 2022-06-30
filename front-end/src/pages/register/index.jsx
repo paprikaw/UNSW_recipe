@@ -1,10 +1,10 @@
 /* The login page start up code is from: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js */
 import React from "react";
 import { Button, Checkbox, Form, Input, Avatar, Space, Badge, message } from "antd";
-import { LockTwoTone } from "@ant-design/icons";
+import { LockTwoTone, LockOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./index.scss";
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -38,7 +38,15 @@ const Register = () => {
     // console.log(data);
     // navigate('/');
     // console.log(data);
-  }
+    }
+
+  //   const handleEmail = (e) => {
+  //     let value = e.target.value;
+  //     if(!(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value))) {
+  //         console.log('Please enter correct email');
+  //     }
+  // }
+
 
   return (
     <div>
@@ -55,7 +63,7 @@ const Register = () => {
         <Form.Item
           label="Email"
           name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
+          rules={[{required: true, type: 'email', message: 'Email format is not correct'  }]}
         >
           <Input />
         </Form.Item>
@@ -63,7 +71,10 @@ const Register = () => {
         <Form.Item
           label="Username"
           name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          rules={[
+            { required: true, message: "Please input your username!" },
+            {max: 10, min: 3, message: "Username should be in 3 to 10 characters"}
+          ]}
         >
           <Input />
         </Form.Item>
@@ -71,10 +82,39 @@ const Register = () => {
         <Form.Item
           label="Password"
           name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[
+            { required: true, message: "Please input your password!" },
+            {
+              pattern: /^[A-Z]((?![^a-z]+$)(?!\D+$).{5,14}$)$/,
+              message: 'Length should be 6-15 characters and include at least a Uppercase and lowercer case letter'
+            }
+          ]}
         >
           <Input.Password />
         </Form.Item>
+
+        <Form.Item
+        name="confirm"
+        label="Confirm Password"
+        dependencies={['password']}
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: 'Please confirm your password!',
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('The two passwords that you entered do not match!'));
+            },
+          }),
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
 
         {/* <Form.Item
           name="remember"

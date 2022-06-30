@@ -49,7 +49,8 @@ const Login = () => {
       <Form.Item
         label="Email"
         name="email"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        // rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[{required: true, type: 'email', message: 'Email format is not correct'  }]}
       >
         <Input />
       </Form.Item>
@@ -57,7 +58,13 @@ const Login = () => {
       <Form.Item
         label="Password"
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[
+          { required: true, message: "Please input your password!" },
+          {
+            pattern: /^[A-Z]((?![^a-z]+$)(?!\D+$).{5,14}$)$/,
+            message: 'Length should be 8-15 characters and include at least a Uppercase and lowercer case letter'
+          }
+        ]}
       >
         <Input.Password />
       </Form.Item>
