@@ -4,12 +4,14 @@ import { Button, Checkbox, Form, Input, Avatar, Space, Badge, Alert } from "antd
 import { LockTwoTone } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./index.scss";
+import bcrypt from 'bcryptjs'
 
 const Register = () => {
   const navigate = useNavigate();
 
   function handleOnFinsh(values) {
     console.log("here");
+    const hashedPassword = bcrypt.hashSync(values.password, '$2a$10$CwTycUXWue0Thq9StjUM0u');
     fetch("http://localhost:8080/signup", {
       method: "POST",
       headers: {
@@ -17,7 +19,7 @@ const Register = () => {
       },
       body: JSON.stringify({
         email: values.email,
-        password: values.password,
+        password: hashedPassword,
         username: values.username,
       }),
     })
@@ -39,7 +41,6 @@ const Register = () => {
     // console.log(data);
     // navigate('/');
     // console.log(data);
-
   }
 
   return (

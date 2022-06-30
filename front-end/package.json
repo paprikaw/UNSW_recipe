@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.2.1",
     "antd": "^4.21.3",
     "axios": "^0.27.2",
+    "bcryptjs": "^2.4.3",
     "react": "^18.2.0",
     "react-collapsed": "^3.3.2",
     "react-dom": "^18.2.0",
@@ -77,5 +78,5 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
- }
+  }
 }

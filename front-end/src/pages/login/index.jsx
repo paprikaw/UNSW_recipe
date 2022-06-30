@@ -5,12 +5,16 @@ import { Button, Checkbox, Form, Input, Avatar, Space, Badge} from 'antd';
 import { LockTwoTone } from '@ant-design/icons';
 import './index.scss';
 import { Link,useNavigate } from 'react-router-dom';
+import bcrypt from 'bcryptjs'
 
 const Login = () => {
   // const navigate = useNavigate();
 
   const navigate = useNavigate();
+  
   async function handleOnFinsh (values) {
+
+    const hashedPassword = bcrypt.hashSync(values.password, '$2a$10$CwTycUXWue0Thq9StjUM0u');
     const response = await fetch('http://localhost:8080/login', {
       method: 'POST',
       headers: {
@@ -18,7 +22,7 @@ const Login = () => {
       },
       body: JSON.stringify({
         email: values.email,
-        password: values.password,
+        password: hashedPassword,
       })
     });
     const data = await response.json();
