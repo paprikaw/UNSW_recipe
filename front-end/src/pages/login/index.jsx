@@ -62,7 +62,7 @@ const Login = () => {
           { required: true, message: "Please input your password!" },
           {
             pattern: /^[A-Z]((?![^a-z]+$)(?!\D+$).{5,14}$)$/,
-            message: 'Length should be 8-15 characters and include at least a Uppercase and lowercer case letter'
+            message: 'Length should be 6-15 characters and include at least a Uppercase and lowercer case letter'
           }
         ]}
       >
