@@ -23,12 +23,13 @@ const Login = () => {
     });
     const data = await response.json();
     console.log(data);
-    if (data.msg === 'LOGIN_SUCCESS') {
+    console.log(data.data.token);
+    localStorage.setItem('token', data.data.token);
+    if (data.msg === 'LOGIN_FAILURE') {
+      alert('Login failed:' + data.error);
+    } else {
       navigate('/home');
-    } else if (data.msg === 'LOGIN_FAILURE') {
-      alert(response.status + ': ' + data.error);
     }
-    
   }
 
   return (
