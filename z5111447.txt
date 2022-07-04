@@ -11,3 +11,24 @@ Week 3
   - proposaled new novel featuer. After trimming with team, all agreed on 'food of the (current) time'.
 - Conducted the low-fidelity prototype for the website design. prototype finalized+flow digram linked(Ruiqi put effort).
 - Other work done by team during the week: Jira all parts done. architacture finalized. propalsal work all complete.
+
+Week 4
+- Work done by the team:
+  - Sprint 1 implementaion ongoing. 
+  - Paylord/data format descision making.
+  - Team had attemptions on working initial backend signup/account route implementation/frontend page conduction.
+  - Backend Server/Frontend files finialization done. 
+
+
+Week 5
+- Work done by the team:
+  - Sprint 1 finialization. Sprint 1 feature/pages early version complete.
+  - Account: login/out route connection & UI design firstly done.
+    - data checking.
+    - database connection.
+  - Homepage: Ingredients menue implementation done.
+ - Complete frontend account:login/out feature. (with Eric's help and Tian's code resources)
+ - Complete account frontend data checking procedual.
+ 
+  
+
