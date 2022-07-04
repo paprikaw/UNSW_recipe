@@ -23,3 +23,11 @@ Week 4
 - Completed homepage (returns categories and ingredients to the frontend) and signup (takes user account data and stores them into database) implementations for the backend. 
 - Restructured backend folder from Tian and Xu's simple backend server implemented in Week 3.
 - Also added a /reset route in the backend server that cleans and resets the SQL database, for use during testing.
+
+Week 5
+- Cleaned up the payload format and refactored account-related routes in server.py to accounts.py
+- Implemented logging out in the backend
+- Cleaned up Jira for Sprint 1 and setup Sprint 2
+- Planned what to present in the demo with all team members
+- Presented demo with Qing and Ruiqi
+- Conducted retro with all team members after demo
