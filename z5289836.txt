@@ -12,3 +12,11 @@ Week 3
 1. Finalise the project propsal.
 2. Build backend flask.
 3. meet on Saturday to finalise our proposal draft.
+
+Week 4
+1. Have a meeting to have tasks assigned.
+2. I am responisble for implementing the frontend register and login functionality .
+
+Week 5
+1. Finalise the frontend of sprint 1.
+2. Have meetings to solve the problems each one faced and practise the demo.

@@ -20,12 +20,12 @@ __location__ = os.path.realpath(
 def homepage(): 
     '''
     homepage returns the categories and their ingredients in the form:
-    {'CategoryName': ['IngredientName1', 'IngredientName2', ...], ...}
+    {'CategoryName': ['emoji IngredientName1', 'emoji IngredientName2', ...], ...}
     '''
     response = {}
     with db_engine.connect() as con:
         result = con.execute(text('''
-            select Categories.categoryName, group_concat(Ingredients.ingredientName separator ',') 
+            select Categories.categoryName, group_concat(Ingredients.emoji, ' ', Ingredients.ingredientName separator ',') 
             from Categories left outer join Ingredients on Categories.categoryId = Ingredients.categoryId 
             group by Categories.categoryName
         ''')).fetchall()
