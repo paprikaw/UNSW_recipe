@@ -49,12 +49,16 @@ create table Recipes (
     mealType        text, -- do we want contributors to require a mealType input
     cookTime        int not null, -- in minutes
     likes           int unsigned
+    accountId       bigint unsigned not null,
     -- storing images: we can save file locally and store the filepath in database, or store image (takes up lots of space)
+    foregin key (accountId) references Accounts(accountId)
 );
 
 create table RecipeIngredients (
     recipeId        bigint unsigned not null,
     ingredientId    bigint unsigned not null,
+    quantity        int,
+    unit            text,
     primary key     (recipeId, ingredientId),
     foreign key (recipeId) references Recipes(recipeId),
     foreign key (ingredientId) references Ingredients(ingredientId)
