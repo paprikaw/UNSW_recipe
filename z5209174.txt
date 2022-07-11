@@ -31,3 +31,7 @@ Week 5
 - Planned what to present in the demo with all team members
 - Presented demo with Qing and Ruiqi
 - Conducted retro with all team members after demo
+
+Week 6
+- Wrote up and submitted retro report through email and webCMS
+- Discussed with team how to proceed for Sprint 2 for contributor and search functions
