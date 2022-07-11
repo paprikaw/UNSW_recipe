@@ -1,5 +1,5 @@
 -- use this file to reset database schema
-drop truncate table if exists AccountSessions, Accounts, RecipeIngredients, Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
+drop table if exists AccountSessions, Accounts, RecipeIngredients, Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
 
 create table Accounts (
     accountId       serial primary key,
@@ -51,8 +51,7 @@ create table Recipes (
     likes           int unsigned,
     accountId       bigint unsigned,
     thumbnailPath   text not null,
-    -- storing images: we can save file locally and store the filepath in database, or store image (takes up lots of space)
-    foregin key (accountId) references Accounts(accountId)
+    foreign key (accountId) references Accounts(accountId)
 );
 
 create table RecipeIngredients (

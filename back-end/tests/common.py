@@ -3,7 +3,7 @@ import requests
 
 port = 8080
 url = f"http://localhost:{port}/"
-thumbnailDir = "./imgs/thumbnails"
+thumbnailDir = "./../src/imgs/thumbnails"
 
 def reset_server():
     requests.delete(url + 'reset')
