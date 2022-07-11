@@ -49,7 +49,7 @@ create table Recipes (
     mealType        text, -- do we want contributors to require a mealType input
     cookTime        int, -- in minutes
     likes           int unsigned,
-    accountId       bigint unsigned not null,
+    accountId       bigint unsigned,
     thumbnailPath   text not null,
     -- storing images: we can save file locally and store the filepath in database, or store image (takes up lots of space)
     foregin key (accountId) references Accounts(accountId)
