@@ -48,9 +48,10 @@ create table Recipes (
     recipeName      text,
     mealType        text, -- do we want contributors to require a mealType input
     cookTime        int, -- in minutes
-    likes           int unsigned,
+    likes           int default 0,
     accountId       bigint unsigned,
     thumbnailPath   text not null,
+    steps           varchar(1024), -- a string about how to cook the recipe
     foreign key (accountId) references Accounts(accountId)
 );
 
