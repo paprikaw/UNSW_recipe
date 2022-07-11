@@ -1,6 +1,7 @@
 import os
 import sqlparse
 import accounts
+import recipes
 from flask import Flask, request
 from flask_cors import CORS
 from sqlalchemy import create_engine, text
@@ -72,6 +73,10 @@ def reset():
             for query in queries:
                 con.execute(text(query))
     return {}
+
+@app.route("/upload-thumbnail", methods={'POST'})
+def upload_thumbnail():
+    return recipes.recipe_upload_thumbnail(db_engine)
 
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)
