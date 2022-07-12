@@ -78,5 +78,9 @@ def reset():
 def upload_thumbnail():
     return recipes.recipe_upload_thumbnail(db_engine)
 
+@app.route("/update-recipe-info", methods={'POST'})
+def update_recipe_info():
+    return recipes.recipe_update_remaining_info_at_creation(db_engine)
+
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)

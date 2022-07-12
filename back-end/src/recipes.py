@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from statistics import median_low
 from flask import request
 from sqlalchemy import text
 
@@ -9,13 +10,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def recipe_upload_thumbnail(db_engine):
     img = request.files['recipeThumbnail']
     path = ''
-    #accountID = request.form['accountID']
-    # if img.filename == '':
-    #     return {
-    #         'status': False,
-    #         'value': '',
-    #         'msg': 'No File specified'
-    #     }
+    
     if (img and verifyFileType(img.filename)):
         if not verifyFileDuplicateName(img.filename):
             path = os.path.join(FOLDER_THUMBNAIL, img.filename)
@@ -33,7 +28,6 @@ def recipe_upload_thumbnail(db_engine):
         with db_engine.connect() as con:
             con.execute(text('insert into Recipes(thumbnailPath) values (:thumbnailPath)'), thumbnailPath=path)
             result = con.execute(text('select recipeID from Recipes where thumbnailPath = :thumbnailPath'), thumbnailPath=path).fetchall()
-        print(result[0][0])
         return {
             'status': True,
             'value': result[0][0],
@@ -55,6 +49,62 @@ def verifyFileDuplicateName(filename):
         if filename in files:
             return True
 
-def create_recipe(db_engine):
-    #recipeInfo = request.form[]
-    recipeThumbnail = request.files['Thumbnail']
+def recipe_update_remaining_info_at_creation(db_engine):
+    MEAL_TYPE = {"breakfast", "lunch", "dinner", "supper", "desert"}
+    
+    recipeInfo = request.get_json()
+    recipeId = recipeInfo['recipeId']
+    recipeName = recipeInfo['recipeName']
+    mealType = recipeInfo['mealType']
+    cookTime = recipeInfo['cookTime']
+    accountId = recipeInfo['accountId']
+    ingredientList = recipeInfo['ingredients']
+
+    if (type(recipeName) != str or mealType not in MEAL_TYPE):
+        return {
+            'status': False,
+            'msg': 'Data type not supported'
+        }
+
+    with db_engine.connect() as con:
+        # filling up remaining columns in Recipes table
+        con.execute(
+            text('''
+                update Recipes
+                set recipeName = :recipeName , mealType = :mealType, cookTime = :cookTime, accountId = :accountId
+                where recipeId = :recipeId
+                '''    
+            ),
+            recipeName = recipeName, mealType = mealType, cookTime = cookTime, 
+            accountId = accountId, recipeId = recipeId
+        )
+        # search ingredientId based on their names in db
+        ingredientIdSet = []
+        for ingreInfo in ingredientList:
+            result = con.execute(
+                text('select ingredientId from Ingredients where ingredientName = :ingre'),
+                ingre = ingreInfo['name']
+            ).fetchone()
+            ingredientIdSet.append(result[0])
+
+        # TODO: check if it is an existing noResultsIngredientSets
+        # In sprint3
+
+        # update ingredients info for the given recipe
+        for ingreId in ingredientIdSet:    
+            con.execute(
+                text(
+                    """
+                    insert into RecipeIngredients(recipeId, ingredientId, quantity, unit)
+                    values (:recipeId, :ingredientId, :quantity, :unit)
+                    """
+                ),
+                recipeId = recipeId, ingredientId = ingreId, 
+                quantity = ingreInfo['quantity'], unit = ingreInfo['unit']
+            )
+    return {
+        'status': True,
+        'msg': 'Recipe submitted'
+    }    
+    
+        
