@@ -1,5 +1,4 @@
 from datetime import datetime
-from telnetlib import SGA
 from flask import request
 from sqlalchemy import text
 from hashlib import sha256
