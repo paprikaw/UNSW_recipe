@@ -120,56 +120,34 @@ const Home = () => {
           width={350}
           theme="light"
           style={{
-            zIndex: 2,
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignContent: 'center',
-            alignItems: 'center',
+            overflow: "auto",
+            height: "100vh",
+            position: "fixed",
+            left: 0,
+            paddingTop: 64,
+            bottom: 0,
+            zIndex: 1,
           }}
         >
-          <Button style={{ zIndex: 2 }} onClick={handleModalOpen}>
-            logout
-          </Button>
-          {/* <Abutton /> */}
-        </Header>
-        <Layout hasSider>
-          <Sider
-            width={350}
-            theme="light"
-            style={{
-              overflow: 'auto',
-              height: '100vh',
-              position: 'fixed',
-              left: 0,
-              paddingTop: 64,
-              bottom: 0,
-              zIndex: 1,
-            }}
-          >
-            <div className="home-sider-childrens">
-              <Title level={2}>Ingredients</Title>
-              {isLoading ? (
-                <div className="spin">
-                  <Spin />
-                </div>
-              ) : (
-                <Category data={ingredients} />
-              )}
-            </div>
-          </Sider>
-          <Content
-            style={{
-              marginLeft: 300,
-            }}
-          ></Content>
-        </Layout>
+          <div className="home-sider-childrens">
+            <Title level={2}>Ingredients</Title>
+            {isLoading ? (
+              <div className="spin">
+                <Spin />
+              </div>
+            ) : (
+              <Category data={ingredients} />
+            )}
+          </div>
+        </Sider>
+        <Content
+          style={{
+            marginLeft: 300,
+          }}
+        ></Content>
       </Layout>
-      <Modal
-        title="Logout"
-        visible={isModalVisible}
-        onOk={handleLogout}
-        onCancel={handleModalCancel}
-      >
+    </Layout>
+    <Modal title="Logout" visible={isModalVisible} onOk={handleLogout} onCancel={handleModalCancel}>
         <p>Are you sure to logout?</p>
     </Modal>
     <Modal title="Contribute my recipe" visible={isModalVisible}  onCancel={handleModalCancel}>
