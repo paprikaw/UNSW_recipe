@@ -5,6 +5,7 @@ import { UserOutlined, DownOutlined, SmileOutlined, AudioOutlined, LoadingOutlin
 import { React, useEffect, useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import "./index.scss";
+import UploadPicture from '@/components/upload/UploadPicture';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
@@ -155,7 +156,7 @@ const Home = () => {
       </div>
       <div>
         <h2>Steps</h2>
-
+        <UploadPicture></UploadPicture>
       </div>
     </Modal>
     </>
