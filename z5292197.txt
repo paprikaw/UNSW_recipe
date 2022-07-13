@@ -15,3 +15,16 @@ Week 3
 
 1. Add some details for system architecture
 2. Add startup codes for project frontend
+
+Week 4
+
+1. Complete the front end of login and register page.
+2. Discuss with teammates about how will data interact with each other
+
+Week 5
+
+1. Complete the running list 
+2. Complete category selector
+3. Build a basic home page
+4. front end is ready to go for demo 1 presentation
+5. Add git hook for prettier
