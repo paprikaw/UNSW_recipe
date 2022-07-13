@@ -1,18 +1,52 @@
 /* The login page start up code is from: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js */
 import Category from '@/components/category';
-import { Layout, Spin, Typography, Button, message, Modal } from 'antd';
+import {
+  Layout,
+  Spin,
+  Typography,
+  Button,
+  message,
+  Modal,
+  Avatar,
+  Dropdown,
+  Menu,
+  Space,
+  Input,
+  Upload,
+} from 'antd';
+import {
+  UserOutlined,
+  DownOutlined,
+  SmileOutlined,
+  AudioOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { React, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './index.scss';
+import UploadPicture from '@/components/upload/UploadPicture';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
+const { Search } = Input;
+const suffix = (
+  <AudioOutlined
+    style={{
+      fontSize: 16,
+      color: '#1890ff',
+    }}
+  />
+);
+
+const onSearch = (value) => console.log(value);
 
 const Home = () => {
   const [ingredients, setIngredients] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -30,6 +64,19 @@ const Home = () => {
       })
       .catch((e) => console.log(e));
   }, []);
+
+  const handleModalOpen = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  //navigate to contribute page
+  // const handleContribute = () => {
+  //   navigate('/contribute');
+  // }
 
   const handleLogout = async () => {
     const response = await fetch('http://localhost:8080/logout', {
@@ -55,6 +102,23 @@ const Home = () => {
     }
   };
 
+  //menu of the dropdown list of profile
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: '1',
+          label: (
+            <Link to={'../'}>Log out</Link>
+            // <Button style={{zIndex: 2, margin: 20}} onClick={handleModalOpen}>
+            //   Logout
+            // </Button>
+          ),
+        },
+      ]}
+    />
+  );
+
   return (
     <>
       <Layout>
@@ -66,22 +130,14 @@ const Home = () => {
             justifyContent: 'flex-end',
             alignContent: 'center',
             alignItems: 'center',
-            gap: '10px',
           }}
         >
-          <Button
-            style={{ zIndex: 2 }}
-            onClick={() => setIsLogoutModalVisible(true)}
-          >
-            logout
+          <Button style={{ zIndex: 2, margin: 20 }} onClick={handleModalOpen}>
+            Contribute
           </Button>
-          <Button
-            style={{ zIndex: 2 }}
-            onClick={() => setIsContriModalVisible(true)}
-          >
-            contribute
-          </Button>
-          {/* <Abutton /> */}
+          <Dropdown overlay={menu} placement="bottom">
+            <Avatar size="large" icon={<UserOutlined />} />
+          </Dropdown>
         </Header>
         <Layout hasSider>
           <Sider
@@ -117,18 +173,24 @@ const Home = () => {
       </Layout>
       <Modal
         title="Logout"
-        visible={isLogoutModalVisible}
+        visible={isModalVisible}
         onOk={handleLogout}
-        onCancel={() => setIsLogoutModalVisible(false)}
+        onCancel={handleModalCancel}
       >
         <p>Are you sure to logout?</p>
       </Modal>
       <Modal
-        title="Contribute Recipe!"
-        visible={isContriModalVisible}
-        onCancel={() => setIsContriModalVisible(false)}
+        title="Contribute my recipe"
+        visible={isModalVisible}
+        onCancel={handleModalCancel}
       >
-        <p>Are you sure to logout?</p>
+        <div>
+          <h2>Select ingredients</h2>
+        </div>
+        <div>
+          <h2>Steps</h2>
+          <UploadPicture></UploadPicture>
+        </div>
       </Modal>
     </>
   );

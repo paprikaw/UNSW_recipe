@@ -5,9 +5,8 @@ import React, { useState } from 'react';
 import Login from '@/pages/login';
 import Register from '@/pages/register';
 import Home from '@/pages/home';
-import LogoutButton from './components/LogoutButton';
-
-import Abutton from '@/components/Abutton';
+// import LogoutButton from './components/LogoutButton';
+// import Abutton from '@/components/Abutton'
 
 function App() {
   const [sentence, setSentence] = useState('');
@@ -18,8 +17,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/logout" element={<LogoutButton />} />
-        <Route path="/abutton" element={<Abutton />} />
+        {/* <Route path="/logout" element={<LogoutButton />} /> */}
       </Routes>
     </BrowserRouter>
   );
