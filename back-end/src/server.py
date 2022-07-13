@@ -1,6 +1,7 @@
 import os
 import sqlparse
 import accounts
+import recipes
 from flask import Flask, request
 from flask_cors import CORS
 from sqlalchemy import create_engine, text
@@ -20,12 +21,12 @@ __location__ = os.path.realpath(
 def homepage(): 
     '''
     homepage returns the categories and their ingredients in the form:
-    {'CategoryName': ['IngredientName1', 'IngredientName2', ...], ...}
+    {'CategoryName': ['emoji IngredientName1', 'emoji IngredientName2', ...], ...}
     '''
     response = {}
     with db_engine.connect() as con:
         result = con.execute(text('''
-            select Categories.categoryName, group_concat(Ingredients.ingredientName separator ',') 
+            select Categories.categoryName, group_concat(Ingredients.emoji, ' ', Ingredients.ingredientName separator ',') 
             from Categories left outer join Ingredients on Categories.categoryId = Ingredients.categoryId 
             group by Categories.categoryName
         ''')).fetchall()
@@ -72,6 +73,14 @@ def reset():
             for query in queries:
                 con.execute(text(query))
     return {}
+
+@app.route("/upload-thumbnail", methods={'POST'})
+def upload_thumbnail():
+    return recipes.recipe_upload_thumbnail(db_engine)
+
+@app.route("/update-recipe-info", methods={'POST'})
+def update_recipe_info():
+    return recipes.recipe_update_remaining_info_at_creation(db_engine)
 
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)
