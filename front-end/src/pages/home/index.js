@@ -7,6 +7,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import "./index.scss";
 import UploadPicture from '@/components/upload/UploadPicture';
 
+
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
@@ -29,8 +30,8 @@ const Home = () => {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch("http://localhost:8080/", {
-      method: "GET",
+    fetch('http://localhost:8080/', {
+      method: 'GET',
     })
       .then((v) => {
         return v.json();
@@ -45,11 +46,11 @@ const Home = () => {
 
   const handleModalOpen = () => {
     setIsModalVisible(true);
-  }
+  };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
-  }
+  };
 
   //navigate to contribute page
   // const handleContribute = () => {
@@ -70,10 +71,10 @@ const Home = () => {
 
     const data = await response.json();
     if (data.msg === 'LOGOUT_FAILURE') {
-      message.error(response.status + ': ' + data.error)
+      message.error(response.status + ': ' + data.error);
       handleModalCancel();
     } else {
-      message.success("Logout successful!")
+      message.success('Logout successful!');
       localStorage.removeItem('token');
       handleModalCancel();
       navigate('/');
@@ -119,34 +120,56 @@ const Home = () => {
           width={350}
           theme="light"
           style={{
-            overflow: "auto",
-            height: "100vh",
-            position: "fixed",
-            left: 0,
-            paddingTop: 64,
-            bottom: 0,
-            zIndex: 1,
+            zIndex: 2,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <div className="home-sider-childrens">
-            <Title level={2}>Ingredients</Title>
-            {isLoading ? (
-              <div className="spin">
-                <Spin />
-              </div>
-            ) : (
-              <Category data={ingredients} />
-            )}
-          </div>
-        </Sider>
-        <Content
-          style={{
-            marginLeft: 300,
-          }}
-        ></Content>
+          <Button style={{ zIndex: 2 }} onClick={handleModalOpen}>
+            logout
+          </Button>
+          {/* <Abutton /> */}
+        </Header>
+        <Layout hasSider>
+          <Sider
+            width={350}
+            theme="light"
+            style={{
+              overflow: 'auto',
+              height: '100vh',
+              position: 'fixed',
+              left: 0,
+              paddingTop: 64,
+              bottom: 0,
+              zIndex: 1,
+            }}
+          >
+            <div className="home-sider-childrens">
+              <Title level={2}>Ingredients</Title>
+              {isLoading ? (
+                <div className="spin">
+                  <Spin />
+                </div>
+              ) : (
+                <Category data={ingredients} />
+              )}
+            </div>
+          </Sider>
+          <Content
+            style={{
+              marginLeft: 300,
+            }}
+          ></Content>
+        </Layout>
       </Layout>
-    </Layout>
-    <Modal title="Logout" visible={isModalVisible} onOk={handleLogout} onCancel={handleModalCancel}>
+      <Modal
+        title="Logout"
+        visible={isModalVisible}
+        onOk={handleLogout}
+        onCancel={handleModalCancel}
+      >
         <p>Are you sure to logout?</p>
     </Modal>
     <Modal title="Contribute my recipe" visible={isModalVisible}  onCancel={handleModalCancel}>

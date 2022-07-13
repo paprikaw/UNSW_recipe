@@ -1,5 +1,5 @@
 -- use this file to reset database schema
-drop truncate table if exists AccountSessions, Accounts, RecipeIngredients, Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
+drop table if exists AccountSessions, Accounts, RecipeIngredients, Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
 
 create table Accounts (
     accountId       serial primary key,
@@ -45,13 +45,14 @@ create table IngredientSets (
 
 create table Recipes (
     recipeId        serial primary key,
-    recipeName      text not null,
+    recipeName      text,
     mealType        text, -- do we want contributors to require a mealType input
-    cookTime        int not null, -- in minutes
-    likes           int unsigned
-    accountId       bigint unsigned not null,
-    -- storing images: we can save file locally and store the filepath in database, or store image (takes up lots of space)
-    foregin key (accountId) references Accounts(accountId)
+    cookTime        int, -- in minutes
+    likes           int default 0,
+    accountId       bigint unsigned,
+    thumbnailPath   text not null,
+    steps           varchar(1024), -- a string about how to cook the recipe
+    foreign key (accountId) references Accounts(accountId)
 );
 
 create table RecipeIngredients (

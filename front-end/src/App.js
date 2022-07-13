@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import axios from 'axios';
 import React, { useState } from "react";
@@ -7,6 +7,7 @@ import Register from "@/pages/register";
 import Home from "@/pages/home";
 // import LogoutButton from './components/LogoutButton';
 // import Abutton from '@/components/Abutton'
+
 
 function App() {
   const [sentence, setSentence] = useState('');
@@ -19,6 +20,7 @@ function App() {
       <Route path="/home" element={<Home />}/>
       {/* <Route path="/logout" element={<LogoutButton />} /> */}
     </Routes>
+
     </BrowserRouter>
   );
 }
