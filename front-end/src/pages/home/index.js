@@ -11,7 +11,8 @@ const { Header, Sider, Content } = Layout;
 const Home = () => {
   const [ingredients, setIngredients] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+  const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -30,14 +31,6 @@ const Home = () => {
       .catch((e) => console.log(e));
   }, []);
 
-  const handleModalOpen = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
-  };
-
   const handleLogout = async () => {
     const response = await fetch('http://localhost:8080/logout', {
       method: 'DELETE',
@@ -53,11 +46,11 @@ const Home = () => {
     const data = await response.json();
     if (data.msg === 'LOGOUT_FAILURE') {
       message.error(response.status + ': ' + data.error);
-      handleModalCancel();
+      setIsLogoutModalVisible(false);
     } else {
       message.success('Logout successful!');
       localStorage.removeItem('token');
-      handleModalCancel();
+      setIsLogoutModalVisible(false);
       navigate('/');
     }
   };
@@ -73,10 +66,20 @@ const Home = () => {
             justifyContent: 'flex-end',
             alignContent: 'center',
             alignItems: 'center',
+            gap: '10px',
           }}
         >
-          <Button style={{ zIndex: 2 }} onClick={handleModalOpen}>
+          <Button
+            style={{ zIndex: 2 }}
+            onClick={() => setIsLogoutModalVisible(true)}
+          >
             logout
+          </Button>
+          <Button
+            style={{ zIndex: 2 }}
+            onClick={() => setIsContriModalVisible(true)}
+          >
+            contribute
           </Button>
           {/* <Abutton /> */}
         </Header>
@@ -114,9 +117,16 @@ const Home = () => {
       </Layout>
       <Modal
         title="Logout"
-        visible={isModalVisible}
+        visible={isLogoutModalVisible}
         onOk={handleLogout}
-        onCancel={handleModalCancel}
+        onCancel={() => setIsLogoutModalVisible(false)}
+      >
+        <p>Are you sure to logout?</p>
+      </Modal>
+      <Modal
+        title="Contribute Recipe!"
+        visible={isContriModalVisible}
+        onCancel={() => setIsContriModalVisible(false)}
       >
         <p>Are you sure to logout?</p>
       </Modal>
