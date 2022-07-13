@@ -22,6 +22,7 @@ import {
   LoadingOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import Contributor from '@/components/contributor';
 import { React, useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './index.scss';
@@ -46,7 +47,6 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -64,14 +64,6 @@ const Home = () => {
       })
       .catch((e) => console.log(e));
   }, []);
-
-  const handleModalOpen = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
-  };
 
   //navigate to contribute page
   // const handleContribute = () => {
@@ -109,10 +101,13 @@ const Home = () => {
         {
           key: '1',
           label: (
-            <Link to={'../'}>Log out</Link>
-            // <Button style={{zIndex: 2, margin: 20}} onClick={handleModalOpen}>
-            //   Logout
-            // </Button>
+            // <Link to={'../'}>Log out</Link>
+            <Button
+              style={{ zIndex: 2, margin: 20 }}
+              onClick={() => setIsLogoutModalVisible(true)}
+            >
+              Logout
+            </Button>
           ),
         },
       ]}
@@ -132,7 +127,10 @@ const Home = () => {
             alignItems: 'center',
           }}
         >
-          <Button style={{ zIndex: 2, margin: 20 }} onClick={handleModalOpen}>
+          <Button
+            style={{ zIndex: 2, margin: 20 }}
+            onClick={() => setIsContriModalVisible(true)}
+          >
             Contribute
           </Button>
           <Dropdown overlay={menu} placement="bottom">
@@ -173,23 +171,22 @@ const Home = () => {
       </Layout>
       <Modal
         title="Logout"
-        visible={isModalVisible}
+        visible={isLogoutModalVisible}
         onOk={handleLogout}
-        onCancel={handleModalCancel}
+        onCancel={() => setIsLogoutModalVisible(false)}
       >
         <p>Are you sure to logout?</p>
       </Modal>
       <Modal
         title="Contribute my recipe"
-        visible={isModalVisible}
-        onCancel={handleModalCancel}
+        visible={isContriModalVisible}
+        onCancel={() => setIsContriModalVisible(false)}
+        transitionName=""
       >
+        <div></div>
         <div>
-          <h2>Select ingredients</h2>
-        </div>
-        <div>
-          <h2>Steps</h2>
-          <UploadPicture></UploadPicture>
+          <UploadPicture />
+          <Contributor ingredients={ingredients} />
         </div>
       </Modal>
     </>
