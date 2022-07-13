@@ -55,13 +55,14 @@ const UploadPicture = () => {
       </div>
     </div>
   );
+
   return (
     <Upload
-      name="avatar"
+      name="recipeThumbnail"
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
-      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+      action="http://127.0.0.1:8080/upload-thumbnail"
       beforeUpload={beforeUpload}
       onChange={handleChange}
     >

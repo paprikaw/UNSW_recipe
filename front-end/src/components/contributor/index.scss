@@ -1,0 +1,11 @@
+.row-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  > div {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+}
