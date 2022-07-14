@@ -79,7 +79,7 @@ def reset():
     )
     
     for file in os.scandir(thumbnails):
-        if not file.path.endswith('.gitignore'):
+        if not file.path.endswith('/.gitignore'):
             os.remove(file.path)
 
     return {}
