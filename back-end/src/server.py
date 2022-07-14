@@ -2,7 +2,7 @@ import os
 import sqlparse
 import accounts
 import recipes
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import create_engine, text
 

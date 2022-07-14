@@ -40,10 +40,7 @@ def login(db_engine):
         returnMSG = {
             'msg': 'LOGIN_FAILURE',
             'error': '',
-            'data': {
-                'accountId': '',
-                'token': '',
-            }
+            'token': ''
         }
         result = con.execute(text(
             'select * from Accounts where email = :email'), email=email
@@ -68,8 +65,7 @@ def login(db_engine):
                 token=token, accountId=accountId
         )
         returnMSG['msg'] = 'LOGIN_SUCCESS'
-        returnMSG['data']['accountId'] = accountId
-        returnMSG['data']['token'] = token
+        returnMSG['token'] = token
 
     return returnMSG
 
@@ -95,3 +91,4 @@ def logout(db_engine):
         'msg': 'LOGOUT_SUCCESS',
         'error': ''
     }
+    

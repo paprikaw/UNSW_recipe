@@ -1,6 +1,4 @@
 import os
-from datetime import datetime
-from statistics import median_low
 from flask import request
 from sqlalchemy import text
 
@@ -50,7 +48,7 @@ def verifyFileDuplicateName(filename):
             return True
 
 def recipe_update_remaining_info_at_creation(db_engine):
-    MEAL_TYPE = {"breakfast", "lunch", "dinner", "supper", "desert"}
+    MEAL_TYPE = {"Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entry", "Main","Tea"}
     
     recipeInfo = request.get_json()
     recipeId = recipeInfo['recipeId']

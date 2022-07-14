@@ -29,7 +29,7 @@ def test_homepage_ingredients_sorted_by_num_uses():
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
     
     thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["data"]["accountId"])
+    recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["token"])
 
     requests.post(url + 'update-recipe-info', json=recipeData1)
 
@@ -86,7 +86,7 @@ def test_logout_success():
     reset_server()
 
     json.loads(requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'}).text)
-    token = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)['data']['token']
+    token = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)['token']
     user1 = json.loads(requests.delete(url + 'logout', json={'token': token}).text)
 
     assert user1 == {
@@ -98,7 +98,7 @@ def test_logout_failure_on_invalid_token():
     reset_server()
 
     json.loads(requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'}).text)
-    json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)['data']['token']
+    json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)['token']
     user1 = json.loads(requests.delete(url + 'logout', json={'token': 'invalid token'}).text)
 
     assert user1 == {
