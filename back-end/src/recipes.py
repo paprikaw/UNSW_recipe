@@ -4,7 +4,7 @@ from statistics import median_low
 from flask import request
 from sqlalchemy import text
 
-FOLDER_THUMBNAIL = './imgs/thumbnails'
+FOLDER_THUMBNAIL = os.path.abspath(os.path.join(os.path.dirname(__file__), 'imgs/thumbnails'))
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def recipe_upload_thumbnail(db_engine):
@@ -106,5 +106,56 @@ def recipe_update_remaining_info_at_creation(db_engine):
         'status': True,
         'msg': 'Recipe submitted'
     }    
-    
+
+def search(db_engine):
+    recipes = []
+
+    ingredientNames = request.get_json()['ingredients']
+    with db_engine.connect() as con:
+        ingredientIds = []
+        # get ingredient ids from running list
+        ingredients = con.execute(
+            text('select Ingredients.ingredientId from Ingredients where ingredientName in :ingredientName'), 
+            ingredientName = tuple(ingredientNames)
+        ).fetchall()
+
+        for i in ingredients:
+            ingredientIds.append(i[0])
+
+        # create view based on ingredients matched
+        con.execute(
+            text('''
+                create or replace view IngredientsMatched as
+                select recipeId, count(recipeId) as numIngredientsMatched 
+                from RecipeIngredients 
+                where ingredientId in :ingredientIds 
+                group by recipeId 
+                order by count(recipeId) desc
+            '''),
+            ingredientIds = tuple(ingredientIds)
+        )
+
+        # get recipes that have matches
+        searchResults = con.execute(
+            text('''
+                select Recipes.recipeId, recipeName, mealType, likes, cookTime, thumbnailPath, numIngredientsMatched 
+                from IngredientsMatched left outer join Recipes on (IngredientsMatched.recipeId = Recipes.recipeId) 
+                order by numIngredientsMatched desc;
+            ''')
+        ).fetchall()
+
+        for result in searchResults:
+            recipes.append({
+                'recipeId': result[0],
+                'recipeName': result[1],
+                'mealType': result[2],
+                'likes': result[3],
+                'cookTime': result[4], 
+                'thumbnail': result[5],
+                'numIngredientsMatched': result[6]
+            })
+
+    return {
+        'recipes': recipes
+    }
         

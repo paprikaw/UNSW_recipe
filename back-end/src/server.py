@@ -82,5 +82,9 @@ def upload_thumbnail():
 def update_recipe_info():
     return recipes.recipe_update_remaining_info_at_creation(db_engine)
 
+@app.route("/search", methods={'POST'})
+def search():
+    return recipes.search(db_engine)
+
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)
