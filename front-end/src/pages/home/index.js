@@ -14,14 +14,7 @@ import {
   Input,
   Upload,
 } from 'antd';
-import {
-  UserOutlined,
-  DownOutlined,
-  SmileOutlined,
-  AudioOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, AudioOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
 import { React, useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -181,11 +174,11 @@ const Home = () => {
         title="Contribute my recipe"
         visible={isContriModalVisible}
         onCancel={() => setIsContriModalVisible(false)}
+        footer={null}
         transitionName=""
       >
         <div></div>
         <div>
-          <UploadPicture />
           <Contributor ingredients={ingredients} />
         </div>
       </Modal>
