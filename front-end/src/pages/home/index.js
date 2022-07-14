@@ -103,7 +103,7 @@ const Home = () => {
           label: (
             // <Link to={'../'}>Log out</Link>
             <Button
-              style={{ zIndex: 2, margin: 20 }}
+              style={{ zIndex: 2 }}
               onClick={() => setIsLogoutModalVisible(true)}
             >
               Logout
@@ -133,7 +133,7 @@ const Home = () => {
           >
             Contribute
           </Button>
-          <Dropdown overlay={menu} placement="bottom">
+          <Dropdown overlay={menu} placement="bottom" arrow>
             <Avatar size="large" icon={<UserOutlined />} />
           </Dropdown>
         </Header>
