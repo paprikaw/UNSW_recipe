@@ -26,7 +26,8 @@ def homepage():
     response = {}
     with db_engine.connect() as con:
         result = con.execute(text('''
-            select Categories.categoryName, group_concat(Ingredients.emoji, ' ', Ingredients.ingredientName separator ',') 
+            select Categories.categoryName, group_concat(Ingredients.emoji, ' ', Ingredients.ingredientName 
+                order by Ingredients.numUses desc separator ',') 
             from Categories left outer join Ingredients on Categories.categoryId = Ingredients.categoryId 
             group by Categories.categoryName
         ''')).fetchall()
