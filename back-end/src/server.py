@@ -73,6 +73,15 @@ def reset():
             queries = sqlparse.split(sqlparse.format(schema.read(), strip_comments=True, reindent=True))
             for query in queries:
                 con.execute(text(query))
+
+    thumbnails = os.path.abspath(
+        os.path.join(os.path.dirname(os.path.dirname(__file__)),'src/imgs/thumbnails')
+    )
+    
+    for file in os.scandir(thumbnails):
+        if not file.path.endswith('.gitignore'):
+            os.remove(file.path)
+
     return {}
 
 @app.route("/upload-thumbnail", methods={'POST'})
