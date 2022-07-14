@@ -2,54 +2,7 @@ import pytest
 import requests
 import json
 import os
-from common import url, reset_server
-
-def getRecipeData1(recipeId, accountId):
-    return {
-        "recipeId": recipeId,
-        "recipeName": "Beef pie",
-        "mealType": "breakfast",
-        "cookTime": 60,
-        "accountId": accountId,
-        "ingredients": [
-            {
-                "name": "Ground Beef",
-                "quantity": 200,
-                "unit": "g"
-            },
-            {
-                "name": "White Flour",
-                "quantity": 100,
-                "unit": "g"
-            },
-            {
-                "name": "Salt",
-                "quantity": 3,
-                "unit": "g"
-            }
-        ]
-    }
-
-def getRecipeData2(recipeId, accountId):
-    return {
-        'recipeId': recipeId,
-        "recipeName": "No Salt Beef pie",
-        "mealType": "breakfast",
-        "cookTime": 60,
-        "accountId": accountId,
-        "ingredients": [
-            {
-                "name": "Ground Beef",
-                "quantity": 200,
-                "unit": "g"
-            },
-            {
-                "name": "White Flour",
-                "quantity": 100,
-                "unit": "g"
-            }
-        ]
-    }
+from common import url, reset_server, getRecipeData1, getRecipeData2
 
 def test_upload_image_success():
     reset_server()
@@ -149,8 +102,8 @@ def test_search_multiple_responses():
     user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
     
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
+    
     thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
-
     recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["data"]["accountId"])
 
     thumbnailResponse2 = requests.post(url + 'upload-thumbnail', files=files).json()
@@ -175,6 +128,7 @@ def test_search_no_matches():
     user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
     
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
+    
     thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
     recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["data"]["accountId"])
 

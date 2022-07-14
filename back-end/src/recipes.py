@@ -102,6 +102,10 @@ def recipe_update_remaining_info_at_creation(db_engine):
                 recipeId = recipeId, ingredientId = ingreId, 
                 quantity = ingreInfo['quantity'], unit = ingreInfo['unit']
             )
+            con.execute(
+                text("update Ingredients set numUses = numUses + 1 where ingredientId = :ingredientId"),
+                ingredientId = ingreId
+            )
     return {
         'status': True,
         'msg': 'Recipe submitted'
