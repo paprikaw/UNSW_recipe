@@ -7,18 +7,74 @@ import {
   Button,
   Input,
   Typography,
+  TimePicker,
+  Slider,
+  Row,
+  Col,
 } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import React from 'react';
-import './index.scss';
 
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { React, useState } from 'react';
+import './index.scss';
+import UploadPicture from '../upload/UploadPicture';
 const { Text } = Typography;
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
 const Contributor = (props) => {
+  const [sliderInputValue, setSliderInputValue] = useState(1);
+  const [recipeId, setRecipeId] = useState(-1);
+  const onSliderChange = (newValue) => {
+    setSliderInputValue(newValue);
+  };
+
+  // const response = {
+  //   recipeId: rjson2['value'],
+  //   recipeName: 'Beef pie',
+  //   mealType: 'breakfast',
+  //   cookTime: 60,
+  //   accountId: user1['data']['accountId'],
+  //   ingredients: [
+  //     {
+  //       name: 'Ground Beef',
+  //       quantity: 200,
+  //       unit: 'g',
+  //     },
+  //     {
+  //       name: 'White Flour',
+  //       quantity: 100,
+  //       unit: 'g',
+  //     },
+  //     {
+  //       name: 'Salt',
+  //       quantity: 3,
+  //       unit: 'g',
+  //     },
+  //   ],
+  // };
+
   const { ingredients } = props;
   const onFinish = (values) => {
     console.log('Received values of form:', values);
+    if (recipeId !== -1) {
+      values['recipeId'] = recipeId;
+      console.log(values);
+      // const requestOptions = {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(values),
+      // };
+
+      // fetch('http://localhost:8080/', {
+      //   method: 'POST',
+      // })
+      //   .then((v) => {
+      //     return v.json();
+      //   })
+      //   .then((data) => {
+      //     console.log(data);
+      //   })
+      //   .catch((e) => console.log(e));
+    }
   };
   return (
     <Card>
@@ -27,7 +83,49 @@ const Contributor = (props) => {
         onFinish={onFinish}
         autoComplete="off"
       >
+        <UploadPicture setRecipeId={setRecipeId} />
+        <br />
+        <br />
+
+        <Form.Item
+          name="recipeName"
+          label="Recipe name"
+          rules={[{ required: true }]}
+        >
+          <Input />
+        </Form.Item>
+        <Row>
+          <Col span={18}>
+            <Form.Item
+              name="cookTime"
+              label="Cook time"
+              rules={[{ required: true }]}
+            >
+              <Slider
+                min={1}
+                max={200}
+                onChange={onSliderChange}
+                tooltipVisible={true}
+                value={
+                  typeof sliderInputValue === 'number' ? sliderInputValue : 0
+                }
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item
+          name="mealType"
+          label="Meal type"
+          rules={[{ required: true }]}
+        >
+          <Select placeholder="please select" size="big" bordered={'false'}>
+            <Option value={'breakfast'}>Breakfast</Option>
+            <Option value={'lunch'}>Lunch</Option>
+            <Option value={'dinner'}>Dinner</Option>
+          </Select>
+        </Form.Item>
         <Card>
+          <h2>Add ingredients</h2>
           <Form.List name="ingredients">
             {(fields, { add, remove }) => (
               <div>
@@ -127,6 +225,7 @@ const Contributor = (props) => {
         </Card>
         <br />
         <Card>
+          <h2>Add instructions</h2>
           <Form.List name="instructions">
             {(fields, { add, remove }) => (
               <div>
@@ -145,7 +244,7 @@ const Contributor = (props) => {
                     <Text>Step {key + 1}</Text>
                     <Form.Item
                       {...restField}
-                      name={[name, 'quantity']}
+                      name={[name, 'step']}
                       rules={[
                         {
                           required: true,
@@ -172,12 +271,15 @@ const Contributor = (props) => {
               </div>
             )}
           </Form.List>
-          <Form.Item>
+        </Card>
+        <br />
+        <Form.Item>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
-          </Form.Item>
-        </Card>
+          </div>
+        </Form.Item>
       </Form>
     </Card>
   );

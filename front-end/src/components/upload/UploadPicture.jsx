@@ -24,18 +24,21 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-const UploadPicture = () => {
+const UploadPicture = (props) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+  const { setRecipeId } = props;
 
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {
       setLoading(true);
+      setRecipeId(info.file.reponse.value);
       return;
     }
 
     if (info.file.status === 'done') {
       // Get this url from response in real world.
+      console.log(info.file.response);
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
