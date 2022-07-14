@@ -1,8 +1,9 @@
+from webbrowser import get
 import pytest
 import requests
 import json
 import os
-from common import url, reset_server, getRecipeData1, getRecipeData2
+from common import url, reset_server, getRecipeData1, getRecipeData2, getAccountIdFromToken
 
 def test_upload_image_success():
     reset_server()
@@ -44,6 +45,7 @@ def test_upload_image_success_on_duplicate_file_name():
     assert rjson2['msg'] == 'Image upload success'
     assert rjson2['value'] > rjson1['value']
 
+
 def test_update_success():
     reset_server()
     user1 = json.loads(requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'}).text)
@@ -53,7 +55,7 @@ def test_update_success():
     response2 = requests.post(url + 'upload-thumbnail', files=files)
     rjson2 = response2.json()
 
-    jsonData = getRecipeData1(rjson2["value"], user1["data"]["accountId"])
+    jsonData = getRecipeData1(rjson2["value"], user1["token"])
 
     result = json.loads(requests.post(url + 'update-recipe-info', json=jsonData).text)
     assert result['status'] == True
@@ -66,13 +68,14 @@ def test_update_failure_on_invalid_recipeName():
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
     response2 = requests.post(url + 'upload-thumbnail', files=files)
     rjson2 = response2.json()
+    accountId = getAccountIdFromToken(user1["token"])
 
     jsonData = {
         "recipeId": rjson2["value"],
         "recipeName": 12345,
         "mealType": "breakfast",
         "cookTime": 60,
-        "accountId": user1["data"]["accountId"],
+        "accountId": accountId,
         "ingredients": [
             {
                 "name": "Ground Beef",
@@ -104,10 +107,10 @@ def test_search_multiple_responses():
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
     
     thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["data"]["accountId"])
-
+    recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["token"])
+    
     thumbnailResponse2 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData2 = getRecipeData2(thumbnailResponse2["value"], user1["data"]["accountId"])
+    recipeData2 = getRecipeData2(thumbnailResponse2["value"], user1["token"])
 
     requests.post(url + 'update-recipe-info', json=recipeData1)
     requests.post(url + 'update-recipe-info', json=recipeData2)
@@ -130,12 +133,12 @@ def test_search_no_matches():
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
     
     thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["data"]["accountId"])
+    recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["token"])
 
     thumbnailResponse2 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData2 = getRecipeData2(thumbnailResponse2["value"], user1["data"]["accountId"])
+    recipeData2 = getRecipeData2(thumbnailResponse2["value"], user1["token"])
 
-    requests.post(url + 'update-recipe-info', json=recipeData1)
+    requests.post(url + 'update-recipe-infox', json=recipeData1)
     requests.post(url + 'update-recipe-info', json=recipeData2)
 
     runningList = {'ingredients': ['Garlic', 'Onion', 'Potato']}
