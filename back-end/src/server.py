@@ -26,7 +26,8 @@ def homepage():
     response = {}
     with db_engine.connect() as con:
         result = con.execute(text('''
-            select Categories.categoryName, group_concat(Ingredients.emoji, ' ', Ingredients.ingredientName separator ',') 
+            select Categories.categoryName, group_concat(Ingredients.emoji, ' ', Ingredients.ingredientName 
+                order by Ingredients.numUses desc separator ',') 
             from Categories left outer join Ingredients on Categories.categoryId = Ingredients.categoryId 
             group by Categories.categoryName
         ''')).fetchall()
@@ -72,6 +73,15 @@ def reset():
             queries = sqlparse.split(sqlparse.format(schema.read(), strip_comments=True, reindent=True))
             for query in queries:
                 con.execute(text(query))
+
+    thumbnails = os.path.abspath(
+        os.path.join(os.path.dirname(os.path.dirname(__file__)),'src/imgs/thumbnails')
+    )
+    
+    for file in os.scandir(thumbnails):
+        if not file.path.endswith('/.gitignore'):
+            os.remove(file.path)
+
     return {}
 
 @app.route("/upload-thumbnail", methods={'POST'})
@@ -81,6 +91,10 @@ def upload_thumbnail():
 @app.route("/update-recipe-info", methods={'POST'})
 def update_recipe_info():
     return recipes.recipe_update_remaining_info_at_creation(db_engine)
+
+@app.route("/search", methods={'POST'})
+def search():
+    return recipes.search(db_engine)
 
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)
