@@ -35,8 +35,8 @@ const Login = () => {
     });
     const data = await response.json();
     console.log(data);
-    console.log(data.data.token);
-    localStorage.setItem('token', data.data.token);
+    console.log(data.token);
+    localStorage.setItem('token', data.token);
     if (data.msg === 'LOGIN_FAILURE') {
       message.error('Login failed:' + data.error);
     } else {
