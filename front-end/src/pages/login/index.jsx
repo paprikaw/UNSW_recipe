@@ -23,7 +23,7 @@ const Login = () => {
       values.password,
       '$2a$10$CwTycUXWue0Thq9StjUM0u'
     );
-    const response = await fetch('http://localhost:8080/login', {
+    const response = await fetch('/login', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
@@ -35,8 +35,8 @@ const Login = () => {
     });
     const data = await response.json();
     console.log(data);
-    console.log(data.data.token);
-    localStorage.setItem('token', data.data.token);
+    console.log(data.token);
+    localStorage.setItem('token', data.token);
     if (data.msg === 'LOGIN_FAILURE') {
       message.error('Login failed:' + data.error);
     } else {

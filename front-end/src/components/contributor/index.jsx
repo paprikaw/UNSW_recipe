@@ -105,7 +105,6 @@ const Contributor = (props) => {
                 min={1}
                 max={200}
                 onChange={onSliderChange}
-                tooltipVisible={true}
                 value={
                   typeof sliderInputValue === 'number' ? sliderInputValue : 0
                 }

@@ -44,7 +44,7 @@ const Home = () => {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('http://localhost:8080/', {
+    fetch('/category', {
       method: 'GET',
     })
       .then((v) => {
@@ -64,7 +64,7 @@ const Home = () => {
   // }
 
   const handleLogout = async () => {
-    const response = await fetch('http://localhost:8080/logout', {
+    const response = await fetch('/logout', {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',

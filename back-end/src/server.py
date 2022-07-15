@@ -7,7 +7,6 @@ from flask_cors import CORS
 from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
-CORS(app)
 
 # database credential to the MySQL in Google Cloud Storage
 # abbreviation: rrs -> Recipe Recommendation System
@@ -17,7 +16,7 @@ db_engine = create_engine(db_url)#, echo=True)
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-@app.route("/", methods={'GET'})
+@app.route("/category", methods={'GET'})
 def homepage(): 
     '''
     homepage returns the categories and their ingredients in the form:
