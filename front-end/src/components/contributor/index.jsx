@@ -121,6 +121,12 @@ const Contributor = (props) => {
             <Option value={'breakfast'}>Breakfast</Option>
             <Option value={'lunch'}>Lunch</Option>
             <Option value={'dinner'}>Dinner</Option>
+            <Option value={'supper'}>Lunch</Option>
+            <Option value={'dessert'}>Dessert</Option>
+            <Option value={'snack'}>Snack</Option>
+            <Option value={'entry'}>Entry</Option>
+            <Option value={'main'}>Main</Option>
+            <Option value={'tea'}>Tea</Option>
           </Select>
         </Form.Item>
         <Card>
