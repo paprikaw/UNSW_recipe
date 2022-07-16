@@ -1,12 +1,12 @@
-import { React } from "react";
-import useCollapse from "react-collapsed";
-import { Card, Button, Spin, Space } from "antd";
-import SelectButton from "./selectButton";
-import "./index.scss";
+import { React } from 'react';
+import useCollapse from 'react-collapsed';
+import { Card, Button, Spin, Space } from 'antd';
+import SelectButton from './selectButton';
+import './index.scss';
 
 function CollapseBox(props) {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
-    collapsedHeight: "80",
+    collapsedHeight: '80',
   });
   const newDic = {};
   const { data, title, selectState, setSelectState } = props;
@@ -16,15 +16,15 @@ function CollapseBox(props) {
     <Card
       title={title}
       hoverable={true}
-      class={"collapse-card"}
-      style={{ margin: "0 auto" }}
+      className="collapse-card"
+      style={{ margin: '0 auto' }}
       actions={[
         <Button {...getToggleProps()} type="link">
-          {isExpanded ? "Collapse" : "Expand"}
+          {isExpanded ? 'Collapse' : 'Expand'}
         </Button>,
       ]}
     >
-      <div style={{ height: "300px" }} {...getCollapseProps()}>
+      <div style={{ height: '300px' }} {...getCollapseProps()}>
         <Space size={[8, 16]} wrap>
           {selectState ? (
             data.map((name) => {

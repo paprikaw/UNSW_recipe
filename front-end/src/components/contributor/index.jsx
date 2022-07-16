@@ -20,6 +20,13 @@ import UploadPicture from '../upload/UploadPicture';
 const { Text } = Typography;
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
+
+function processContributeVal(value) {
+  value.instructions = value.instructions.map((obj) => obj['step']);
+  value.token = localStorage.getItem('token');
+  console.log(value);
+}
+
 const Contributor = (props) => {
   const [sliderInputValue, setSliderInputValue] = useState(1);
   const [recipeId, setRecipeId] = useState(-1);
@@ -54,26 +61,24 @@ const Contributor = (props) => {
 
   const { ingredients } = props;
   const onFinish = (values) => {
-    console.log('Received values of form:', values);
     if (recipeId !== -1) {
-      values['recipeId'] = recipeId;
+      values.recipeId = recipeId;
+      processContributeVal(values);
       console.log(values);
-      // const requestOptions = {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(values),
-      // };
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      };
 
-      // fetch('http://localhost:8080/', {
-      //   method: 'POST',
-      // })
-      //   .then((v) => {
-      //     return v.json();
-      //   })
-      //   .then((data) => {
-      //     console.log(data);
-      //   })
-      //   .catch((e) => console.log(e));
+      fetch('/update-recipe-info', requestOptions)
+        .then((v) => {
+          return v.json();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((e) => console.log(e));
     }
   };
   return (
@@ -83,7 +88,9 @@ const Contributor = (props) => {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <UploadPicture setRecipeId={setRecipeId} />
+        <Form.Item required={true}>
+          <UploadPicture setRecipeId={setRecipeId} />
+        </Form.Item>
         <br />
         <br />
 
