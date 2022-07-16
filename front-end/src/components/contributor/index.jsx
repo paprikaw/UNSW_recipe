@@ -59,6 +59,17 @@ const Contributor = (props) => {
   //   ],
   // };
 
+  //set value for the slider bar
+  const marks = {
+    0: '0min',
+    200: {
+      style: {
+        color: '#f50',
+      },
+      label: <strong>200min</strong>,
+    },
+  };
+
   const { ingredients } = props;
   const onFinish = (values) => {
     if (recipeId !== -1) {
@@ -111,6 +122,7 @@ const Contributor = (props) => {
               <Slider
                 min={1}
                 max={200}
+                marks={marks}
                 onChange={onSliderChange}
                 value={
                   typeof sliderInputValue === 'number' ? sliderInputValue : 0
