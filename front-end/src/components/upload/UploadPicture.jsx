@@ -32,13 +32,13 @@ const UploadPicture = (props) => {
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {
       setLoading(true);
-      setRecipeId(info.file.reponse.value);
+      console.log(info);
       return;
     }
 
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      console.log(info.file.response);
+      setRecipeId(info.file.response.value);
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
@@ -65,7 +65,7 @@ const UploadPicture = (props) => {
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
-      action="http://127.0.0.1:8080/upload-thumbnail"
+      action="/upload-thumbnail"
       beforeUpload={beforeUpload}
       onChange={handleChange}
     >

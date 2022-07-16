@@ -55,7 +55,7 @@ def recipe_update_remaining_info_at_creation(db_engine):
     recipeName = recipeInfo['recipeName']
     mealType = recipeInfo['mealType']
     cookTime = recipeInfo['cookTime']
-    accountId = recipeInfo['accountId']
+    token = recipeInfo['token']
     ingredientList = recipeInfo['ingredients']
 
     if (type(recipeName) != str or mealType not in MEAL_TYPE):
