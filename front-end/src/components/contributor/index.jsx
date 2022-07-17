@@ -27,55 +27,28 @@ function processContributeVal(value) {
   console.log(value);
 }
 
+/**
+ * Component for contributor page
+ *
+ * @component
+ * @example
+ * const ingredients = ['apple', 'pear']
+ * return (
+ *   <Contributor ingredients={ingredients} />
+ * )
+ */
 const Contributor = (props) => {
+  const { ingredients = [] } = props;
   const [sliderInputValue, setSliderInputValue] = useState(1);
   const [recipeId, setRecipeId] = useState(-1);
   const onSliderChange = (newValue) => {
     setSliderInputValue(newValue);
   };
 
-  // const response = {
-  //   recipeId: rjson2['value'],
-  //   recipeName: 'Beef pie',
-  //   mealType: 'breakfast',
-  //   cookTime: 60,
-  //   accountId: user1['data']['accountId'],
-  //   ingredients: [
-  //     {
-  //       name: 'Ground Beef',
-  //       quantity: 200,
-  //       unit: 'g',
-  //     },
-  //     {
-  //       name: 'White Flour',
-  //       quantity: 100,
-  //       unit: 'g',
-  //     },
-  //     {
-  //       name: 'Salt',
-  //       quantity: 3,
-  //       unit: 'g',
-  //     },
-  //   ],
-  // };
-
-  //set value for the slider bar
-  const marks = {
-    0: '0min',
-    200: {
-      style: {
-        color: '#f50',
-      },
-      label: <strong>200min</strong>,
-    },
-  };
-
-  const { ingredients } = props;
   const onFinish = (values) => {
     if (recipeId !== -1) {
       values.recipeId = recipeId;
       processContributeVal(values);
-      console.log(values);
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,6 +65,7 @@ const Contributor = (props) => {
         .catch((e) => console.log(e));
     }
   };
+
   return (
     <Card>
       <Form
@@ -102,6 +76,7 @@ const Contributor = (props) => {
         <Form.Item required={true}>
           <UploadPicture setRecipeId={setRecipeId} />
         </Form.Item>
+
         <br />
         <br />
 
