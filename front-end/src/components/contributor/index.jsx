@@ -250,7 +250,7 @@ const Contributor = (props) => {
                     }}
                     className="row-container"
                   >
-                    <Text>Step {key + 1}</Text>
+                    <Text>Step {name + 1}</Text>
                     <Form.Item
                       {...restField}
                       name={[name, 'step']}
