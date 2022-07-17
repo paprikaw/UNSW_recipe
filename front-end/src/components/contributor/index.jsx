@@ -38,6 +38,16 @@ function processContributeVal(value) {
  * )
  */
 const Contributor = (props) => {
+  //set value for the slider bar
+  const marks = {
+    0: '0min',
+    200: {
+      style: {
+        color: '#f50',
+      },
+      label: <strong>200min</strong>,
+    },
+  };
   const { ingredients = [] } = props;
   const [sliderInputValue, setSliderInputValue] = useState(1);
   const [recipeId, setRecipeId] = useState(-1);
