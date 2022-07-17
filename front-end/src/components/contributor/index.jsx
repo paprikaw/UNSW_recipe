@@ -93,7 +93,10 @@ const Contributor = (props) => {
         <Form.Item
           name="recipeName"
           label="Recipe name"
-          rules={[{ required: true }]}
+          rules={[{ 
+            required: true,
+            message: "Input required"
+          }]}
         >
           <Input />
         </Form.Item>
@@ -102,7 +105,10 @@ const Contributor = (props) => {
             <Form.Item
               name="cookTime"
               label="Cook time"
-              rules={[{ required: true }]}
+              rules={[{ 
+                required: true,
+                message: 'Input required' 
+              }]}
             >
               <Slider
                 min={1}
@@ -119,7 +125,10 @@ const Contributor = (props) => {
         <Form.Item
           name="mealType"
           label="Meal type"
-          rules={[{ required: true }]}
+          rules={[{ 
+            required: true,
+            message: "Input required" 
+          }]}
         >
           <Select placeholder="please select" size="big" bordered={'false'}>
             <Option value={'breakfast'}>Breakfast</Option>
@@ -146,7 +155,7 @@ const Contributor = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Missing ingredient quantity',
+                          message: 'Input required',
                         },
                       ]}
                     >
@@ -161,6 +170,12 @@ const Contributor = (props) => {
                       {...restField}
                       style={{ flexGrow: 2 }}
                       name={[name, 'ingredients']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Input required',
+                        },
+                      ]}
                     >
                       <Select placeholder="Ingredients">
                         {Object.entries(ingredients)
@@ -180,7 +195,7 @@ const Contributor = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Missing last name',
+                          message: 'Input required',
                         },
                       ]}
                       style={{ flexGrow: 1 }}
@@ -257,7 +272,7 @@ const Contributor = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Step needs',
+                          message: 'Please fill in the form',
                         },
                       ]}
                       style={{ flexGrow: 1 }}
