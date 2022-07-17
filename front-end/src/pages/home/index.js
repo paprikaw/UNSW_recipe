@@ -176,6 +176,7 @@ const Home = () => {
         onCancel={() => setIsContriModalVisible(false)}
         footer={null}
         transitionName=""
+        width={800}
       >
         <div></div>
         <div>

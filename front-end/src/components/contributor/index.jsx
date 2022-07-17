@@ -97,6 +97,7 @@ const Contributor = (props) => {
               <Slider
                 min={1}
                 max={200}
+                marks={marks}
                 onChange={onSliderChange}
                 value={
                   typeof sliderInputValue === 'number' ? sliderInputValue : 0
