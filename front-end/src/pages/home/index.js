@@ -10,20 +10,17 @@ import {
   Avatar,
   Dropdown,
   Menu,
-  Space,
   Input,
-  Upload,
 } from 'antd';
 import { UserOutlined, AudioOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
 import { React, useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './index.scss';
-import UploadPicture from '@/components/upload/UploadPicture';
+import { getRidOfEmoji } from '@/utils/utils';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
-const { Search } = Input;
 const suffix = (
   <AudioOutlined
     style={{
@@ -40,6 +37,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
+  const [categoryList, setCategoryList] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -53,7 +51,6 @@ const Home = () => {
       .then((data) => {
         setIngredients(data);
         setIsLoading(false);
-        console.log(data);
       })
       .catch((e) => console.log(e));
   }, []);
@@ -62,6 +59,24 @@ const Home = () => {
   // const handleContribute = () => {
   //   navigate('/contribute');
   // }
+
+  const onCategoryChange = (list) => {
+    setCategoryList(list);
+  };
+
+  const handleSearch = async (list) => {
+    const response = await fetch('/search', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        ingredients: list.map((name) => getRidOfEmoji(name)),
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
 
   const handleLogout = async () => {
     const response = await fetch('/logout', {
@@ -151,8 +166,15 @@ const Home = () => {
                   <Spin />
                 </div>
               ) : (
-                <Category data={ingredients} />
+                <Category data={ingredients} onChange={onCategoryChange} />
               )}
+              <Button
+                type="primary"
+                shape="round"
+                onClick={(_event) => handleSearch(categoryList)}
+              >
+                Search
+              </Button>
             </div>
           </Sider>
           <Content
@@ -178,7 +200,6 @@ const Home = () => {
         transitionName=""
         width={800}
       >
-        <div></div>
         <div>
           <Contributor ingredients={ingredients} />
         </div>
