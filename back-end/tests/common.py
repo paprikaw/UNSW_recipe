@@ -13,13 +13,12 @@ def reset_server():
     requests.delete(url + 'reset')
 
 def getRecipeData1(recipeId, token):
-    accountId = getAccountIdFromToken(token)
     return {
         "recipeId": recipeId,
         "recipeName": "Beef pie",
-        "mealType": "breakfast",
+        "mealType": "Breakfast",
         "cookTime": 60,
-        "accountId": accountId,
+        "token": token,
         "ingredients": [
             {
                 "name": "Ground Beef",
@@ -41,13 +40,12 @@ def getRecipeData1(recipeId, token):
     }
 
 def getRecipeData2(recipeId, token):
-    accountId = getAccountIdFromToken(token)
     return {
         'recipeId': recipeId,
         "recipeName": "No Salt Beef pie",
-        "mealType": "breakfast",
+        "mealType": "Breakfast",
         "cookTime": 60,
-        "accountId": accountId,
+        "token": token,
         "ingredients": [
             {
                 "name": "Ground Beef",
@@ -62,10 +60,3 @@ def getRecipeData2(recipeId, token):
         ],
         "steps": ['1. Fry ground beef.', '2. Add flour']
     }
-
-def getAccountIdFromToken(token):
-    with db_engine.connect() as con:
-            accountId = con.execute(
-                text('select accountId from AccountSessions where token = :token'), token=token
-                ).fetchall()
-    return accountId[0][0]

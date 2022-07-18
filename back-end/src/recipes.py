@@ -79,10 +79,8 @@ def recipe_update_remaining_info_at_creation(db_engine):
             userToken = token
         ).fetchone()[0]
 
-
         # filling up remaining columns in Recipes table
         con.execute(
-
             text('''
                 update Recipes
                 set recipeName = :recipeName , mealType = :mealType, cookTime = :cookTime, accountId = :accountId
@@ -92,7 +90,6 @@ def recipe_update_remaining_info_at_creation(db_engine):
             recipeName = recipeName, mealType = mealType, cookTime = cookTime, 
             accountId = accountId, recipeId = recipeId, steps = steps
         )
-
 
         # search ingredientId based on their names in db
         for ingreInfo in ingredientList:
