@@ -2,4 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd front-end
-/Users/ericwhite/.nvm/versions/node/v16.10.0/bin/yarn pretty-quick --staged
+yarn pretty-quick --staged
