@@ -124,13 +124,8 @@ def recipe_update_remaining_info_at_creation(db_engine):
                 recipeId = recipeId, step = step
             )
         
-        # TODO: check if it is an existing noResultsIngredientSets
+        # TODO: check if it is an existing noResultsIngredientSets to decrement
         # In sprint3
-        '''
-        ^ not quite sure what this is for? NoResultsIngredientSets should be updated in search.
-        information pulled from NoResultsIngredientSets is only used when we are providing ingredient set suggestions 
-        for the contributor, which shouldn't be in this route that inserts recipes?
-        '''
 
     return {
         'status': True,
