@@ -3,29 +3,29 @@ import {
   Select,
   InputNumber,
   Form,
-  Space,
   Button,
   Input,
   Typography,
-  TimePicker,
   Slider,
   Row,
   Col,
   AutoComplete,
+  message,
 } from 'antd';
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { React, useState } from 'react';
 import './index.scss';
 import UploadPicture from '../upload/UploadPicture';
+import { getRidOfEmoji } from '@/utils/utils';
 const { Text } = Typography;
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
 
+// Transform the format of data to what backend want
 function processContributeVal(value) {
   value.instructions = value.instructions.map((obj) => obj['step']);
   value.token = localStorage.getItem('token');
-  console.log(value);
 }
 
 /**
@@ -49,14 +49,50 @@ const Contributor = (props) => {
       label: <strong>200min</strong>,
     },
   };
-  const { ingredients = [] } = props;
+  const { ingredients = [], onOk } = props;
   const [sliderInputValue, setSliderInputValue] = useState(1);
+
+  // Control the uploader
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState();
+
   const [recipeId, setRecipeId] = useState(-1);
+  const [form] = Form.useForm();
+
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  };
+
   const onSliderChange = (newValue) => {
     setSliderInputValue(newValue);
   };
 
-  const onFinish = (values) => {
+  const onUploadChange = (info) => {
+    console.log('here');
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+      console.log(info);
+      return;
+    }
+
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      setRecipeId(info.file.response.value);
+      getBase64(info.file.originFileObj, (url) => {
+        setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
+
+  const onFormFinish = (values) => {
+    // Get rid of emoji in the recipe names
+    values.ingredients.map(
+      (element) => (element.name = getRidOfEmoji(element.name))
+    );
+
     if (recipeId !== -1) {
       values.recipeId = recipeId;
       processContributeVal(values);
@@ -71,9 +107,14 @@ const Contributor = (props) => {
           return v.json();
         })
         .then((data) => {
-          console.log(data);
+          message.success(data.msg);
+          onOk();
+          form.resetFields();
+          setImageUrl();
         })
         .catch((e) => console.log(e));
+    } else {
+      message.error('Please upload images!');
     }
   };
 
@@ -89,13 +130,15 @@ const Contributor = (props) => {
     <Card>
       <Form
         name="dynamic_form_nest_item"
-        onFinish={onFinish}
+        onFinish={onFormFinish}
         autoComplete="off"
+        form={form}
       >
-        <Form.Item>
-          <UploadPicture 
-            setRecipeId={setRecipeId} 
-            
+        <Form.Item required={true}>
+          <UploadPicture
+            onChange={onUploadChange}
+            loading={loading}
+            imageUrl={imageUrl}
           />
         </Form.Item>
 
@@ -105,10 +148,12 @@ const Contributor = (props) => {
         <Form.Item
           name="recipeName"
           label="Recipe name"
-          rules={[{ 
-            required: true,
-            message: "Input required"
-          }]}
+          rules={[
+            {
+              required: true,
+              message: 'Input required',
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -117,10 +162,12 @@ const Contributor = (props) => {
             <Form.Item
               name="cookTime"
               label="Cook time"
-              rules={[{ 
-                required: true,
-                message: 'Input required' 
-              }]}
+              rules={[
+                {
+                  required: true,
+                  message: 'Input required',
+                },
+              ]}
             >
               <Slider
                 min={1}
@@ -137,21 +184,23 @@ const Contributor = (props) => {
         <Form.Item
           name="mealType"
           label="Meal type"
-          rules={[{ 
-            required: true,
-            message: "Input required" 
-          }]}
+          rules={[
+            {
+              required: true,
+              message: 'Input required',
+            },
+          ]}
         >
           <Select placeholder="please select" size="big" bordered={'false'}>
-            <Option value={'breakfast'}>Breakfast</Option>
-            <Option value={'lunch'}>Lunch</Option>
-            <Option value={'dinner'}>Dinner</Option>
-            <Option value={'supper'}>Lunch</Option>
-            <Option value={'dessert'}>Dessert</Option>
-            <Option value={'snack'}>Snack</Option>
-            <Option value={'entry'}>Entry</Option>
-            <Option value={'main'}>Main</Option>
-            <Option value={'tea'}>Tea</Option>
+            <Option value={'Breakfast'}>Breakfast</Option>
+            <Option value={'Lunch'}>Lunch</Option>
+            <Option value={'Dinner'}>Dinner</Option>
+            <Option value={'Supper'}>Lunch</Option>
+            <Option value={'Dessert'}>Dessert</Option>
+            <Option value={'Snack'}>Snack</Option>
+            <Option value={'Entry'}>Entry</Option>
+            <Option value={'Main'}>Main</Option>
+            <Option value={'Tea'}>Tea</Option>
           </Select>
         </Form.Item>
         <Card>
@@ -192,7 +241,7 @@ const Contributor = (props) => {
                     <Form.Item
                       {...restField}
                       style={{ flexGrow: 2 }}
-                      name={[name, 'ingredients']}
+                      name={[name, 'name']}
                       rules={[
                         {
                           required: true,
@@ -205,7 +254,7 @@ const Contributor = (props) => {
                         dropdownClassName="certain-category-search-dropdown"
                         options={Object.entries(ingredients)
                           .sort((a, b) => a[0] > b[0])
-                          .map(([key, values]) => (
+                          .map(([_key, values]) => (
                             <OptGroup label={key}>
                               {values.map((value) => (
                                 <Option value={value}>{value}</Option>
@@ -299,17 +348,7 @@ const Contributor = (props) => {
             {(fields, { add, remove }) => (
               <div>
                 {fields.map(({ key, name, ...restField }) => (
-                  <div
-                    key={key}
-                    style={{
-                      display: 'flex',
-                      columnGap: '20px',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                    }}
-                    className="row-container"
-                  >
+                  <div key={key} className="row-container">
                     <Text>Step {name + 1}</Text>
                     <Form.Item
                       {...restField}

@@ -1,5 +1,8 @@
 -- use this file to reset database schema
-drop table if exists AccountSessions, Accounts, RecipeIngredients, Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
+drop table if exists AccountSessions, Accounts, RecipeIngredients, RecipeSteps, 
+    Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
+
+drop view if exists IngredientsMatched;
 
 create table Accounts (
     accountId       serial primary key,
@@ -46,12 +49,11 @@ create table IngredientSets (
 create table Recipes (
     recipeId        serial primary key,
     recipeName      text,
-    mealType        text, -- do we want contributors to require a mealType input
+    mealType        text, 
     cookTime        int, -- in minutes
     likes           int default 0,
     accountId       bigint unsigned,
     thumbnailPath   text not null,
-    steps           varchar(1024), -- a string about how to cook the recipe
     foreign key (accountId) references Accounts(accountId)
 );
 
@@ -63,6 +65,13 @@ create table RecipeIngredients (
     primary key     (recipeId, ingredientId),
     foreign key (recipeId) references Recipes(recipeId),
     foreign key (ingredientId) references Ingredients(ingredientId)
+);
+
+create table RecipeSteps (
+    stepId          serial primary key,
+    recipeId        bigint unsigned not null,
+    step            text,
+    foreign key (recipeId) references Recipes(recipeId)
 );
 
 insert into Categories (categoryName) values ('Vegetables');

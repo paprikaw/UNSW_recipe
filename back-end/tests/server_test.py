@@ -7,7 +7,7 @@ from common import url, reset_server, getRecipeData1
 def test_homepage():
     reset_server()
 
-    response = requests.get(url).json()
+    response = requests.get(url + 'category').json()
 
     assert 'Vegetables' in response
     assert 'Fruits' in response
@@ -20,7 +20,7 @@ def test_homepage():
     assert 'Fats and Oils' in response
     assert 'Condiments and Dressings' in response
 
-def test_homepage_ingredients_sorted_by_num_uses():
+def test_category_ingredients_sorted_by_num_uses():
     reset_server()
 
     requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
@@ -33,7 +33,7 @@ def test_homepage_ingredients_sorted_by_num_uses():
 
     requests.post(url + 'update-recipe-info', json=recipeData1)
 
-    response = requests.get(url).json()
+    response = requests.get(url + 'category').json()
     assert response['Meat and Fish'][0] == "🐮 Ground Beef"
     assert response['Baking Products'][0] == "🌾 White Flour"
     assert response['Herbs, Seasonings and Spices'][0] == "🧂 Salt" 
