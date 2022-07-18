@@ -23,7 +23,7 @@ const Register = () => {
       values.password,
       '$2a$10$CwTycUXWue0Thq9StjUM0u'
     );
-    fetch('http://localhost:8080/signup', {
+    fetch('/signup', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',

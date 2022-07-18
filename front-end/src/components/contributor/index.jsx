@@ -7,27 +7,163 @@ import {
   Button,
   Input,
   Typography,
+  TimePicker,
+  Slider,
+  Row,
+  Col,
+  message,
 } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import React from 'react';
-import './index.scss';
 
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { React, useState } from 'react';
+import './index.scss';
+import UploadPicture from '../upload/UploadPicture';
+import { getRidOfEmoji } from '@/utils/utils';
 const { Text } = Typography;
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
+
+// Transform the format of data to what backend want
+function processContributeVal(value) {
+  value.instructions = value.instructions.map((obj) => obj['step']);
+  value.token = localStorage.getItem('token');
+}
+
+/**
+ * Component for contributor page
+ *
+ * @component
+ * @example
+ * const ingredients = ['apple', 'pear']
+ * return (
+ *   <Contributor ingredients={ingredients} />
+ * )
+ */
 const Contributor = (props) => {
-  const { ingredients } = props;
-  const onFinish = (values) => {
-    console.log('Received values of form:', values);
+  //set value for the slider bar
+  const marks = {
+    0: '0min',
+    200: {
+      style: {
+        color: '#f50',
+      },
+      label: <strong>200min</strong>,
+    },
   };
+  const { ingredients = [] } = props;
+  const [sliderInputValue, setSliderInputValue] = useState(1);
+  const [recipeId, setRecipeId] = useState(-1);
+
+  const onSliderChange = (newValue) => {
+    setSliderInputValue(newValue);
+  };
+
+  const onFormFinish = (values) => {
+    // Get rid of emoji in the recipe names
+    values.ingredients.map(
+      (element) => (element.name = getRidOfEmoji(element.name))
+    );
+
+    if (recipeId !== -1) {
+      values.recipeId = recipeId;
+      processContributeVal(values);
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      };
+
+      fetch('/update-recipe-info', requestOptions)
+        .then((v) => {
+          return v.json();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((e) => console.log(e));
+    } else {
+      message.error('Please upload images!');
+    }
+  };
+
+  const onUploadFinish = (rid) => {
+    setRecipeId(rid);
+  };
+
   return (
     <Card>
       <Form
         name="dynamic_form_nest_item"
-        onFinish={onFinish}
+        onFinish={onFormFinish}
         autoComplete="off"
       >
+        <Form.Item required={true}>
+          <UploadPicture onFinish={onUploadFinish} />
+        </Form.Item>
+
+        <br />
+        <br />
+
+        <Form.Item
+          name="recipeName"
+          label="Recipe name"
+          rules={[
+            {
+              required: true,
+              message: 'Input required',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Row>
+          <Col span={18}>
+            <Form.Item
+              name="cookTime"
+              label="Cook time"
+              rules={[
+                {
+                  required: true,
+                  message: 'Input required',
+                },
+              ]}
+            >
+              <Slider
+                min={1}
+                max={200}
+                marks={marks}
+                onChange={onSliderChange}
+                value={
+                  typeof sliderInputValue === 'number' ? sliderInputValue : 0
+                }
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item
+          name="mealType"
+          label="Meal type"
+          rules={[
+            {
+              required: true,
+              message: 'Input required',
+            },
+          ]}
+        >
+          <Select placeholder="please select" size="big" bordered={'false'}>
+            <Option value={'Breakfast'}>Breakfast</Option>
+            <Option value={'Lunch'}>Lunch</Option>
+            <Option value={'Dinner'}>Dinner</Option>
+            <Option value={'Supper'}>Lunch</Option>
+            <Option value={'Dessert'}>Dessert</Option>
+            <Option value={'Snack'}>Snack</Option>
+            <Option value={'Entry'}>Entry</Option>
+            <Option value={'Main'}>Main</Option>
+            <Option value={'Tea'}>Tea</Option>
+          </Select>
+        </Form.Item>
         <Card>
+          <h2>Add ingredients</h2>
           <Form.List name="ingredients">
             {(fields, { add, remove }) => (
               <div>
@@ -39,7 +175,7 @@ const Contributor = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Missing ingredient quantity',
+                          message: 'Input required',
                         },
                       ]}
                     >
@@ -53,7 +189,13 @@ const Contributor = (props) => {
                     <Form.Item
                       {...restField}
                       style={{ flexGrow: 2 }}
-                      name={[name, 'ingredients']}
+                      name={[name, 'name']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Input required',
+                        },
+                      ]}
                     >
                       <Select placeholder="Ingredients">
                         {Object.entries(ingredients)
@@ -73,7 +215,7 @@ const Contributor = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Missing last name',
+                          message: 'Input required',
                         },
                       ]}
                       style={{ flexGrow: 1 }}
@@ -127,29 +269,20 @@ const Contributor = (props) => {
         </Card>
         <br />
         <Card>
+          <h2>Add instructions</h2>
           <Form.List name="instructions">
             {(fields, { add, remove }) => (
               <div>
                 {fields.map(({ key, name, ...restField }) => (
-                  <div
-                    key={key}
-                    style={{
-                      display: 'flex',
-                      columnGap: '20px',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                    }}
-                    className="row-container"
-                  >
-                    <Text>Step {key + 1}</Text>
+                  <div key={key} className="row-container">
+                    <Text>Step {name + 1}</Text>
                     <Form.Item
                       {...restField}
-                      name={[name, 'quantity']}
+                      name={[name, 'step']}
                       rules={[
                         {
                           required: true,
-                          message: 'Step needs',
+                          message: 'Please fill in the form',
                         },
                       ]}
                       style={{ flexGrow: 1 }}
@@ -172,12 +305,15 @@ const Contributor = (props) => {
               </div>
             )}
           </Form.List>
-          <Form.Item>
+        </Card>
+        <br />
+        <Form.Item>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
-          </Form.Item>
-        </Card>
+          </div>
+        </Form.Item>
       </Form>
     </Card>
   );

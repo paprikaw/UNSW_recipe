@@ -10,27 +10,17 @@ import {
   Avatar,
   Dropdown,
   Menu,
-  Space,
   Input,
-  Upload,
 } from 'antd';
-import {
-  UserOutlined,
-  DownOutlined,
-  SmileOutlined,
-  AudioOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, AudioOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
 import { React, useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './index.scss';
-import UploadPicture from '@/components/upload/UploadPicture';
+import { getRidOfEmoji } from '@/utils/utils';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
-const { Search } = Input;
 const suffix = (
   <AudioOutlined
     style={{
@@ -47,11 +37,12 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
+  const [categoryList, setCategoryList] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('http://localhost:8080/', {
+    fetch('/category', {
       method: 'GET',
     })
       .then((v) => {
@@ -60,7 +51,6 @@ const Home = () => {
       .then((data) => {
         setIngredients(data);
         setIsLoading(false);
-        console.log(data);
       })
       .catch((e) => console.log(e));
   }, []);
@@ -70,8 +60,26 @@ const Home = () => {
   //   navigate('/contribute');
   // }
 
+  const onCategoryChange = (list) => {
+    setCategoryList(list);
+  };
+
+  const handleSearch = async (list) => {
+    const response = await fetch('/search', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        ingredients: list.map((name) => getRidOfEmoji(name)),
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
   const handleLogout = async () => {
-    const response = await fetch('http://localhost:8080/logout', {
+    const response = await fetch('/logout', {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',
@@ -103,7 +111,7 @@ const Home = () => {
           label: (
             // <Link to={'../'}>Log out</Link>
             <Button
-              style={{ zIndex: 2, margin: 20 }}
+              style={{ zIndex: 2 }}
               onClick={() => setIsLogoutModalVisible(true)}
             >
               Logout
@@ -133,7 +141,7 @@ const Home = () => {
           >
             Contribute
           </Button>
-          <Dropdown overlay={menu} placement="bottom">
+          <Dropdown overlay={menu} placement="bottom" arrow>
             <Avatar size="large" icon={<UserOutlined />} />
           </Dropdown>
         </Header>
@@ -158,8 +166,15 @@ const Home = () => {
                   <Spin />
                 </div>
               ) : (
-                <Category data={ingredients} />
+                <Category data={ingredients} onChange={onCategoryChange} />
               )}
+              <Button
+                type="primary"
+                shape="round"
+                onClick={(_event) => handleSearch(categoryList)}
+              >
+                Search
+              </Button>
             </div>
           </Sider>
           <Content
@@ -181,11 +196,11 @@ const Home = () => {
         title="Contribute my recipe"
         visible={isContriModalVisible}
         onCancel={() => setIsContriModalVisible(false)}
+        footer={null}
         transitionName=""
+        width={800}
       >
-        <div></div>
         <div>
-          <UploadPicture />
           <Contributor ingredients={ingredients} />
         </div>
       </Modal>

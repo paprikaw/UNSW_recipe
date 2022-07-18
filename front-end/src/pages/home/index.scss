@@ -1,19 +1,24 @@
 .home-sider-childrens {
-    padding-left: 10px;
-    padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  button {
+    margin: 0 auto;
+    display: block;
+  }
 }
 
 .home-nav-bar {
-    background-color: #fff23f;
+  background-color: #fff23f;
 }
- .spin {
-    margin: 20px 0;
-    margin-bottom: 20px;
-    padding: 30px 50px;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
-  }
-  .logout {
-    float: right;
-  }
+.spin {
+  margin: 20px 0;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+.logout {
+  float: right;
+}

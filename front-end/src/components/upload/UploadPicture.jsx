@@ -24,18 +24,21 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-const UploadPicture = () => {
+const UploadPicture = (props) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+  const { onFinish } = props;
 
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {
       setLoading(true);
+      console.log(info);
       return;
     }
 
     if (info.file.status === 'done') {
       // Get this url from response in real world.
+      onFinish(info.file.response.value);
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
@@ -62,7 +65,7 @@ const UploadPicture = () => {
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
-      action="http://127.0.0.1:8080/upload-thumbnail"
+      action="/upload-thumbnail"
       beforeUpload={beforeUpload}
       onChange={handleChange}
     >
