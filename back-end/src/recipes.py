@@ -1,4 +1,3 @@
-from curses import meta
 import os
 from flask import request
 from sqlalchemy import text
@@ -59,9 +58,6 @@ def recipe_update_remaining_info_at_creation(db_engine):
     token = recipeInfo['token']
     ingredientList = recipeInfo['ingredients']
 
-    print(token)
-    print(recipeInfo)
-
     if (type(recipeName) != str):
         return {
             'status': False,
@@ -83,7 +79,6 @@ def recipe_update_remaining_info_at_creation(db_engine):
         ).fetchone()[0]
 
 
-        print(accountId)
         # filling up remaining columns in Recipes table
         con.execute(
 
