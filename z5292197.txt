@@ -28,3 +28,4 @@ Week 5
 3. Build a basic home page
 4. front end is ready to go for demo 1 presentation
 5. Add git hook for prettier
+Week 7
