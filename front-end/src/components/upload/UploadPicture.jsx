@@ -27,7 +27,7 @@ const beforeUpload = (file) => {
 const UploadPicture = (props) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
-  const { setRecipeId } = props;
+  const { onFinish } = props;
 
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {
@@ -38,7 +38,7 @@ const UploadPicture = (props) => {
 
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      setRecipeId(info.file.response.value);
+      onFinish(info.file.response.value);
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);

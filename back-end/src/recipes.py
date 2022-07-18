@@ -1,3 +1,4 @@
+from curses import meta
 import os
 from flask import request
 from sqlalchemy import text
@@ -49,7 +50,7 @@ def verifyFileDuplicateName(filename):
 
 def recipe_update_remaining_info_at_creation(db_engine):
     MEAL_TYPE = {"Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entry", "Main","Tea"}
-    
+
     recipeInfo = request.get_json()
     recipeId = recipeInfo['recipeId']
     recipeName = recipeInfo['recipeName']
@@ -58,15 +59,34 @@ def recipe_update_remaining_info_at_creation(db_engine):
     token = recipeInfo['token']
     ingredientList = recipeInfo['ingredients']
 
-    if (type(recipeName) != str or mealType not in MEAL_TYPE):
+    print(token)
+    print(recipeInfo)
+
+    if (type(recipeName) != str):
         return {
             'status': False,
-            'msg': 'Data type not supported'
+            'msg': 'Recipe should be string'
+        }
+
+    if (mealType not in MEAL_TYPE):
+        return {
+            'status': False,
+            'msg': 'Meal type is not right'
         }
 
     with db_engine.connect() as con:
+
+        # Get account Id
+        accountId = con.execute(
+            text('select accountId from AccountSessions where token = :userToken'),
+            userToken = token
+        ).fetchone()[0]
+
+
+        print(accountId)
         # filling up remaining columns in Recipes table
         con.execute(
+
             text('''
                 update Recipes
                 set recipeName = :recipeName , mealType = :mealType, cookTime = :cookTime, accountId = :accountId
@@ -76,6 +96,8 @@ def recipe_update_remaining_info_at_creation(db_engine):
             recipeName = recipeName, mealType = mealType, cookTime = cookTime, 
             accountId = accountId, recipeId = recipeId
         )
+
+
         # search ingredientId based on their names in db
         ingredientIdSet = []
         for ingreInfo in ingredientList:
@@ -123,7 +145,6 @@ def search(db_engine):
 
         for i in ingredients:
             ingredientIds.append(i[0])
-
         # create view based on ingredients matched
         con.execute(
             text('''

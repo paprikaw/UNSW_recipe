@@ -1,13 +1,13 @@
-import { React, useState, useEffect } from "react";
-import { Select, Typography } from "antd";
-import CollapseBox from "./collapseBox";
-import "./index.scss";
+import { React, useState, useEffect } from 'react';
+import { Select, Typography } from 'antd';
+import CollapseBox from './collapseBox';
+import './index.scss';
 
 const { Title } = Typography;
 
 const Category = (props) => {
   const { Option } = Select;
-  const { data } = props;
+  const { data, onChange } = props;
   const children = [];
   const iniState = {};
   for (const key in data) {
@@ -27,11 +27,11 @@ const Category = (props) => {
   };
 
   useEffect(() => {
-    setOpStateList(
-      Object.entries(opState)
-        .filter(([key, value]) => value)
-        .map(([key, value]) => key)
-    );
+    const list = Object.entries(opState)
+      .filter(([_key, value]) => value)
+      .map(([key, _value]) => key);
+    setOpStateList(list);
+    onChange(list);
   }, [opState]);
 
   return (
@@ -39,7 +39,7 @@ const Category = (props) => {
       <Select
         mode="multiple"
         allowClear
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         placeholder="Please select"
         onChange={handleOnChange}
         value={opStateList}
