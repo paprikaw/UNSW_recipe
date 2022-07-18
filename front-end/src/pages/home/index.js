@@ -41,6 +41,10 @@ const Home = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
+  const handleContirbuteOk = () => {
+    setIsContriModalVisible(false);
+  };
+
   useEffect(() => {
     fetch('/category', {
       method: 'GET',
@@ -201,7 +205,7 @@ const Home = () => {
         width={800}
       >
         <div>
-          <Contributor ingredients={ingredients} />
+          <Contributor ingredients={ingredients} onOk={handleContirbuteOk} />
         </div>
       </Modal>
     </>

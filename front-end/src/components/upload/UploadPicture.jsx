@@ -1,15 +1,13 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
-import React, { useState } from 'react';
-
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
+import React from 'react';
 
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  const isJpgOrPng =
+    file.type === 'image/jpeg' ||
+    file.type === 'image/png' ||
+    file.type === 'image.jpg' ||
+    file.type === 'image.gif';
 
   if (!isJpgOrPng) {
     message.error('You can only upload JPG/PNG file!');
@@ -25,26 +23,7 @@ const beforeUpload = (file) => {
 };
 
 const UploadPicture = (props) => {
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState();
-  const { onFinish } = props;
-
-  const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      console.log(info);
-      return;
-    }
-
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      onFinish(info.file.response.value);
-      getBase64(info.file.originFileObj, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
-  };
+  const { onChange, loading, imageUrl } = props;
 
   const uploadButton = (
     <div>
@@ -67,7 +46,7 @@ const UploadPicture = (props) => {
       showUploadList={false}
       action="/upload-thumbnail"
       beforeUpload={beforeUpload}
-      onChange={handleChange}
+      onChange={onChange}
     >
       {imageUrl ? (
         <img

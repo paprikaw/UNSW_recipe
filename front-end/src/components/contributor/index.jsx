@@ -3,11 +3,9 @@ import {
   Select,
   InputNumber,
   Form,
-  Space,
   Button,
   Input,
   Typography,
-  TimePicker,
   Slider,
   Row,
   Col,
@@ -50,12 +48,42 @@ const Contributor = (props) => {
       label: <strong>200min</strong>,
     },
   };
-  const { ingredients = [] } = props;
+  const { ingredients = [], onOk } = props;
   const [sliderInputValue, setSliderInputValue] = useState(1);
+
+  // Control the uploader
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState();
+
   const [recipeId, setRecipeId] = useState(-1);
+  const [form] = Form.useForm();
+
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  };
 
   const onSliderChange = (newValue) => {
     setSliderInputValue(newValue);
+  };
+
+  const onUploadChange = (info) => {
+    console.log('here');
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+      console.log(info);
+      return;
+    }
+
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      setRecipeId(info.file.response.value);
+      getBase64(info.file.originFileObj, (url) => {
+        setLoading(false);
+        setImageUrl(url);
+      });
+    }
   };
 
   const onFormFinish = (values) => {
@@ -78,16 +106,15 @@ const Contributor = (props) => {
           return v.json();
         })
         .then((data) => {
-          console.log(data);
+          message.success(data.msg);
+          onOk();
+          form.resetFields();
+          setImageUrl();
         })
         .catch((e) => console.log(e));
     } else {
       message.error('Please upload images!');
     }
-  };
-
-  const onUploadFinish = (rid) => {
-    setRecipeId(rid);
   };
 
   return (
@@ -96,9 +123,14 @@ const Contributor = (props) => {
         name="dynamic_form_nest_item"
         onFinish={onFormFinish}
         autoComplete="off"
+        form={form}
       >
         <Form.Item required={true}>
-          <UploadPicture onFinish={onUploadFinish} />
+          <UploadPicture
+            onChange={onUploadChange}
+            loading={loading}
+            imageUrl={imageUrl}
+          />
         </Form.Item>
 
         <br />
@@ -200,7 +232,7 @@ const Contributor = (props) => {
                       <Select placeholder="Ingredients">
                         {Object.entries(ingredients)
                           .sort((a, b) => a[0] > b[0])
-                          .map(([key, values]) => (
+                          .map(([_key, values]) => (
                             <OptGroup label={key}>
                               {values.map((value) => (
                                 <Option value={value}>{value}</Option>
