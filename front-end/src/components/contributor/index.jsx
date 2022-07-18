@@ -9,6 +9,7 @@ import {
   Slider,
   Row,
   Col,
+  AutoComplete,
   message,
 } from 'antd';
 
@@ -117,6 +118,14 @@ const Contributor = (props) => {
     }
   };
 
+  //create options for the autocomplete of input of the ingredients
+  // const options = [
+  //   {
+  //     label:
+  //     options: []
+  //   }
+  // ]
+
   return (
     <Card>
       <Form
@@ -196,7 +205,18 @@ const Contributor = (props) => {
         </Form.Item>
         <Card>
           <h2>Add ingredients</h2>
-          <Form.List name="ingredients">
+          <Form.List
+            name="ingredients"
+            rules={[
+              {
+                validator: async (_, ingredients) => {
+                  if (!ingredients || ingredients.length < 2) {
+                    return Promise.reject(new Error('At least 2 ingredients'));
+                  }
+                },
+              },
+            ]}
+          >
             {(fields, { add, remove }) => (
               <div>
                 {fields.map(({ key, name, ...restField }) => (
