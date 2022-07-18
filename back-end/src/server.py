@@ -96,5 +96,9 @@ def update_recipe_info():
 def search():
     return recipes.search(db_engine)
 
+@app.route("/details", methods={'GET'})
+def details():
+    return recipes.details(db_engine)
+
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)

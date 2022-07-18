@@ -30,7 +30,8 @@ def getRecipeData1(recipeId, accountId):
                 "quantity": 3,
                 "unit": "g"
             }
-        ]
+        ],
+        "steps": ['1. Fry ground beef.', '2. Add salt', '3. Add flour']
     }
 
 def getRecipeData2(recipeId, accountId):
@@ -51,5 +52,6 @@ def getRecipeData2(recipeId, accountId):
                 "quantity": 100,
                 "unit": "g"
             }
-        ]
+        ],
+        "steps": ['1. Fry ground beef.', '2. Add flour']
     }
