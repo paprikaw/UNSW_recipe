@@ -35,3 +35,11 @@ Week 5
 Week 6
 - Wrote up and submitted retro report through email and webCMS
 - Discussed with team how to proceed for Sprint 2 for contributor and search functions
+
+Week 7
+- finished recipe search route on the backend
+- reviewed other team member's implementations of contributor route on backend and frontend, provided feedback for what could be fixed and improved on in a team meeting (we should use tokens not account ids, clarified what meal types we need, ui fixes)
+- our team is aiming to finish all contributor functionalities and recipe search on the frontend by monday week 8
+
+Week 8
+ - completed full recipe details route on the backend. encountered some logic errors and bugs in the recipe update route and fixed them.
