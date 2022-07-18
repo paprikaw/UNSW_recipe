@@ -139,8 +139,15 @@ def recipe_update_remaining_info_at_creation(db_engine):
 
 def search(db_engine):
     recipes = []
+    recipesResult = {
+        'recipes': recipes
+    }
 
     ingredientNames = request.get_json()['ingredients']
+
+    if len(ingredientNames) == 0:
+        return recipesResult
+
     with db_engine.connect() as con:
         ingredientIds = []
         # get ingredient ids from running list
@@ -151,6 +158,10 @@ def search(db_engine):
 
         for i in ingredients:
             ingredientIds.append(i[0])
+
+        if len(ingredientIds) == 0:
+            return recipesResult
+
         # create view based on ingredients matched
         con.execute(
             text('''
@@ -189,9 +200,7 @@ def search(db_engine):
         # set exists, increment hits
         # set does not exist, insert new set
 
-    return {
-        'recipes': recipes
-    }
+    return recipesResult
     
 def details(db_engine):
     recipe = {'recipe': {}}
