@@ -124,8 +124,8 @@ def recipe_update_remaining_info_at_creation(db_engine):
                 recipeId = recipeId, step = step
             )
         
-        # TODO: check if it is an existing noResultsIngredientSets to decrement
-        # In sprint3
+        # TODO: sprint 3, check if it is an existing NoResultsIngredientSets
+        # if it is, remove entries from the table
 
     return {
         'status': True,
