@@ -229,11 +229,11 @@ const Contributor = (props) => {
                         },
                       ]}
                     >
-                      <Select placeholder="Ingredients">
+                      <Select placeholder="Ingredients" showSearch>
                         {Object.entries(ingredients)
                           .sort((a, b) => a[0] > b[0])
                           .map(([_key, values]) => (
-                            <OptGroup label={key}>
+                            <OptGroup label={_key}>
                               {values.map((value) => (
                                 <Option value={value}>{value}</Option>
                               ))}
