@@ -11,6 +11,7 @@ import {
   Slider,
   Row,
   Col,
+  AutoComplete,
 } from 'antd';
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -76,6 +77,14 @@ const Contributor = (props) => {
     }
   };
 
+  //create options for the autocomplete of input of the ingredients
+  // const options = [
+  //   {
+  //     label: 
+  //     options: []
+  //   }
+  // ]
+
   return (
     <Card>
       <Form
@@ -83,8 +92,11 @@ const Contributor = (props) => {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item required={true}>
-          <UploadPicture setRecipeId={setRecipeId} />
+        <Form.Item>
+          <UploadPicture 
+            setRecipeId={setRecipeId} 
+            
+          />
         </Form.Item>
 
         <br />
@@ -144,7 +156,18 @@ const Contributor = (props) => {
         </Form.Item>
         <Card>
           <h2>Add ingredients</h2>
-          <Form.List name="ingredients">
+          <Form.List 
+            name="ingredients"
+            rules={[
+              {
+                validator: async (_, ingredients) => {
+                  if (!ingredients || ingredients.length < 2) {
+                    return Promise.reject(new Error('At least 2 ingredients'));
+                  }
+                },
+              },
+            ]}
+          >
             {(fields, { add, remove }) => (
               <div>
                 {fields.map(({ key, name, ...restField }) => (
@@ -177,8 +200,10 @@ const Contributor = (props) => {
                         },
                       ]}
                     >
-                      <Select placeholder="Ingredients">
-                        {Object.entries(ingredients)
+                      <AutoComplete 
+                        placeholder="Ingredients"
+                        dropdownClassName="certain-category-search-dropdown"
+                        options={Object.entries(ingredients)
                           .sort((a, b) => a[0] > b[0])
                           .map(([key, values]) => (
                             <OptGroup label={key}>
@@ -187,7 +212,27 @@ const Contributor = (props) => {
                               ))}
                             </OptGroup>
                           ))}
-                      </Select>
+                      >
+                        {/* {Object.entries(ingredients)
+                          .sort((a, b) => a[0] > b[0])
+                          .map(([key, values]) => (
+                            <OptGroup label={key}>
+                              {values.map((value) => (
+                                <Option value={value}>{value}</Option>
+                              ))}
+                            </OptGroup>
+                          ))} */}
+                      </AutoComplete>
+                      {/* <AutoComplete
+                        dropdownClassName="certain-category-search-dropdown"
+                        dropdownMatchSelectWidth={600}
+                        style={{
+                          width: 250,
+                        }}
+                        // options={options}
+                      >
+                        <Input.Search size="medium" placeholder="input here" />
+                      </AutoComplete> */}
                     </Form.Item>
                     <Form.Item
                       {...restField}
