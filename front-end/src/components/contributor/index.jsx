@@ -107,7 +107,12 @@ const Contributor = (props) => {
         <Form.Item
           name="recipeName"
           label="Recipe name"
-          rules={[{ required: true }]}
+          rules={[
+            {
+              required: true,
+              message: 'Input required',
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -116,7 +121,12 @@ const Contributor = (props) => {
             <Form.Item
               name="cookTime"
               label="Cook time"
-              rules={[{ required: true }]}
+              rules={[
+                {
+                  required: true,
+                  message: 'Input required',
+                },
+              ]}
             >
               <Slider
                 min={1}
@@ -133,7 +143,12 @@ const Contributor = (props) => {
         <Form.Item
           name="mealType"
           label="Meal type"
-          rules={[{ required: true }]}
+          rules={[
+            {
+              required: true,
+              message: 'Input required',
+            },
+          ]}
         >
           <Select placeholder="please select" size="big" bordered={'false'}>
             <Option value={'Breakfast'}>Breakfast</Option>
@@ -160,7 +175,7 @@ const Contributor = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Missing ingredient quantity',
+                          message: 'Input required',
                         },
                       ]}
                     >
@@ -175,6 +190,12 @@ const Contributor = (props) => {
                       {...restField}
                       style={{ flexGrow: 2 }}
                       name={[name, 'name']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Input required',
+                        },
+                      ]}
                     >
                       <Select placeholder="Ingredients">
                         {Object.entries(ingredients)
@@ -194,7 +215,7 @@ const Contributor = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Missing last name',
+                          message: 'Input required',
                         },
                       ]}
                       style={{ flexGrow: 1 }}
@@ -254,14 +275,14 @@ const Contributor = (props) => {
               <div>
                 {fields.map(({ key, name, ...restField }) => (
                   <div key={key} className="row-container">
-                    <Text>Step {key + 1}</Text>
+                    <Text>Step {name + 1}</Text>
                     <Form.Item
                       {...restField}
                       name={[name, 'step']}
                       rules={[
                         {
                           required: true,
-                          message: 'Step needs',
+                          message: 'Please fill in the form',
                         },
                       ]}
                       style={{ flexGrow: 1 }}
