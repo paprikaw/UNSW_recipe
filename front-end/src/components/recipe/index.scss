@@ -1,0 +1,62 @@
+.recipe-thumbnail {
+  .ant-card-body {
+    padding: 0;
+    line-height: normal;
+  }
+}
+
+.thumbnail-header-box {
+  margin-top: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .header {
+    min-width: 0;
+    font-size: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .likes {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+}
+
+.thumbnail-content {
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+
+  .line {
+    display: flex;
+    align-items: center;
+
+    .description {
+      margin-left: 5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+}
+
+.thumbnail-mealtype {
+  margin-left: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
+
+// .user_recipe_info {
+//   padding-bottom: 20px;
+// }
+
+.small_card {
+  width: 600px;
+}

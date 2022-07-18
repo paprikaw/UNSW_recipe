@@ -68,7 +68,7 @@ const Thumbnail = (props) => {
           <Text>{recipeName}</Text>
         </div>
         <div className="likes">
-          <Text>{likes} likes</Text>
+          <Text>{likes} 👍</Text>
         </div>
       </div>
 

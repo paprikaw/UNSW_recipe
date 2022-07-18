@@ -11,6 +11,7 @@ import {
   Dropdown,
   Menu,
   Input,
+  Drawer,
 } from 'antd';
 import { UserOutlined, AudioOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
@@ -18,6 +19,7 @@ import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
 import { getRidOfEmoji } from '@/utils/utils';
+import Recipe from '@/components/recipe';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
@@ -33,11 +35,16 @@ const suffix = (
 const onSearch = (value) => console.log(value);
 
 const Home = () => {
+  // left hand, ingredients menu set up
   const [ingredients, setIngredients] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
+  // right hand, recipe detail page set up
+  const [visible, setVisible] = useState(false);
+  const [childrenDrawer, setChildrenDrawer] = useState(false);
+  // page navigate and account info
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -64,9 +71,24 @@ const Home = () => {
   //   navigate('/contribute');
   // }
 
+  // recipe detail funcs
   const onCategoryChange = (list) => {
     setCategoryList(list);
   };
+  const showDrawer = () => {
+    setVisible(true);
+  };
+  const onClose = () => {
+    setVisible(false);
+  };
+  const showChildrenDrawer = () => {
+    setChildrenDrawer(true);
+  };
+  const onChildrenDrawerClose = () => {
+    setChildrenDrawer(false);
+  };
+  // a func of call recipe_detail route when click tiles  needed.
+  const onCheckRecipeDetail = () => {};
 
   const handleSearch = async (list) => {
     const response = await fetch('/search', {
@@ -185,7 +207,11 @@ const Home = () => {
             style={{
               marginLeft: 300,
             }}
-          ></Content>
+          >
+            <Button type="primary" onClick={showDrawer}>
+              Recipe tiles Button
+            </Button>
+          </Content>
         </Layout>
       </Layout>
       <Modal
@@ -208,6 +234,29 @@ const Home = () => {
           <Contributor ingredients={ingredients} onOk={handleContirbuteOk} />
         </div>
       </Modal>
+      <Drawer
+        title="Recipe detail page"
+        width={520}
+        closable={false}
+        onClose={onClose}
+        visible={visible}
+      >
+        <div>
+          <Recipe />
+        </div>
+        <Button type="primary" onClick={showChildrenDrawer}>
+          Go for detail instructions →
+        </Button>
+        <Drawer
+          title="Recipe detail instruction"
+          width={320}
+          closable={false}
+          onClose={onChildrenDrawerClose}
+          visible={childrenDrawer}
+        >
+          The instructions are as follow...
+        </Drawer>
+      </Drawer>
     </>
   );
 };
