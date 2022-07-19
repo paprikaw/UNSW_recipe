@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # database credential to the MySQL in Google Cloud Storage
 # abbreviation: rrs -> Recipe Recommendation System
-db_url = 'mysql+pymysql://admin:123123@34.151.68.205:3306/rrs'
+db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/testDb'
 db_engine = create_engine(db_url)#, echo=True)
 
 __location__ = os.path.realpath(
