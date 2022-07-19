@@ -28,4 +28,14 @@ Week 5
 3. Build a basic home page
 4. front end is ready to go for demo 1 presentation
 5. Add git hook for prettier
+6. Participate demo representation, discuss and complete retro with teammates
+
 Week 7
+
+1. Complete most features on the contributor page.
+2. Bug fix
+
+
+Week 8
+
+1. Complete Thumbnail components
