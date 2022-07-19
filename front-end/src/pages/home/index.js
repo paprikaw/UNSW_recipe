@@ -11,6 +11,8 @@ import {
   Dropdown,
   Menu,
   Input,
+  Row,
+  Col,
 } from 'antd';
 import { UserOutlined, AudioOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
@@ -18,6 +20,7 @@ import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
 import { getRidOfEmoji } from '@/utils/utils';
+import Thumbnail from '@/components/thumbnail';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
@@ -30,17 +33,17 @@ const suffix = (
   />
 );
 
-const onSearch = (value) => console.log(value);
-
 const Home = () => {
   const [ingredients, setIngredients] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
+  const [thumbnails, setThumbnails] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
+  const onSearch = (value) => setThumbnails(value);
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
   };
@@ -79,7 +82,7 @@ const Home = () => {
       }),
     });
     const data = await response.json();
-    console.log(data);
+    setThumbnails(data.recipes);
   };
 
   const handleLogout = async () => {
@@ -132,11 +135,13 @@ const Home = () => {
         <Header
           className="home-nav-bar"
           style={{
-            zIndex: 2,
+            zIndex: 1,
             display: 'flex',
             justifyContent: 'flex-end',
             alignContent: 'center',
             alignItems: 'center',
+            position: 'fixed',
+            width: '100%',
           }}
         >
           <Button
@@ -151,16 +156,15 @@ const Home = () => {
         </Header>
         <Layout hasSider>
           <Sider
+            id="sider"
             width={350}
             theme="light"
             style={{
               overflow: 'auto',
               height: '100vh',
-              position: 'fixed',
               left: 0,
-              paddingTop: 64,
               bottom: 0,
-              zIndex: 1,
+              marginTop: '64px',
             }}
           >
             <div className="home-sider-childrens">
@@ -183,9 +187,79 @@ const Home = () => {
           </Sider>
           <Content
             style={{
-              marginLeft: 300,
+              marginTop: '64px',
+              padding: '20px 20px',
+              overflow: 'scroll',
             }}
-          ></Content>
+          >
+            <Row gutter={[10, 20]}>
+              {thumbnails.map((data) => (
+                <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                  <Thumbnail
+                    recipeId={data.recipeId}
+                    recipeName={data.recipeName}
+                    mealType={data.mealType}
+                    likes={data.likes}
+                    cookTime={data.cookTime}
+                    thumbnail={data.thumbnail}
+                    numIngredientsMatched={data.numIngredientsMatched}
+                  />
+                </Col>
+              ))}
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  numIngredientsMatched={8}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  numIngredientsMatched={2}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  numIngredientsMatched={2}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  numIngredientsMatched={2}
+                />
+              </Col>
+            </Row>
+          </Content>
         </Layout>
       </Layout>
       <Modal

@@ -44,6 +44,11 @@ const Category = (props) => {
         onChange={handleOnChange}
         value={opStateList}
         className="mySelect"
+        onDropdownVisibleChange={(open) =>
+          open
+            ? (document.getElementById('sider').style.overflow = 'hidden')
+            : (document.getElementById('sider').style.overflow = 'auto')
+        }
       >
         {children}
       </Select>
