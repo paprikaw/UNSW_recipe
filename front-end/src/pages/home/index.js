@@ -99,19 +99,6 @@ const Home = () => {
       .catch((e) => console.log(e));
   };
 
-  const handleClickThumbnail = (recipeId) => {
-    fetch('/details?recipeId=' + recipeId, {
-      method: 'GET',
-    })
-      .then((v) => {
-        return v.json();
-      })
-      .then((data) => {
-        setCurThumbnailDetails(data.recipes);
-      })
-      .catch((e) => console.log(e));
-  };
-
   const handleLogout = async () => {
     const response = await fetch('/logout', {
       method: 'DELETE',
