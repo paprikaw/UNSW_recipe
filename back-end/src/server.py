@@ -2,11 +2,11 @@ import os
 import sqlparse
 import accounts
 import recipes
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from sqlalchemy import create_engine, text
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 # database credential to the MySQL in Google Cloud Storage
 # abbreviation: rrs -> Recipe Recommendation System
@@ -74,7 +74,7 @@ def reset():
                 con.execute(text(query))
 
     thumbnails = os.path.abspath(
-        os.path.join(os.path.dirname(os.path.dirname(__file__)),'src/imgs/thumbnails')
+        os.path.join(os.path.dirname(os.path.dirname(__file__)),'src/static')
     )
     
     for file in os.scandir(thumbnails):
@@ -98,6 +98,10 @@ def search():
 @app.route("/details", methods={'GET'})
 def details():
     return recipes.details(db_engine)
+
+@app.route("/static/<path:filepath>")
+def send_static(filepath):
+    return send_from_directory(app.static_folder, filepath)
 
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)

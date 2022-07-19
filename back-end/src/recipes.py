@@ -2,7 +2,7 @@ import os
 from flask import request
 from sqlalchemy import text
 
-FOLDER_THUMBNAIL = os.path.abspath(os.path.join(os.path.dirname(__file__), 'imgs/thumbnails'))
+FOLDER_THUMBNAIL = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def recipe_upload_thumbnail(db_engine):
