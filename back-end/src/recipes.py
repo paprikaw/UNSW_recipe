@@ -140,7 +140,7 @@ def search(db_engine):
 
     ingredientNames = request.get_json()['ingredients']
 
-    if len(ingredientNames) == 0:
+    if ingredientNames is None or len(ingredientNames) == 0:
         return recipesResult
 
     with db_engine.connect() as con:
@@ -201,6 +201,9 @@ def details(db_engine):
     recipe = {'recipe': {}}
 
     recipeId = request.args.get('recipeId')
+    
+    if recipeId is None:
+        return recipe
 
     with db_engine.connect() as con:
         recipeResult = con.execute(
