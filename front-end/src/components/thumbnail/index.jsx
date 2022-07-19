@@ -34,6 +34,7 @@ const Thumbnail = (props) => {
     cookTime,
     thumbnail,
     numIngredientsMatched,
+    onClick,
   } = props;
   // const onFinish = (values) => {
   //   if (recipeId !== -1) {
@@ -62,6 +63,8 @@ const Thumbnail = (props) => {
       cover={<img alt={recipeName} src={thumbnail} />}
       style={{ minWidth: '200px', maxWidth: '300px' }}
       className="recipe-thumbnail"
+      key={recipeId}
+      onClick={() => onClick(recipeId)}
     >
       <div className="thumbnail-header-box">
         <div className="header">

@@ -38,6 +38,8 @@ const Home = () => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
+  const [thumbnails, setThumbnails] = useState([]);
+  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -80,6 +82,19 @@ const Home = () => {
     });
     const data = await response.json();
     console.log(data);
+  };
+
+  const handleClickThumbnail = (recipeId) => {
+    fetch('/details?recipeId=' + recipeId, {
+      method: 'GET',
+    })
+      .then((v) => {
+        return v.json();
+      })
+      .then((data) => {
+        setCurThumbnailDetails(data.recipes);
+      })
+      .catch((e) => console.log(e));
   };
 
   const handleLogout = async () => {
@@ -160,7 +175,7 @@ const Home = () => {
               left: 0,
               paddingTop: 64,
               bottom: 0,
-              zIndex: 1,
+              paddingTop: '64px',
             }}
           >
             <div className="home-sider-childrens">
@@ -185,7 +200,77 @@ const Home = () => {
             style={{
               marginLeft: 300,
             }}
-          ></Content>
+          >
+            <Row gutter={[10, 20]}>
+              {thumbnails.map((data) => (
+                <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                  <Thumbnail
+                    recipeId={data.recipeId}
+                    recipeName={data.recipeName}
+                    mealType={data.mealType}
+                    likes={data.likes}
+                    cookTime={data.cookTime}
+                    thumbnail={data.thumbnail}
+                    numIngredientsMatched={data.numIngredientsMatched}
+                    onClick={handleClickThumbnail}
+                  />
+                </Col>
+              ))}
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  onClick={handleClickThumbnail}
+                  numIngredientsMatched={8}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  numIngredientsMatched={2}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  numIngredientsMatched={2}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                <Thumbnail
+                  recipeId={1}
+                  recipeName={'martini'}
+                  mealType={'Lunch'}
+                  likes={100}
+                  cookTime={10}
+                  thumbnail={
+                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
+                  }
+                  numIngredientsMatched={2}
+                />
+              </Col>
+            </Row>
+          </Content>
         </Layout>
       </Layout>
       <Modal
