@@ -84,12 +84,15 @@ const Home = () => {
   const onCategoryChange = (list) => {
     setCategoryList(list);
   };
+
   const showDrawer = () => {
     setVisible(true);
   };
+
   const onClose = () => {
     setVisible(false);
   };
+
   const showChildrenDrawer = () => {
     setChildrenDrawer(true);
   };
@@ -123,7 +126,8 @@ const Home = () => {
         return v.json();
       })
       .then((data) => {
-        setCurThumbnailDetails(data.recipes);
+        setCurThumbnailDetails(data.recipe);
+        showDrawer();
       })
       .catch((e) => console.log(e));
   };
@@ -280,20 +284,33 @@ const Home = () => {
         </div>
       </Modal>
       <Drawer
-        // title="Recipe detail page"
+        placement="right"
         width={400}
         closable={false}
         onClose={onClose}
         visible={visible}
       >
+        {/*
+          
         <PageHeader
           className="site-page-header"
           onBack={onClose}
           title="RecipeName"
           subTitle={'recipe #42'}
         ></PageHeader>
+          */}
         <div>
-          <Recipe />
+          <Recipe
+            username={curThumbnailDetails.username}
+            recipeId={curThumbnailDetails.recipeId}
+            recipeName={curThumbnailDetails.recipeName}
+            mealType={curThumbnailDetails.mealType}
+            likes={curThumbnailDetails.likes}
+            cookTime={curThumbnailDetails.cookTime}
+            thumbnailPath={curThumbnailDetails.thumbnailPath}
+            ingredients={curThumbnailDetails.ingredients}
+            steps={curThumbnailDetails.steps}
+          />
         </div>
       </Drawer>
     </>
