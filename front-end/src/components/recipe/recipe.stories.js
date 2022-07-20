@@ -40,5 +40,5 @@ recipe.args = {
       unit: 'g',
     },
   ],
-  steps: 'This is the instruction',
+  steps: ['1. Fry ground beef.', '2. Add salt', '3. Add flour'],
 };

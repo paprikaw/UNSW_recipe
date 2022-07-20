@@ -1,11 +1,13 @@
 import { Button, Drawer, Card, Typography, Image, Collapse } from 'antd';
 import React, { useState } from 'react';
+import './index.scss';
 
 import {
   EditOutlined,
   EllipsisOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
+import { string } from 'prop-types';
 
 const { Meta } = Card;
 const { Text } = Typography;
@@ -60,7 +62,15 @@ const Recipe = (props) => {
             width: 300,
           }}
         >
-          <Text>{mealType}</Text>
+          {ingredients.map((dict, index) => (
+            <Text>
+              <p> {dict.name} </p>
+              <p class="ingredients_quantity">
+                {dict.quantity}
+                {dict.unit}
+              </p>
+            </Text>
+          ))}
         </Card>
         <Card
           size="default"
@@ -74,15 +84,11 @@ const Recipe = (props) => {
             defaultActiveKey={['1', '2', '3']}
             onChange={onChange}
           >
-            <Panel header="Step 1" key="1">
-              <p>{steps}</p>
-            </Panel>
-            <Panel header="Step 2" key="2">
-              <p>{steps}</p>
-            </Panel>
-            <Panel header="Step 3" key="3">
-              <p>{steps}</p>
-            </Panel>
+            {steps.map((string, index) => (
+              <Text>
+                <p>{string}</p>
+              </Text>
+            ))}
           </Collapse>
         </Card>
       </div>
