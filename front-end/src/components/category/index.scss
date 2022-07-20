@@ -1,15 +1,18 @@
-
 .collapseBox {
-    margin: 0 auto;
-    z-index: 2;
+  margin: 0 auto;
+  z-index: 2;
 }
 
 .mySelect {
-    z-index: 1;
-    position: sticky;
-    top: 0px;
+  z-index: 1;
+  position: sticky;
+  top: 0px;
 }
 
 .ant-select {
-    border: 1px solid;
+  border: 1px solid;
+}
+
+body {
+  overflow: hidden;
 }

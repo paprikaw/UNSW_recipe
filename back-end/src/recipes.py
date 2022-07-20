@@ -124,13 +124,8 @@ def recipe_update_remaining_info_at_creation(db_engine):
                 recipeId = recipeId, step = step
             )
         
-        # TODO: check if it is an existing noResultsIngredientSets
-        # In sprint3
-        '''
-        ^ not quite sure what this is for? NoResultsIngredientSets should be updated in search.
-        information pulled from NoResultsIngredientSets is only used when we are providing ingredient set suggestions 
-        for the contributor, which shouldn't be in this route that inserts recipes?
-        '''
+        # TODO: sprint 3, check if it is an existing NoResultsIngredientSets
+        # if it is, remove entries from the table
 
     return {
         'status': True,
@@ -139,8 +134,15 @@ def recipe_update_remaining_info_at_creation(db_engine):
 
 def search(db_engine):
     recipes = []
+    recipesResult = {
+        'recipes': recipes
+    }
 
     ingredientNames = request.get_json()['ingredients']
+
+    if ingredientNames is None or len(ingredientNames) == 0:
+        return recipesResult
+
     with db_engine.connect() as con:
         ingredientIds = []
         # get ingredient ids from running list
@@ -151,6 +153,10 @@ def search(db_engine):
 
         for i in ingredients:
             ingredientIds.append(i[0])
+
+        if len(ingredientIds) == 0:
+            return recipesResult
+
         # create view based on ingredients matched
         con.execute(
             text('''
@@ -189,14 +195,15 @@ def search(db_engine):
         # set exists, increment hits
         # set does not exist, insert new set
 
-    return {
-        'recipes': recipes
-    }
+    return recipesResult
     
 def details(db_engine):
     recipe = {'recipe': {}}
 
     recipeId = request.args.get('recipeId')
+    
+    if recipeId is None:
+        return recipe
 
     with db_engine.connect() as con:
         recipeResult = con.execute(

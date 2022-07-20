@@ -3,9 +3,23 @@
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   > div {
-    margin-top: 12px;
-    margin-bottom: 12px;
   }
+}
+
+.head-tail-field1 {
+  margin-top: 6px;
+  margin-bottom: unset;
+  display: block;
+}
+
+.head-tail-field2 {
+  margin-top: 40px;
+  margin-bottom: unset;
+  display: block;
+}
+
+.ant-form-item-control-input-content {
+  margin-left: 20px;
 }

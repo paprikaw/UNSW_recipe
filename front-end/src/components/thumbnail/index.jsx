@@ -60,8 +60,9 @@ const Thumbnail = (props) => {
     <Card
       hoverable
       cover={<img alt={recipeName} src={thumbnail} />}
-      style={{ minWidth: '200px', maxWidth: '300px' }}
+      style={{ minWidth: '180px' }}
       className="recipe-thumbnail"
+      key={recipeId}
     >
       <div className="thumbnail-header-box">
         <div className="header">

@@ -1,5 +1,6 @@
-import { Button, Drawer, Avatar, Card, Typography } from 'antd';
+import { Button, Drawer, Card, Typography, Image, Collapse } from 'antd';
 import React, { useState } from 'react';
+
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -8,6 +9,7 @@ import {
 
 const { Meta } = Card;
 const { Text } = Typography;
+const { Panel } = Collapse;
 
 const Recipe = (props) => {
   const {
@@ -22,41 +24,68 @@ const Recipe = (props) => {
     steps,
   } = props;
 
+  const onChange = (key) => {
+    console.log(key);
+  };
+
   return (
-    <Card
-      bordered={false}
-      style={{
-        width: 300,
-      }}
-      cover={<img alt="example" src={thumbnailPath} />}
-      actions={[
-        // <SettingOutlined key="setting" />,
-        <EditOutlined key="edit" />,
-        <EllipsisOutlined key="ellipsis" />,
-      ]}
-    >
-      <Meta
-        className="user_recipe_info"
-        // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-        title={
-          <Text>
-            {recipeName} #{recipeId}
-          </Text>
-        }
-        description={
-          <Text>
-            Devoted by {username} {likes}👍
-          </Text>
-        }
-      />
-      {/* <Card className ='small_card' size="small" title="Meal Type">
-        <p>Card content</p>
-      </Card> */}
-    </Card>
+    <>
+      <div className="recipe_big_image">
+        <Image
+          width={200}
+          src="https://cp1.douguo.com/upload/caiku/3/1/d/yuan_3168b8c616522ae87e246cf7a559271d.jpg"
+        />
+      </div>
+
+      <div className="likes">
+        <Text>{likes}👍</Text>
+      </div>
+
+      <h className="header">
+        <Text>{recipeName} </Text>
+      </h>
+      <div className="likes">
+        <Text>Devoted by {username}</Text>
+      </div>
+      <Card
+        size="Default size card"
+        title="Meal Type"
+        style={{
+          width: 300,
+        }}
+      >
+        <Text>{mealType}</Text>
+      </Card>
+      <Card
+        size="Default size card"
+        title="Ingredients needed"
+        style={{
+          width: 300,
+        }}
+      ></Card>
+      <Card
+        size="Default size card"
+        title="Instructions"
+        style={{
+          width: 300,
+        }}
+      >
+        <Collapse defaultActiveKey={['1']} onChange={onChange}>
+          <Panel header="Step 1" key="1">
+            <p>{steps}</p>
+          </Panel>
+          <Panel header="Step 2" key="2">
+            <p>{steps}</p>
+          </Panel>
+          <Panel header="Step 3" key="3">
+            <p>{steps}</p>
+          </Panel>
+        </Collapse>
+      </Card>
+    </>
   );
 };
 
 export default Recipe;
-
 // title={recipeName}
 // description={<Text>Devoted by {username}</Text> }

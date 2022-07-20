@@ -9,6 +9,7 @@ import {
   Slider,
   Row,
   Col,
+  AutoComplete,
   message,
 } from 'antd';
 
@@ -23,7 +24,7 @@ const { TextArea } = Input;
 
 // Transform the format of data to what backend want
 function processContributeVal(value) {
-  value.instructions = value.instructions.map((obj) => obj['step']);
+  value.steps = value.steps.map((obj) => obj['step']);
   value.token = localStorage.getItem('token');
 }
 
@@ -87,6 +88,7 @@ const Contributor = (props) => {
   };
 
   const onFormFinish = (values) => {
+    console.log(values);
     // Get rid of emoji in the recipe names
     values.ingredients.map(
       (element) => (element.name = getRidOfEmoji(element.name))
@@ -117,21 +119,27 @@ const Contributor = (props) => {
     }
   };
 
+  //create options for the autocomplete of input of the ingredients
+  // const options = [
+  //   {
+  //     label:
+  //     options: []
+  //   }
+  // ]
+
   return (
-    <Card>
+    <Card id="contributor-card">
       <Form
         name="dynamic_form_nest_item"
         onFinish={onFormFinish}
         autoComplete="off"
         form={form}
       >
-        <Form.Item required={true}>
-          <UploadPicture
-            onChange={onUploadChange}
-            loading={loading}
-            imageUrl={imageUrl}
-          />
-        </Form.Item>
+        <UploadPicture
+          onChange={onUploadChange}
+          loading={loading}
+          imageUrl={imageUrl}
+        />
 
         <br />
         <br />
@@ -182,22 +190,40 @@ const Contributor = (props) => {
             },
           ]}
         >
-          <Select placeholder="please select" size="big" bordered={'false'}>
+          <Select
+            placeholder="please select"
+            size="big"
+            bordered={'false'}
+            getPopupContainer={() =>
+              document.getElementById('contributor-card')
+            }
+          >
             <Option value={'Breakfast'}>Breakfast</Option>
             <Option value={'Lunch'}>Lunch</Option>
             <Option value={'Dinner'}>Dinner</Option>
             <Option value={'Supper'}>Lunch</Option>
             <Option value={'Dessert'}>Dessert</Option>
             <Option value={'Snack'}>Snack</Option>
-            <Option value={'Entry'}>Entry</Option>
+            <Option value={'Entree'}>Entry</Option>
             <Option value={'Main'}>Main</Option>
             <Option value={'Tea'}>Tea</Option>
           </Select>
         </Form.Item>
         <Card>
           <h2>Add ingredients</h2>
-          <Form.List name="ingredients">
-            {(fields, { add, remove }) => (
+          <Form.List
+            name="ingredients"
+            rules={[
+              {
+                validator: async (_, ingredient) => {
+                  if (!ingredient || ingredient.length < 2) {
+                    return Promise.reject(new Error('At least 2 ingredients'));
+                  }
+                },
+              },
+            ]}
+          >
+            {(fields, { add, remove }, { errors }) => (
               <div>
                 {fields.map(({ key, name, ...restField }) => (
                   <div key={key} className="row-container">
@@ -229,11 +255,17 @@ const Contributor = (props) => {
                         },
                       ]}
                     >
-                      <Select placeholder="Ingredients">
+                      <Select
+                        placeholder="Ingredients"
+                        showSearch
+                        getPopupContainer={() =>
+                          document.getElementById('contributor-card')
+                        }
+                      >
                         {Object.entries(ingredients)
                           .sort((a, b) => a[0] > b[0])
                           .map(([_key, values]) => (
-                            <OptGroup label={key}>
+                            <OptGroup label={_key}>
                               {values.map((value) => (
                                 <Option value={value}>{value}</Option>
                               ))}
@@ -252,7 +284,12 @@ const Contributor = (props) => {
                       ]}
                       style={{ flexGrow: 1 }}
                     >
-                      <Select placeholder="Unit">
+                      <Select
+                        placeholder="Unit"
+                        getPopupContainer={() =>
+                          document.getElementById('contributor-card')
+                        }
+                      >
                         <Option key={1} value={'cups'}>
                           {'cups'}
                         </Option>
@@ -282,7 +319,9 @@ const Contributor = (props) => {
                         </Option>
                       </Select>
                     </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
+                    <div className="head-tail-field1">
+                      <MinusCircleOutlined onClick={() => remove(name)} />
+                    </div>
                   </div>
                 ))}
                 <Form.Item>
@@ -294,6 +333,7 @@ const Contributor = (props) => {
                   >
                     Add ingredients
                   </Button>
+                  <Form.ErrorList errors={errors} />
                 </Form.Item>
               </div>
             )}
@@ -302,12 +342,25 @@ const Contributor = (props) => {
         <br />
         <Card>
           <h2>Add instructions</h2>
-          <Form.List name="instructions">
-            {(fields, { add, remove }) => (
+          <Form.List
+            name="steps"
+            rules={[
+              {
+                validator: async (_, instruction) => {
+                  if (!instruction) {
+                    return Promise.reject(new Error('At least 1 step'));
+                  }
+                },
+              },
+            ]}
+          >
+            {(fields, { add, remove }, { errors }) => (
               <div>
                 {fields.map(({ key, name, ...restField }) => (
                   <div key={key} className="row-container">
-                    <Text>Step {name + 1}</Text>
+                    <div className="head-tail-field2">
+                      <Text>Step {name + 1}</Text>
+                    </div>
                     <Form.Item
                       {...restField}
                       name={[name, 'step']}
@@ -321,7 +374,9 @@ const Contributor = (props) => {
                     >
                       <TextArea rows={4} style={{ display: 'inline' }} />
                     </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
+                    <div className="head-tail-field2">
+                      <MinusCircleOutlined onClick={() => remove(name)} />
+                    </div>
                   </div>
                 ))}
                 <Form.Item>
@@ -333,6 +388,7 @@ const Contributor = (props) => {
                   >
                     Add instructions
                   </Button>
+                  <Form.ErrorList errors={errors} />
                 </Form.Item>
               </div>
             )}

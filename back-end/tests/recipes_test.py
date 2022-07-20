@@ -1,4 +1,3 @@
-from webbrowser import get
 import pytest
 import requests
 import json

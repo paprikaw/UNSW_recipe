@@ -1,6 +1,6 @@
 // YourComponent.stories.js|jsx
 import Recipe from '.';
-
+import Instruction from '.';
 //👇 This default export determines where your story goes in the story list
 export default {
   /* 👇 The title prop is optional.
@@ -26,16 +26,3 @@ recipe.args = {
   ingredients: 'something',
   steps: 'This is the instruction',
 };
-
-// const Template1 = (args) => <Instruction {...args} />;
-// export const instruction = Template.bind({});
-// instruction.args = {
-//   recipeId: 1,
-//   recipeName: '?????',
-//   mealType: '?????',
-//   likes: 100,
-//   cookTime: 5,
-//   thumbnail:
-//     'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg',
-//   numIngredientsMatched: 4,
-// };
