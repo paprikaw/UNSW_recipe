@@ -10,12 +10,14 @@ const Category = (props) => {
   const { data, onChange } = props;
   const children = [];
   const iniState = {};
+
   for (const key in data) {
     data[key].map((value) =>
       children.push(<Option key={value}>{value}</Option>)
     );
     data[key].map((value) => (iniState[value] = false));
   }
+  console.log(data);
   const [opState, setOpState] = useState(iniState);
   const [opStateList, setOpStateList] = useState([]);
 

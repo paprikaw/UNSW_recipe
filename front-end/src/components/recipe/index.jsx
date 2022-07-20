@@ -32,7 +32,7 @@ const Recipe = (props) => {
     <>
       <div className="recipe_big_image">
         <Image
-          width={200}
+          width={338}
           src="https://cp1.douguo.com/upload/caiku/3/1/d/yuan_3168b8c616522ae87e246cf7a559271d.jpg"
         />
       </div>
@@ -40,48 +40,52 @@ const Recipe = (props) => {
       <div className="likes">
         <Text>{likes}👍</Text>
       </div>
-
-      <h className="header">
-        <Text>{recipeName} </Text>
-      </h>
-      <div className="likes">
+      <div>
         <Text>Devoted by {username}</Text>
       </div>
-      <Card
-        size="Default size card"
-        title="Meal Type"
-        style={{
-          width: 300,
-        }}
-      >
-        <Text>{mealType}</Text>
-      </Card>
-      <Card
-        size="Default size card"
-        title="Ingredients needed"
-        style={{
-          width: 300,
-        }}
-      ></Card>
-      <Card
-        size="Default size card"
-        title="Instructions"
-        style={{
-          width: 300,
-        }}
-      >
-        <Collapse defaultActiveKey={['1']} onChange={onChange}>
-          <Panel header="Step 1" key="1">
-            <p>{steps}</p>
-          </Panel>
-          <Panel header="Step 2" key="2">
-            <p>{steps}</p>
-          </Panel>
-          <Panel header="Step 3" key="3">
-            <p>{steps}</p>
-          </Panel>
-        </Collapse>
-      </Card>
+      <div>
+        <Card
+          size="default"
+          title="Meal Type"
+          style={{
+            width: 300,
+          }}
+        >
+          <Text>{mealType}</Text>
+        </Card>
+        <Card
+          size="default"
+          title="Ingredients needed"
+          style={{
+            width: 300,
+          }}
+        >
+          <Text>{mealType}</Text>
+        </Card>
+        <Card
+          size="default"
+          title="Instructions"
+          style={{
+            width: 300,
+          }}
+        >
+          <Collapse
+            bordered={false}
+            defaultActiveKey={['1', '2', '3']}
+            onChange={onChange}
+          >
+            <Panel header="Step 1" key="1">
+              <p>{steps}</p>
+            </Panel>
+            <Panel header="Step 2" key="2">
+              <p>{steps}</p>
+            </Panel>
+            <Panel header="Step 3" key="3">
+              <p>{steps}</p>
+            </Panel>
+          </Collapse>
+        </Card>
+      </div>
     </>
   );
 };

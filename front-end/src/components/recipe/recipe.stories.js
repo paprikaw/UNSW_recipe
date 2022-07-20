@@ -23,6 +23,22 @@ recipe.args = {
   cookTime: 20,
   thumbnailPath:
     'https://cp1.douguo.com/upload/caiku/3/1/d/yuan_3168b8c616522ae87e246cf7a559271d.jpg',
-  ingredients: 'something',
+  ingredients: [
+    {
+      name: 'Ground Beef',
+      quantity: 200,
+      unit: 'g',
+    },
+    {
+      name: 'White Flour',
+      quantity: 100,
+      unit: 'g',
+    },
+    {
+      name: 'Salt',
+      quantity: 3,
+      unit: 'g',
+    },
+  ],
   steps: 'This is the instruction',
 };
