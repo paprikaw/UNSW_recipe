@@ -14,7 +14,7 @@ import {
   Row,
   Col,
 } from 'antd';
-import { UserOutlined, AudioOutlined } from '@ant-design/icons';
+import { UserOutlined, AudioOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
 import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -41,6 +41,7 @@ const Home = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
+  const [isRecipeLoading, setIsRecipeLoading] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -73,6 +74,7 @@ const Home = () => {
   };
 
   const handleSearch = async (list) => {
+    setIsRecipeLoading(true);
     const response = await fetch('/search', {
       method: 'POST',
       headers: {
@@ -83,6 +85,7 @@ const Home = () => {
       }),
     });
     const data = await response.json();
+    setIsRecipeLoading(false);
     setThumbnails(data.recipes);
   };
 
@@ -181,7 +184,7 @@ const Home = () => {
               paddingTop: '64px',
             }}
           >
-            <div className="home-sider-childrens">
+            <div className="home-sider-childrens" style={{}}>
               <Title level={2}>Ingredients</Title>
               {isLoading ? (
                 <div className="spin">
@@ -190,14 +193,17 @@ const Home = () => {
               ) : (
                 <Category data={ingredients} onChange={onCategoryChange} />
               )}
-              <Button
-                type="primary"
-                shape="round"
-                onClick={(_event) => handleSearch(categoryList)}
-              >
-                Search
-              </Button>
             </div>
+            <Button
+              className="my-button"
+              type="primary"
+              shape="round"
+              style={{}}
+              onClick={(_event) => handleSearch(categoryList)}
+              icon={<SearchOutlined />}
+            >
+              Search
+            </Button>
           </Sider>
           <Content
             style={{
@@ -206,75 +212,24 @@ const Home = () => {
               overflow: 'scroll',
             }}
           >
-            <Row gutter={[10, 20]}>
-              {thumbnails.map((data) => (
-                <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-                  <Thumbnail
-                    recipeId={data.recipeId}
-                    recipeName={data.recipeName}
-                    mealType={data.mealType}
-                    likes={data.likes}
-                    cookTime={data.cookTime}
-                    thumbnail={data.thumbnail}
-                    numIngredientsMatched={data.numIngredientsMatched}
-                    onClick={handleClickThumbnail}
-                  />
-                </Col>
-              ))}
-              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-                <Thumbnail
-                  recipeId={1}
-                  recipeName={'martini'}
-                  mealType={'Lunch'}
-                  likes={100}
-                  cookTime={10}
-                  thumbnail={
-                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
-                  }
-                  onClick={handleClickThumbnail}
-                  numIngredientsMatched={8}
-                />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-                <Thumbnail
-                  recipeId={1}
-                  recipeName={'martini'}
-                  mealType={'Lunch'}
-                  likes={100}
-                  cookTime={10}
-                  thumbnail={
-                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
-                  }
-                  numIngredientsMatched={2}
-                />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-                <Thumbnail
-                  recipeId={1}
-                  recipeName={'martini'}
-                  mealType={'Lunch'}
-                  likes={100}
-                  cookTime={10}
-                  thumbnail={
-                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
-                  }
-                  numIngredientsMatched={2}
-                />
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-                <Thumbnail
-                  recipeId={1}
-                  recipeName={'martini'}
-                  mealType={'Lunch'}
-                  likes={100}
-                  cookTime={10}
-                  thumbnail={
-                    'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
-                  }
-                  numIngredientsMatched={2}
-                />
-              </Col>
-            </Row>
+            <Spin spinning={isRecipeLoading}>
+              <Row gutter={[10, 20]}>
+                {thumbnails.map((data) => (
+                  <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                    <Thumbnail
+                      recipeId={data.recipeId}
+                      recipeName={data.recipeName}
+                      mealType={data.mealType}
+                      likes={data.likes}
+                      cookTime={data.cookTime}
+                      thumbnail={'/static/' + data.thumbnail}
+                      numIngredientsMatched={data.numIngredientsMatched}
+                      onClick={handleClickThumbnail}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            </Spin>
           </Content>
         </Layout>
       </Layout>

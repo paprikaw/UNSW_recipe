@@ -1,7 +1,7 @@
 .home-sider-childrens {
   padding-left: 10px;
   padding-right: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 70px;
   button {
     margin: 0 auto;
     display: block;
@@ -21,4 +21,13 @@
 }
 .logout {
   float: right;
+}
+
+.my-button {
+  display: inline-block;
+  box-shadow: 5px 5px 15px #a4aab7;
+  z-index: 2;
+  bottom: 30px;
+  left: 110px;
+  position: fixed;
 }

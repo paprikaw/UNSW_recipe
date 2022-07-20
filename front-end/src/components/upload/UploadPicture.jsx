@@ -1,6 +1,7 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import React from 'react';
+import ImgCrop from 'antd-img-crop';
 
 const beforeUpload = (file) => {
   const isJpgOrPng =
@@ -39,27 +40,29 @@ const UploadPicture = (props) => {
   );
 
   return (
-    <Upload
-      name="recipeThumbnail"
-      listType="picture-card"
-      className="avatar-uploader"
-      showUploadList={false}
-      action="/upload-thumbnail"
-      beforeUpload={beforeUpload}
-      onChange={onChange}
-    >
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt="avatar"
-          style={{
-            width: '100%',
-          }}
-        />
-      ) : (
-        uploadButton
-      )}
-    </Upload>
+    <ImgCrop aspect={16 / 10}>
+      <Upload
+        name="recipeThumbnail"
+        listType="picture-card"
+        className="avatar-uploader"
+        showUploadList={false}
+        action="/upload-thumbnail"
+        beforeUpload={beforeUpload}
+        onChange={onChange}
+      >
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt="avatar"
+            style={{
+              width: '100%',
+            }}
+          />
+        ) : (
+          uploadButton
+        )}
+      </Upload>
+    </ImgCrop>
   );
 };
 

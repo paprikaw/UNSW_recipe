@@ -62,6 +62,7 @@ def recipe_update_remaining_info_at_creation(db_engine):
     ingredientList = recipeInfo['ingredients']
     steps = recipeInfo['steps']
 
+    print("here")
     if (type(recipeName) != str):
         return {
             'status': False,
