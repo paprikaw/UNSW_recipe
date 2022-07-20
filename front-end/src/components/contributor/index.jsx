@@ -119,13 +119,6 @@ const Contributor = (props) => {
     }
   };
 
-  //create options for the autocomplete of input of the ingredients
-  // const options = [
-  //   {
-  //     label:
-  //     options: []
-  //   }
-  // ]
 
   return (
     <Card id="contributor-card">
