@@ -46,13 +46,12 @@ const Home = () => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
-  // right hand, recipe detail page set up
+  // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
-  const [childrenDrawer, setChildrenDrawer] = useState(false);
-  // page navigate and account info
   const [thumbnails, setThumbnails] = useState([]);
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
+  // page navigate and account info
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -88,17 +87,10 @@ const Home = () => {
   const showDrawer = () => {
     setVisible(true);
   };
-
   const onClose = () => {
     setVisible(false);
   };
 
-  const showChildrenDrawer = () => {
-    setChildrenDrawer(true);
-  };
-  const onChildrenDrawerClose = () => {
-    setChildrenDrawer(false);
-  };
   // a func of call recipe_detail route when click tiles  needed.
   const onCheckRecipeDetail = () => {};
 
@@ -291,7 +283,6 @@ const Home = () => {
         visible={visible}
       >
         {/*
-          
         <PageHeader
           className="site-page-header"
           onBack={onClose}
