@@ -51,6 +51,7 @@ const Home = () => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   // page navigate and account info
   const [thumbnails, setThumbnails] = useState([]);
+  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -109,6 +110,19 @@ const Home = () => {
     });
     const data = await response.json();
     setThumbnails(data.recipes);
+  };
+
+  const handleClickThumbnail = (recipeId) => {
+    fetch('/details?recipeId=' + recipeId, {
+      method: 'GET',
+    })
+      .then((v) => {
+        return v.json();
+      })
+      .then((data) => {
+        setCurThumbnailDetails(data.recipes);
+      })
+      .catch((e) => console.log(e));
   };
 
   const handleLogout = async () => {
@@ -190,7 +204,7 @@ const Home = () => {
               height: '100vh',
               left: 0,
               bottom: 0,
-              marginTop: '64px',
+              paddingTop: '64px',
             }}
           >
             <div className="home-sider-childrens">
@@ -232,6 +246,7 @@ const Home = () => {
                     cookTime={data.cookTime}
                     thumbnail={data.thumbnail}
                     numIngredientsMatched={data.numIngredientsMatched}
+                    onClick={handleClickThumbnail}
                   />
                 </Col>
               ))}
@@ -245,6 +260,7 @@ const Home = () => {
                   thumbnail={
                     'https://ministryofhemp.com/wp-content/uploads/2018/09/Cosmopolitan-shutterstock_772042387-1-e1537293496842.jpg'
                   }
+                  onClick={handleClickThumbnail}
                   numIngredientsMatched={8}
                 />
               </Col>

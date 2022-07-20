@@ -2,17 +2,19 @@ import os
 from flask import request
 from sqlalchemy import text
 
-FOLDER_THUMBNAIL = os.path.abspath(os.path.join(os.path.dirname(__file__), 'imgs/thumbnails'))
+FOLDER_THUMBNAIL = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def recipe_upload_thumbnail(db_engine):
     img = request.files['recipeThumbnail']
     path = ''
+    filename = ''
     
     if (img and verifyFileType(img.filename)):
         if not verifyFileDuplicateName(img.filename):
             path = os.path.join(FOLDER_THUMBNAIL, img.filename)
             img.save(path)
+            filename = img.filename
         else:
             nameSuffix = 0
             for _,_,files in os.walk(FOLDER_THUMBNAIL):
@@ -23,9 +25,10 @@ def recipe_upload_thumbnail(db_engine):
             newFileName = splited[0] + str(nameSuffix) + "." + splited[1]
             path = os.path.join(FOLDER_THUMBNAIL, newFileName)
             img.save(path)
+            filename = newFileName
         with db_engine.connect() as con:
-            con.execute(text('insert into Recipes(thumbnailPath) values (:thumbnailPath)'), thumbnailPath=path)
-            result = con.execute(text('select recipeID from Recipes where thumbnailPath = :thumbnailPath'), thumbnailPath=path).fetchall()
+            con.execute(text('insert into Recipes(thumbnailPath) values (:thumbnailPath)'), thumbnailPath=filename)
+            result = con.execute(text('select recipeID from Recipes where thumbnailPath = :thumbnailPath'), thumbnailPath=filename).fetchall()
         return {
             'status': True,
             'value': result[0][0],
