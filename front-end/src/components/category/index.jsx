@@ -17,7 +17,6 @@ const Category = (props) => {
     );
     data[key].map((value) => (iniState[value] = false));
   }
-  console.log(data);
   const [opState, setOpState] = useState(iniState);
   const [opStateList, setOpStateList] = useState([]);
 

@@ -33,10 +33,7 @@ const Recipe = (props) => {
   return (
     <>
       <div className="recipe_big_image">
-        <Image
-          width={338}
-          src="https://cp1.douguo.com/upload/caiku/3/1/d/yuan_3168b8c616522ae87e246cf7a559271d.jpg"
-        />
+        <Image width={'100%'} src={'/static/' + thumbnailPath} />
       </div>
 
       <div className="likes">
