@@ -11,8 +11,13 @@ import {
   Dropdown,
   Menu,
   Input,
+  Drawer,
   Row,
   Col,
+  Descriptions,
+  PageHeader,
+  Statistic,
+  Tag,
 } from 'antd';
 import { UserOutlined, AudioOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
@@ -20,6 +25,7 @@ import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
 import { getRidOfEmoji } from '@/utils/utils';
+import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
 
 const { Title } = Typography;
@@ -34,11 +40,16 @@ const suffix = (
 );
 
 const Home = () => {
+  // left hand, ingredients menu set up
   const [ingredients, setIngredients] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
+  // right hand, recipe detail page set up
+  const [visible, setVisible] = useState(false);
+  const [childrenDrawer, setChildrenDrawer] = useState(false);
+  // page navigate and account info
   const [thumbnails, setThumbnails] = useState([]);
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
@@ -69,9 +80,24 @@ const Home = () => {
   //   navigate('/contribute');
   // }
 
+  // recipe detail funcs
   const onCategoryChange = (list) => {
     setCategoryList(list);
   };
+  const showDrawer = () => {
+    setVisible(true);
+  };
+  const onClose = () => {
+    setVisible(false);
+  };
+  const showChildrenDrawer = () => {
+    setChildrenDrawer(true);
+  };
+  const onChildrenDrawerClose = () => {
+    setChildrenDrawer(false);
+  };
+  // a func of call recipe_detail route when click tiles  needed.
+  const onCheckRecipeDetail = () => {};
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
@@ -253,6 +279,23 @@ const Home = () => {
           <Contributor ingredients={ingredients} onOk={handleContirbuteOk} />
         </div>
       </Modal>
+      <Drawer
+        // title="Recipe detail page"
+        width={400}
+        closable={false}
+        onClose={onClose}
+        visible={visible}
+      >
+        <PageHeader
+          className="site-page-header"
+          onBack={onClose}
+          title="RecipeName"
+          subTitle={'recipe #42'}
+        ></PageHeader>
+        <div>
+          <Recipe />
+        </div>
+      </Drawer>
     </>
   );
 };

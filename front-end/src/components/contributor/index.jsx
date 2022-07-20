@@ -17,7 +17,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { React, useState } from 'react';
 import './index.scss';
 import UploadPicture from '../upload/UploadPicture';
-import { getRidOfEmoji } from '@/utils/utils';
+import { getRidOfEmoji } from '../../utils/utils';
 const { Text } = Typography;
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
