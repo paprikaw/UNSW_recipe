@@ -34,3 +34,9 @@
 .ant-page-header-ghost {
   background-color: gainsboro;
 }
+
+.ant-spin {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

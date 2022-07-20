@@ -1,4 +1,13 @@
-import { Button, Drawer, Card, Typography, Image, Collapse } from 'antd';
+import {
+  Button,
+  Drawer,
+  Card,
+  Typography,
+  Image,
+  Collapse,
+  Space,
+  Divider,
+} from 'antd';
 import React, { useState } from 'react';
 import './index.scss';
 
@@ -35,59 +44,55 @@ const Recipe = (props) => {
       <div className="recipe_big_image">
         <Image width={'100%'} src={'/static/' + thumbnailPath} />
       </div>
+      <div className="detail-page-container">
+        <div className="header">
+          <h1>{recipeName}</h1>
+          <div className="likes">
+            <Text>{likes}👍</Text>
+          </div>
+        </div>
+        <div style={{ textAlign: 'end' }}>
+          <Text>Devoted by {username}</Text>
+        </div>
 
-      <div className="likes">
-        <Text>{likes}👍</Text>
-      </div>
-      <div>
-        <Text>Devoted by {username}</Text>
-      </div>
-      <div>
-        <Card
-          size="default"
-          title="Meal Type"
-          style={{
-            width: 300,
-          }}
+        <Divider />
+        <Space
+          direction="vertical"
+          style={{ width: '100%' }}
+          className="content"
         >
-          <Text>{mealType}</Text>
-        </Card>
-        <Card
-          size="default"
-          title="Ingredients needed"
-          style={{
-            width: 300,
-          }}
-        >
-          {ingredients.map((dict, index) => (
-            <Text>
-              <p> {dict.name} </p>
-              <p class="ingredients_quantity">
-                {dict.quantity}
-                {dict.unit}
-              </p>
-            </Text>
-          ))}
-        </Card>
-        <Card
-          size="default"
-          title="Instructions"
-          style={{
-            width: 300,
-          }}
-        >
-          <Collapse
-            bordered={false}
-            defaultActiveKey={['1', '2', '3']}
-            onChange={onChange}
-          >
-            {steps.map((string, index) => (
-              <Text>
-                <p>{string}</p>
-              </Text>
+          <div className="line">
+            <h4 style={{ display: 'inline' }}>Meal Type: </h4>
+            <Text>{mealType}</Text>
+          </div>
+
+          <div className="line">
+            <h4 style={{ display: 'inline' }}>Cook Time: </h4>
+            <Text>{cookTime} minutes</Text>
+          </div>
+
+          <h3>Ingredients needed:</h3>
+          <Card size="default">
+            {ingredients.map((dict, index) => (
+              <div className="line">
+                <Text>{dict.name}</Text>
+                <Text>
+                  {dict.quantity} {dict.unit}
+                </Text>
+              </div>
             ))}
-          </Collapse>
-        </Card>
+          </Card>
+          <h3>Steps:</h3>
+          {steps.map((string, index) => (
+            <Card size="default">
+              <div className="line">
+                <Text>
+                  Step {index + 1}: {string}
+                </Text>
+              </div>
+            </Card>
+          ))}
+        </Space>
       </div>
     </>
   );

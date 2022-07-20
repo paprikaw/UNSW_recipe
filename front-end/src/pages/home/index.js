@@ -10,14 +10,9 @@ import {
   Avatar,
   Dropdown,
   Menu,
-  Input,
   Drawer,
   Row,
   Col,
-  Descriptions,
-  PageHeader,
-  Statistic,
-  Tag,
 } from 'antd';
 import { UserOutlined, AudioOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
@@ -48,6 +43,9 @@ const Home = () => {
   const [categoryList, setCategoryList] = useState([]);
   // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
+  const [childrenDrawer, setChildrenDrawer] = useState(false);
+  const [isDrawerLoading, setIsDrawerLoading] = useState(false);
+  // page navigate and account info
   const [thumbnails, setThumbnails] = useState([]);
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
@@ -111,6 +109,8 @@ const Home = () => {
   };
 
   const handleClickThumbnail = (recipeId) => {
+    setIsDrawerLoading(true);
+    showDrawer();
     fetch('/details?recipeId=' + recipeId, {
       method: 'GET',
     })
@@ -119,7 +119,7 @@ const Home = () => {
       })
       .then((data) => {
         setCurThumbnailDetails(data.recipe);
-        showDrawer();
+        setIsDrawerLoading(false);
       })
       .catch((e) => console.log(e));
   };
@@ -232,9 +232,12 @@ const Home = () => {
               marginTop: '64px',
               padding: '20px 20px',
               overflow: 'scroll',
+              height: '90vh',
             }}
           >
-            <Spin spinning={isRecipeLoading}>
+            {isRecipeLoading ? (
+              <Spin />
+            ) : (
               <Row gutter={[10, 20]}>
                 {thumbnails.map((data) => (
                   <Col xs={24} sm={24} md={12} lg={8} xl={6}>
@@ -251,7 +254,7 @@ const Home = () => {
                   </Col>
                 ))}
               </Row>
-            </Spin>
+            )}
           </Content>
         </Layout>
       </Layout>
@@ -290,7 +293,11 @@ const Home = () => {
           subTitle={'recipe #42'}
         ></PageHeader>
           */}
-        <div>
+        {isDrawerLoading ? (
+          <div>
+            <Spin />
+          </div>
+        ) : (
           <Recipe
             username={curThumbnailDetails.username}
             recipeId={curThumbnailDetails.recipeId}
@@ -302,7 +309,7 @@ const Home = () => {
             ingredients={curThumbnailDetails.ingredients}
             steps={curThumbnailDetails.steps}
           />
-        </div>
+        )}
       </Drawer>
     </>
   );

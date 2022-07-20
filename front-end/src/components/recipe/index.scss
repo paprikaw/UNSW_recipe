@@ -10,3 +10,18 @@
 .ingredients_quantity {
   text-align: right;
 }
+.detail-page-container {
+  padding: 10px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .content {
+    .line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+  }
+}

@@ -119,7 +119,6 @@ const Contributor = (props) => {
     }
   };
 
-
   return (
     <Card id="contributor-card">
       <Form
