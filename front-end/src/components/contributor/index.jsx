@@ -195,7 +195,7 @@ const Contributor = (props) => {
             <Option value={'Dinner'}>Dinner</Option>
             <Option value={'Dessert'}>Dessert</Option>
             <Option value={'Snack'}>Snack</Option>
-            <Option value={'Entree'}>Entry</Option>
+            <Option value={'Entree'}>Entree</Option>
             <Option value={'Main'}>Main</Option>
             <Option value={'Tea'}>Tea</Option>
           </Select>
