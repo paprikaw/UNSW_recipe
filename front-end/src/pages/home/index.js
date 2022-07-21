@@ -209,9 +209,7 @@ const Home = () => {
             <div className="home-sider-childrens" style={{}}>
               <Title level={2}>Ingredients</Title>
               {isLoading ? (
-                <div className="spin">
-                  <Spin />
-                </div>
+                <Spin />
               ) : (
                 <Category data={ingredients} onChange={onCategoryChange} />
               )}
@@ -294,9 +292,7 @@ const Home = () => {
         ></PageHeader>
           */}
         {isDrawerLoading ? (
-          <div>
-            <Spin />
-          </div>
+          <Spin />
         ) : (
           <Recipe
             username={curThumbnailDetails.username}
