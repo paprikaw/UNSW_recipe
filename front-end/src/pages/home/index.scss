@@ -11,14 +11,6 @@
 .home-nav-bar {
   background-color: #fff23f;
 }
-.spin {
-  margin: 20px 0;
-  margin-bottom: 20px;
-  padding: 30px 50px;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-}
 .logout {
   float: right;
 }
@@ -39,4 +31,5 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  position: relative;
 }
