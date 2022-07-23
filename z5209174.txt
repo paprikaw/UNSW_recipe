@@ -42,4 +42,13 @@ Week 7
 - our team is aiming to finish all contributor functionalities and recipe search on the frontend by monday week 8
 
 Week 8
- - completed full recipe details route on the backend. encountered some logic errors and bugs in the recipe update route and fixed them.
+- completed full recipe details route on the backend. encountered some logic errors and bugs in the recipe update route and fixed them.
+- backend finished for sprint 2 on Monday.
+- frontend finished up their implementations for sprint 2 on Wednesday.
+- did a quick bugfix on the backend, created a new route to return images through a url to the frontend.
+- went through and reviewed the application as a team on Wednesday night, discussed who wants to demo and how to structure our demo.
+- ran through demo with Tian and the rest of the team, presented on Thursday lab.
+- held retrospective after lab.
+
+Week 9
+- 
