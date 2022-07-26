@@ -5,6 +5,39 @@ from sqlalchemy import text
 FOLDER_THUMBNAIL = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+'''
+helpers
+'''
+
+def verifyFileType(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def verifyFileDuplicateName(filename):
+    for _, _, files in os.walk(FOLDER_THUMBNAIL):
+        if filename in files:
+            return True
+
+def getAccountIdFromToken(token, con):
+    return con.execute(
+        text('select accountId from AccountSessions where token = :userToken'),
+        userToken = token
+    ).fetchone()
+
+def isRecipeLiked(token, recipeId, accountId, con):
+    isLiked = con.execute(
+        text('select * from RecipeLikes where recipeId = :recipeId and accountId = accountId'),
+        recipeId = recipeId, accountId = accountId
+    ).fetchone()
+
+    if isLiked is None:
+         return False
+    return True
+
+'''
+routes
+'''
+
 def recipe_upload_thumbnail(db_engine):
     img = request.files['recipeThumbnail']
     path = ''
@@ -41,15 +74,6 @@ def recipe_upload_thumbnail(db_engine):
             'msg': 'Unsupported file type'
         } 
 
-def verifyFileType(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def verifyFileDuplicateName(filename):
-    for _, _, files in os.walk(FOLDER_THUMBNAIL):
-        if filename in files:
-            return True
-
 def recipe_update_remaining_info_at_creation(db_engine):
     MEAL_TYPE = {"Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entry", "Main","Tea"}
 
@@ -62,7 +86,6 @@ def recipe_update_remaining_info_at_creation(db_engine):
     ingredientList = recipeInfo['ingredients']
     steps = recipeInfo['steps']
 
-    print("here")
     if (type(recipeName) != str):
         return {
             'status': False,
@@ -78,10 +101,15 @@ def recipe_update_remaining_info_at_creation(db_engine):
     with db_engine.connect() as con:
 
         # Get account Id
-        accountId = con.execute(
-            text('select accountId from AccountSessions where token = :userToken'),
-            userToken = token
-        ).fetchone()[0]
+        accountId = getAccountIdFromToken(token, con)
+        # check valid token
+        if accountId is None:
+            return {
+                'status': False,
+                'error': 'Invalid token'
+            }
+            
+        accountId = accountId[0]
 
         # filling up remaining columns in Recipes table
         con.execute(
@@ -143,11 +171,20 @@ def search(db_engine):
     }
 
     ingredientNames = request.get_json()['ingredients']
+    token = request.get_json()['token']
 
     if ingredientNames is None or len(ingredientNames) == 0:
         return recipesResult
 
     with db_engine.connect() as con:
+        accountId = getAccountIdFromToken(token, con)
+
+        # check valid token
+        if accountId is None:
+            return  recipesResult
+
+        accountId = accountId[0]
+
         ingredientIds = []
         # get ingredient ids from running list
         ingredients = con.execute(
@@ -191,7 +228,8 @@ def search(db_engine):
                 'likes': result[3],
                 'cookTime': result[4], 
                 'thumbnail': result[5],
-                'numIngredientsMatched': result[6]
+                'numIngredientsMatched': result[6],
+                'liked': isRecipeLiked(token, result[0], accountId, con)
             })
 
         # TODO sprint 3: update NoResultIngredientSets for empty searchResults
@@ -204,12 +242,20 @@ def search(db_engine):
 def details(db_engine):
     recipe = {'recipe': {}}
 
-    recipeId = request.args.get('recipeId')
+    recipeId = request.get_json()['recipeId']
+    token = request.get_json()['token']
     
     if recipeId is None:
         return recipe
 
     with db_engine.connect() as con:
+        accountId = getAccountIdFromToken(token, con)
+
+        # check valid token
+        if accountId is None:
+            return  recipe
+
+        accountId = accountId[0]
         recipeResult = con.execute(
             text('''
                 select recipeId, username, recipeName, mealType, cookTime, likes, thumbnailPath
@@ -265,9 +311,49 @@ def details(db_engine):
             'likes': recipeResult[5],
             'thumbnailPath': recipeResult[6],
             'ingredients': ingredients,
-            'steps': steps
+            'steps': steps,
+            'liked': isRecipeLiked(token, recipeResult[0], accountId, con)
         }
 
     return {
         'recipe': recipe
+    }
+
+def like(db_engine):
+    recipeId = request.get_json()['recipeId']
+    token = request.get_json()['token']
+    
+    with db_engine.connect() as con:
+        accountId = getAccountIdFromToken(token, con)
+
+        # check valid token
+        if accountId is None:
+            return {
+                'msg': 'LIKE_FAILURE',
+                'error': 'Invalid token'
+            }
+
+        accountId = accountId[0]
+
+        # check valid recipe        
+        checkRecipe = con.execute(
+            text('select * from Recipes where recipeId = :recipeId'),
+            recipeId = recipeId
+        ).fetchall()
+
+        if len(checkRecipe) == 0:
+            return {
+                'msg': 'LIKE_FAILURE',
+                'error': 'Invalid recipe'
+            }
+
+        # update likes
+        con.execute(
+            text('insert into RecipeLikes (recipeId, accountId) values (:recipeId, :accountId)'),
+            recipeId = recipeId, accountId = accountId
+        )
+
+    return {
+        'msg': 'LIKE_SUCCESS', 
+        'error': ''
     }
