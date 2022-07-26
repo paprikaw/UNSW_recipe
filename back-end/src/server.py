@@ -35,32 +35,6 @@ def homepage():
 
     return response
 
-@app.route("/signup", methods={'POST'})
-def signup():
-    '''
-    add a new user on sign up
-    given a new user's username, email and hashed password,
-    return success message on success
-    return error message on email duplicate
-    '''
-    return accounts.signup(db_engine)
-
-@app.route("/login", methods={'POST'})
-def login():
-    '''
-    login an existing user
-    '''
-    return accounts.login(db_engine)
-
-@app.route("/logout", methods={'DELETE'})
-def logout():
-    '''
-    logout an existing user's session
-    given an existing user's token, return success message on success
-    return error message on invalid token
-    '''
-    return accounts.logout(db_engine)
-
 @app.route("/reset", methods={'DELETE'})
 def reset():
     '''
@@ -83,25 +57,89 @@ def reset():
 
     return {}
 
+@app.route("/static/<path:filepath>")
+def send_static(filepath):
+    '''
+    uploads file from static folder given a filename
+    '''
+    return send_from_directory(app.static_folder, filepath)
+
+'''
+Accounts
+'''
+
+@app.route("/signup", methods={'POST'})
+def signup():
+    '''
+    add a new user on sign up.
+    given a new user's username, email and hashed password,
+    return success message on success.
+    return error message on email duplicate.
+    '''
+    return accounts.signup(db_engine)
+
+@app.route("/login", methods={'POST'})
+def login():
+    '''
+    login an existing user
+    '''
+    return accounts.login(db_engine)
+
+@app.route("/logout", methods={'DELETE'})
+def logout():
+    '''
+    logout an existing user's session.
+    given an existing user's token, return success message on success.
+    return error message on invalid token.
+    '''
+    return accounts.logout(db_engine)
+    
+'''
+Recipes
+'''
+
 @app.route("/upload-thumbnail", methods={'POST'})
 def upload_thumbnail():
+    '''
+    given an image file, upload it to the local server and insert filepath into database.
+    return recipeId on success. return error message on unsupported file type. 
+    '''
     return recipes.recipe_upload_thumbnail(db_engine)
 
 @app.route("/update-recipe-info", methods={'POST'})
 def update_recipe_info():
+    '''
+    given a recipeId, recipe name, meal type, cook time, token, ingredients and steps,
+    upload or update the recipe on the database.
+    return success message on success.
+    return error message on invalid token. 
+    '''
     return recipes.recipe_update_remaining_info_at_creation(db_engine)
 
 @app.route("/search", methods={'POST'})
 def search():
+    '''
+    given a list of ingredients, 
+    return a list of recipes and some of their details that use at least 1 of the ingredients
+    '''
     return recipes.search(db_engine)
 
 @app.route("/details", methods={'GET'})
 def details():
+    '''
+    given a recipeId,
+    return a recipe's full details
+    '''
     return recipes.details(db_engine)
 
-@app.route("/static/<path:filepath>")
-def send_static(filepath):
-    return send_from_directory(app.static_folder, filepath)
+@app.route("/like", methods={'PUT'})
+def like():
+    '''
+    given a recipeId and an existing user's token, update the user's likes.
+    return success message on success.
+    return error message on invalid recipeId or invalid token.
+    '''
+    return recipes.like(db_engine)
 
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)

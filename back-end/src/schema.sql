@@ -1,5 +1,5 @@
 -- use this file to reset database schema
-drop table if exists AccountSessions, Accounts, RecipeIngredients, RecipeSteps, 
+drop table if exists AccountSessions, Accounts, RecipeIngredients, RecipeSteps, RecipeLikes,
     Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
 
 drop view if exists IngredientsMatched;
@@ -41,7 +41,7 @@ create table NoResultIngredientSets (
 create table IngredientSets (
     setId           bigint unsigned not null,
     ingredientId    bigint unsigned not null,
-    primary key     (setId, ingredientId),
+    primary key (setId, ingredientId),
     foreign key (setId) references NoResultIngredientSets(setId),
     foreign key (ingredientId) references Ingredients(ingredientId)
 );
@@ -62,7 +62,7 @@ create table RecipeIngredients (
     ingredientId    bigint unsigned not null,
     quantity        int,
     unit            text,
-    primary key     (recipeId, ingredientId),
+    primary key (recipeId, ingredientId),
     foreign key (recipeId) references Recipes(recipeId),
     foreign key (ingredientId) references Ingredients(ingredientId)
 );
@@ -72,6 +72,14 @@ create table RecipeSteps (
     recipeId        bigint unsigned not null,
     step            text,
     foreign key (recipeId) references Recipes(recipeId)
+);
+
+create table RecipeLikes (
+    recipeId        bigint unsigned not null,
+    accountId       bigint unsigned not null,
+    primary key (recipeId, accountId),
+    foreign key (recipeId) references Recipes(recipeId),
+    foreign key (accountId) references Accounts(accountId)
 );
 
 insert into Categories (categoryName) values ('Vegetables');
