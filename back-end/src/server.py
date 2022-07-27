@@ -112,7 +112,7 @@ def remove_thumbnail():
     given an image file name, delete it from the local server and remove filepath from database.
     return success message on success. return error message on invalid file name. 
     '''
-    return recipes.remove_thumbnail(db_engine)
+    return recipes.remove_thumbnail(db_engine, app.static_folder)
 
 @app.route("/update-recipe-info", methods={'POST'})
 def update_recipe_info():
