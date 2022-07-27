@@ -64,15 +64,24 @@ def recipe_upload_thumbnail(db_engine):
             result = con.execute(text('select recipeID from Recipes where thumbnailPath = :thumbnailPath'), thumbnailPath=filename).fetchall()
         return {
             'status': True,
-            'value': result[0][0],
+            'recipeId': result[0][0],
+            'fileName': filename,
             'msg': 'Image upload success'
         }
     else:
         return {
             'status': False,
-            'value': '',
+            'recipeId': '',
+            'fileName': '',
             'msg': 'Unsupported file type'
         } 
+
+def remove_thumbnail(db_engine):
+    file = request.get_json()['thumbnail']
+
+    with db_engine.connect() as con:
+    
+    return {}
 
 def recipe_update_remaining_info_at_creation(db_engine):
     MEAL_TYPE = {"Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entry", "Main","Tea"}
