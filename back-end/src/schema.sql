@@ -49,7 +49,6 @@ create table IngredientSets (
 create table Recipes (
     recipeId        serial primary key,
     recipeName      text,
-    mealType        text, 
     cookTime        int, -- in minutes
     likes           int default 0,
     accountId       bigint unsigned,
