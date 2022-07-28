@@ -306,7 +306,7 @@ def details(db_engine):
         accountId = accountId[0]
         recipeResult = con.execute(
             text('''
-                select recipeId, username, recipeName, mealType, cookTime, likes, thumbnailPath
+                select recipeId, username, recipeName, cookTime, likes, thumbnailPath
                 from Recipes left outer join Accounts on Recipes.accountId = Accounts.accountId
                 where recipeId = :recipeId
             '''),
@@ -365,9 +365,9 @@ def details(db_engine):
             'username': recipeResult[1],
             'recipeName': recipeResult[2],
             'mealType': mealTypes,
-            'cookTime': recipeResult[4],
-            'likes': recipeResult[5],
-            'thumbnailPath': recipeResult[6],
+            'cookTime': recipeResult[3],
+            'likes': recipeResult[4],
+            'thumbnailPath': recipeResult[5],
             'ingredients': ingredients,
             'steps': steps,
             'liked': isRecipeLiked(token, recipeResult[0], accountId, con)
