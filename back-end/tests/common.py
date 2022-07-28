@@ -16,7 +16,7 @@ def getRecipeData1(recipeId, token):
     return {
         "recipeId": recipeId,
         "recipeName": "Beef pie",
-        "mealType": "Breakfast",
+        "mealType": ["Breakfast"],
         "cookTime": 60,
         "token": token,
         "ingredients": [
@@ -43,7 +43,7 @@ def getRecipeData2(recipeId, token):
     return {
         'recipeId': recipeId,
         "recipeName": "No Salt Beef pie",
-        "mealType": "Breakfast",
+        "mealType": ["Breakfast"],
         "cookTime": 60,
         "token": token,
         "ingredients": [

@@ -94,7 +94,7 @@ def test_update_failure_on_invalid_recipeName():
     jsonData = {
         "recipeId": rjson2["recipeId"],
         "recipeName": 12345,
-        "mealType": "Breakfast",
+        "mealType": ["Breakfast"],
         "cookTime": 60,
         "token": user1["token"],
         "ingredients": [

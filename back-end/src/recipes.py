@@ -123,7 +123,7 @@ def recipe_update_remaining_info_at_creation(db_engine):
             'msg': 'Recipe should be string'
         }
 
-    if (mealType not in MEAL_TYPE):
+    if not any(m in MEAL_TYPE for m in mealType):
         return {
             'status': False,
             'msg': 'Meal type is not right'
