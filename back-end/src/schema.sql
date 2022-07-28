@@ -49,12 +49,18 @@ create table IngredientSets (
 create table Recipes (
     recipeId        serial primary key,
     recipeName      text,
-    mealType        text, 
     cookTime        int, -- in minutes
     likes           int default 0,
     accountId       bigint unsigned,
     thumbnailPath   text not null,
     foreign key (accountId) references Accounts(accountId)
+);
+
+create table RecipeMealTypes (
+    recipeId        serial primary key,
+    mealType        enum("Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entree", "Main", "Tea"),
+    primary key (recipeId, mealType),
+    foreign key (reipeId) references Recipes(recipeId)
 );
 
 create table RecipeIngredients (

@@ -106,7 +106,7 @@ def remove_thumbnail(db_engine, directory):
     }
 
 def recipe_update_remaining_info_at_creation(db_engine):
-    MEAL_TYPE = {"Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entry", "Main","Tea"}
+    MEAL_TYPE = {"Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entree", "Main", "Tea"}
 
     recipeInfo = request.get_json()
     recipeId = recipeInfo['recipeId']
