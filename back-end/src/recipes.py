@@ -284,24 +284,25 @@ def search(db_engine):
         # check if ingredient set is existing
         # set exists, increment hits
         # set does not exist, insert new set
-        maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchall()
+        maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchone()
+        maxSetId = maxSetId[0] # extract id from tuple
         # init the setId == 1 if there's no record in the table
         if type(maxSetId) != int:
-            # print("haha1")
             maxSetId = 1
         ingreIdsInSearch = set(ingredientIds)
+        ingreIdsInDb = set()
         existenceFlag = False
         for i in range(1, maxSetId + 1):
+            ingreIdsInDb.clear()
+            print(f"-------------------------- {i} ---------------------------")
             result = con.execute(
                 text("""
                     select ingredientId from IngredientSets where setId = :setId
                 """), setId = i
             ).fetchall()
-            if len(result) == 0:
-                ingreIdsInDb = {}
-            else:
-                print(result)
-                ingreIdsInDb = set(result)
+            if len(result) != 0:
+                for id in result:
+                    ingreIdsInDb.add(id[0])
 
             difference = ingreIdsInSearch.symmetric_difference(ingreIdsInDb)
             if len(difference) != 0:
@@ -314,7 +315,7 @@ def search(db_engine):
                 existenceFlag = True
                 con.execute(
                     text("""
-                        update NoResultIngredientSets set hits = hits + 1 where setId := setId
+                        update NoResultIngredientSets set hits = hits + 1 where setId = :setId
                     """), setId = i
                 )
                 break
@@ -322,16 +323,16 @@ def search(db_engine):
         if not existenceFlag:
             con.execute(
                 text("""
-                    insert into NoResultIngredientSets(hits) values (0)
+                    insert into NoResultIngredientSets(hits) values (1)
                 """)
             )
-            maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchall()
+            maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchone()
             for id in ingredientIds:
                 con.execute(
                     text("""
                         insert into IngredientSets (setId, ingredientId) values (:setId, :ingredientId)
                     """), 
-                    setId = maxSetId, ingredientId = id
+                    setId = maxSetId[0], ingredientId = id
                 )
             
 
