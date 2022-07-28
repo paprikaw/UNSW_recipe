@@ -211,8 +211,8 @@ def test_details_valid_recipe_id():
     requests.post(url + 'update-recipe-info', json=recipeData1)
     requests.post(url + 'update-recipe-info', json=recipeData2)
 
-    response1 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
-    response2 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
+    response1 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
+    response2 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
 
     assert response1['recipe']['recipeId'] == 1
     assert response1['recipe']['username'] == 'user1'
@@ -283,8 +283,8 @@ def test_details_invalid_recipe_id():
     requests.post(url + 'update-recipe-info', json=recipeData1)
     requests.post(url + 'update-recipe-info', json=recipeData2)
 
-    response1 = json.loads(requests.get(url + 'details', json={'recipeId': 3, 'token': token}).text)
-    response2 = json.loads(requests.get(url + 'details', json={'recipeId': -1, 'token': token}).text)
+    response1 = json.loads(requests.post(url + 'details', json={'recipeId': 3, 'token': token}).text)
+    response2 = json.loads(requests.post(url + 'details', json={'recipeId': -1, 'token': token}).text)
     
     assert response1 == {'recipe': {}}
     assert response2 == {'recipe': {}}
@@ -336,8 +336,8 @@ def test_like_success():
     assert response['recipes'][0]['liked'] == True
     assert response['recipes'][1]['liked'] == True
 
-    response1 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
-    response2 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
+    response1 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
+    response2 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
     assert response1['recipe']['liked'] == True
     assert response1['recipe']['liked'] == True
 

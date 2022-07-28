@@ -132,7 +132,7 @@ def search():
     '''
     return recipes.search(db_engine)
 
-@app.route("/details", methods={'GET'})
+@app.route("/details", methods={'POST'})
 def details():
     '''
     given a recipeId,
