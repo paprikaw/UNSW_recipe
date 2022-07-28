@@ -267,6 +267,56 @@ def search(db_engine):
         # check if ingredient set is existing
         # set exists, increment hits
         # set does not exist, insert new set
+        maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchall()
+        # init the setId == 1 if there's no record in the table
+        if type(maxSetId) != int:
+            # print("haha1")
+            maxSetId = 1
+        ingreIdsInSearch = set(ingredientIds)
+        existenceFlag = False
+        for i in range(1, maxSetId + 1):
+            result = con.execute(
+                text("""
+                    select ingredientId from IngredientSets where setId = :setId
+                """), setId = i
+            ).fetchall()
+            if len(result) == 0:
+                ingreIdsInDb = {}
+            else:
+                print(result)
+                ingreIdsInDb = set(result)
+
+            difference = ingreIdsInSearch.symmetric_difference(ingreIdsInDb)
+            if len(difference) != 0:
+                print("=====  Diff =====")
+                print(ingreIdsInSearch)
+                print(ingreIdsInDb)
+                pass
+            else:
+                print("=====  No Diff =====")
+                existenceFlag = True
+                con.execute(
+                    text("""
+                        update NoResultIngredientSets set hits = hits + 1 where setId := setId
+                    """), setId = i
+                )
+                break
+
+        if not existenceFlag:
+            con.execute(
+                text("""
+                    insert into NoResultIngredientSets(hits) values (0)
+                """)
+            )
+            maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchall()
+            for id in ingredientIds:
+                con.execute(
+                    text("""
+                        insert into IngredientSets (setId, ingredientId) values (:setId, :ingredientId)
+                    """), 
+                    setId = maxSetId, ingredientId = id
+                )
+            
 
     return recipesResult
     
@@ -402,6 +452,7 @@ def showTopThreeNoResultIngredientSets(db_engine):
                 'ingredients': []
             }
         else:
+            # find ingredientName for each set of unmatched Ingredient sets
             for setId in ingredientSetIds:
                 ingredientNameSet = con.execute(
                     text("""

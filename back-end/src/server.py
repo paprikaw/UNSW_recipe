@@ -149,7 +149,7 @@ def like():
     '''
     return recipes.like(db_engine)
 
-@app.route("/topThreeNoResultIngredientSets", method={'GET'})
+@app.route("/topThreeNoResultIngredientSets", methods={'GET'})
 def topThreeNoResultIngredientSets():
     '''
     return top 3 searched ingredients sets which has no matching recipes
