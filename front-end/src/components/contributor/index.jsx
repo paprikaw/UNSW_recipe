@@ -90,7 +90,9 @@ const Contributor = (props) => {
   };
 
   const onFormFinish = (values) => {
+    console.log('here');
     console.log(values);
+
     // Get rid of emoji in the recipe names
     values.ingredients.map(
       (element) => (element.name = getRidOfEmoji(element.name))

@@ -121,8 +121,15 @@ const Home = () => {
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
-    fetch('/details?recipeId=' + recipeId, {
-      method: 'GET',
+    fetch('/details', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: token,
+        recipeId: recipeId,
+      }),
     })
       .then((v) => {
         return v.json();
@@ -139,7 +146,6 @@ const Home = () => {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         token: token,
