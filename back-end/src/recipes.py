@@ -280,21 +280,24 @@ def search(db_engine):
                 'liked': isRecipeLiked(token, result[0], accountId, con)
             })
 
-        # TODO sprint 3: update NoResultIngredientSets for empty searchResults
-        # check if ingredient set is existing
-        # set exists, increment hits
-        # set does not exist, insert new set
+        '''
+        update NoResultIngredientSets for empty searchResults
+        check if ingredient set is existing
+        set exists, increment hits
+        set does not exist, insert new set
+        '''
         maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchone()
         maxSetId = maxSetId[0] # extract id from tuple
         # init the setId == 1 if there's no record in the table
         if type(maxSetId) != int:
             maxSetId = 1
+
+        # compare ingredients sets from search and the one from database  
         ingreIdsInSearch = set(ingredientIds)
         ingreIdsInDb = set()
         existenceFlag = False
         for i in range(1, maxSetId + 1):
             ingreIdsInDb.clear()
-            print(f"-------------------------- {i} ---------------------------")
             result = con.execute(
                 text("""
                     select ingredientId from IngredientSets where setId = :setId
@@ -304,14 +307,10 @@ def search(db_engine):
                 for id in result:
                     ingreIdsInDb.add(id[0])
 
+            # compare the set difference here
+            # if two sets are same, update the hits by 1
             difference = ingreIdsInSearch.symmetric_difference(ingreIdsInDb)
-            if len(difference) != 0:
-                print("=====  Diff =====")
-                print(ingreIdsInSearch)
-                print(ingreIdsInDb)
-                pass
-            else:
-                print("=====  No Diff =====")
+            if len(difference) == 0:
                 existenceFlag = True
                 con.execute(
                     text("""
@@ -319,7 +318,9 @@ def search(db_engine):
                     """), setId = i
                 )
                 break
-
+            
+        # if no sets in db matches the input set
+        # register this ingre set in db
         if not existenceFlag:
             con.execute(
                 text("""
