@@ -64,15 +64,46 @@ def recipe_upload_thumbnail(db_engine):
             result = con.execute(text('select recipeID from Recipes where thumbnailPath = :thumbnailPath'), thumbnailPath=filename).fetchall()
         return {
             'status': True,
-            'value': result[0][0],
+            'recipeId': result[0][0],
+            'thumbnail': filename,
             'msg': 'Image upload success'
         }
     else:
         return {
             'status': False,
-            'value': '',
+            'recipeId': '',
+            'thumbnail': '',
             'msg': 'Unsupported file type'
         } 
+
+def remove_thumbnail(db_engine, directory):
+    file = request.get_json()['thumbnail']
+
+    with db_engine.connect() as con:
+        # check thumbnail exists in database
+        recipe = con.execute(
+            text('select recipeId from Recipes where thumbnailPath = :thumbnailPath'),
+            thumbnailPath = file
+        ).fetchone()
+
+        if recipe is None:
+            return {
+                'msg': 'REMOVE_THUMBNAIL_FAILURE',
+                'error': 'Invalid thumbnail file name'
+            }
+        
+        con.execute(
+            text('delete from Recipes where recipeId = :recipeId'),
+            recipeId = recipe[0]
+        )
+
+        # remove thumbnail file from local server
+        os.remove(os.path.join(directory, file))
+
+    return {
+        'msg': 'REMOVE_THUMBNAIL_SUCCESS',
+        'error': ''
+    }
 
 def recipe_update_remaining_info_at_creation(db_engine):
     MEAL_TYPE = {"Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entry", "Main","Tea"}

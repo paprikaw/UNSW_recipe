@@ -29,7 +29,7 @@ def test_category_ingredients_sorted_by_num_uses():
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
     
     thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData1 = getRecipeData1(thumbnailResponse1["value"], user1["token"])
+    recipeData1 = getRecipeData1(thumbnailResponse1["recipeId"], user1["token"])
 
     requests.post(url + 'update-recipe-info', json=recipeData1)
 
