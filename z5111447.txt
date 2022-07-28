@@ -19,7 +19,6 @@ Week 4
   - Team had attemptions on working initial backend signup/account route implementation/frontend page conduction.
   - Backend Server/Frontend files finialization done. 
 
-
 Week 5
 - Work done by the team:
   - Sprint 1 finialization. Sprint 1 feature/pages early version complete.
@@ -30,5 +29,15 @@ Week 5
  - Complete frontend account:login/out feature. (with Eric's help and Tian's code resources)
  - Complete account frontend data checking procedual.
  
-  
+Week 6
+- Disscussion with team in reference to Retrospective topics in order to produce better work.
+- Next sprint prework discussion and preparing with the team.
 
+Week 7
+- bug fix from sprint 1 work regarding the home page features.
+- home page skleton work, set up the slot for recipe detail component in homepage.
+- recipe detail component darft done.
+
+Week 8
+- 
+Week 9
