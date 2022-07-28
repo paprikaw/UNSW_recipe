@@ -1,4 +1,5 @@
 import os
+import re
 from flask import request
 from sqlalchemy import text
 
@@ -280,10 +281,62 @@ def search(db_engine):
                 'liked': isRecipeLiked(token, result[0], accountId, con)
             })
 
-        # TODO sprint 3: update NoResultIngredientSets for empty searchResults
-        # check if ingredient set is existing
-        # set exists, increment hits
-        # set does not exist, insert new set
+        '''
+        update NoResultIngredientSets for empty searchResults
+        check if ingredient set is existing
+        set exists, increment hits
+        set does not exist, insert new set
+        '''
+        maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchone()
+        maxSetId = maxSetId[0] # extract id from tuple
+        # init the setId == 1 if there's no record in the table
+        if type(maxSetId) != int:
+            maxSetId = 1
+
+        # compare ingredients sets from search and the one from database  
+        ingreIdsInSearch = set(ingredientIds)
+        ingreIdsInDb = set()
+        existenceFlag = False
+        for i in range(1, maxSetId + 1):
+            ingreIdsInDb.clear()
+            result = con.execute(
+                text("""
+                    select ingredientId from IngredientSets where setId = :setId
+                """), setId = i
+            ).fetchall()
+            if len(result) != 0:
+                for id in result:
+                    ingreIdsInDb.add(id[0])
+
+            # compare the set difference here
+            # if two sets are same, update the hits by 1
+            difference = ingreIdsInSearch.symmetric_difference(ingreIdsInDb)
+            if len(difference) == 0:
+                existenceFlag = True
+                con.execute(
+                    text("""
+                        update NoResultIngredientSets set hits = hits + 1 where setId = :setId
+                    """), setId = i
+                )
+                break
+
+        # if no sets in db matches the input set
+        # register this ingre set in db
+        if not existenceFlag:
+            con.execute(
+                text("""
+                    insert into NoResultIngredientSets(hits) values (1)
+                """)
+            )
+            maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchone()
+            for id in ingredientIds:
+                con.execute(
+                    text("""
+                        insert into IngredientSets (setId, ingredientId) values (:setId, :ingredientId)
+                    """), 
+                    setId = maxSetId[0], ingredientId = id
+                )
+            
 
     return recipesResult
     
@@ -415,3 +468,41 @@ def like(db_engine):
         'msg': 'LIKE_SUCCESS', 
         'error': ''
     }
+
+def showTopThreeNoResultIngredientSets(db_engine):
+    result = {
+                'ingredientSets': [[], [], []],
+                'hits': [0, 0, 0] 
+            }
+    with db_engine.connect() as con:
+        # search the top 3 hitted ingredient sets which has no matching recipes.
+        response =  con.execute(
+            text('select setId, hits from NoResultIngredientSets order by hits desc limit 3')
+        ).fetchall()
+
+        if len(response) != 0:
+            # find ingredientName for each set of unmatched Ingredient sets
+            i = 0
+            for res in response:
+                ingredientNameSet = con.execute(
+                    text("""
+                    select concat(Ingredients.emoji, ' ', Ingredients.ingredientName) from Ingredients 
+                    right join IngredientSets on IngredientSets.ingredientId = Ingredients.ingredientId
+                    where IngredientSets.setId = :setId
+                    order by Ingredients.numUses
+                    """),
+                    setId = res[0]
+                ).fetchall()
+                
+                if len(ingredientNameSet) != 0:
+                    for name in ingredientNameSet:
+                        result['ingredientSets'][i].append(name[0])
+                        result['hits'][i] = res[1]
+                i+=1
+
+            # display "empty" msg for empty list
+            for index in range(3):
+                if len(result['ingredientSets'][index]) == 0:
+                    result['ingredientSets'][index].append("empty")
+            print(result)
+        return result

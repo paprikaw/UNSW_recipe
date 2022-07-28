@@ -171,5 +171,16 @@ def like():
     '''
     return recipes.like(db_engine)
 
+@app.route("/topThreeNoResultIngredientSets", methods={'GET'})
+def topThreeNoResultIngredientSets():
+    '''
+    return top 3 searched ingredients sets which has no matching recipes
+    return empty list if we only have less than three sets
+        {
+            'ingredients': [['ingre1', 'ingre2', 'ingre3'], [], []]
+        }
+    '''
+    return recipes.showTopThreeNoResultIngredientSets(db_engine)
+    
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)
