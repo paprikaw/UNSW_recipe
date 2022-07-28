@@ -17,10 +17,10 @@ __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 @app.route("/category", methods={'GET'})
-def homepage(): 
+def category(): 
     '''
-    homepage returns the categories and their ingredients in the form:
-    {'CategoryName': ['emoji IngredientName1', 'emoji IngredientName2', ...], ...}
+    returns the categories and their ingredients ordered by number of uses, and then alphabetically
+    in the form: {'CategoryName': ['emoji IngredientName1', 'emoji IngredientName2', ...], ...}
     '''
     response = {}
     with db_engine.connect() as con:
@@ -34,6 +34,28 @@ def homepage():
             response[row[0]] = [ingredient for ingredient in row[1].split(',')]
 
     return response
+
+@app.route("/top10", methods={'GET'})
+def top10():
+    '''
+    returns the top 10 most frequently used ingredients (regardless of categories) 
+    ordered by number of uses, and then alphabetically in the form:
+    {'ingredients': ['🧄 Garlic', ...]}
+    '''
+    ingredients = []
+
+    with db_engine.connect() as con:
+        ingredientsResult = con.execute(text('''
+            select concat(emoji, ' ', ingredientName) 
+            from Ingredients 
+            order by numUses desc, ingredientName asc limit 10
+        ''')).fetchall()
+
+        for ingredient in ingredientsResult:
+            ingredients.append(ingredient[0])
+    
+    return {'ingredients': ingredients}
+
 
 @app.route("/reset", methods={'DELETE'})
 def reset():
