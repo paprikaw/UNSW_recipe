@@ -37,6 +37,11 @@ const suffix = (
 const Home = () => {
   // left hand, ingredients menu set up
   const [ingredients, setIngredients] = useState({});
+  // ingredient suggestion data
+  const [sugIngredients, setSugIngredients] = useState({
+    apple: true,
+    pear: false,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
@@ -56,6 +61,10 @@ const Home = () => {
   const onSearch = (value) => setThumbnails(value);
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
+  };
+
+  const handleSuggestionIngre = (key) => {
+    setSugIngredients({ ...sugIngredients, [key]: false });
   };
 
   useEffect(() => {
