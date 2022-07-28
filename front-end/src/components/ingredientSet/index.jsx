@@ -36,12 +36,13 @@ const IngredientSet = (props) => {
     <Card style={{ padding: '10px' }}>
       <h3>These ingredient sets need you!</h3>
       <div className="container">
-        {ingredient_set.map((set) => (
+        {ingredient_set.map((set, key) => (
           <Card
             style={{ paddingLeft: '10px' }}
             id="my-card"
             hoverable={true}
             onClick={onClick}
+            key={key}
           >
             <div className="ingredient-element">{set.join(', ')}</div>
           </Card>
