@@ -4,13 +4,25 @@ import { Card, Button, Spin, Space } from 'antd';
 import SelectButton from './selectButton';
 import './index.scss';
 
-function CollapseBox(props) {
+/**
+ * Component for category page to suggest ingredient input
+ *
+ * @component
+ * @example
+ * const ingredients = {
+ *    apple: true,
+ *    pear: false
+ * }
+ * return (
+ *   <CollapseBox data={ingredients} onClick=() title/>
+ * )
+ */
+function SuggestionBox(props) {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     collapsedHeight: '80',
   });
-  const newDic = {};
-  const { data, title, selectState, onClick } = props;
-  data.map((name) => (newDic[name] = false));
+
+  const { data, title, onClick } = props;
 
   return (
     <Card
@@ -24,16 +36,17 @@ function CollapseBox(props) {
         </Button>,
       ]}
     >
-      <div style={{ height: '300px' }} {...getCollapseProps()}>
+      <div style={{ height: '200px' }} {...getCollapseProps()}>
         <Space size={[8, 16]} wrap>
-          {data.map((name) => {
+          {Object.entries(data).map(([name, isShow]) => {
             return (
-              <SelectButton
-                selectState={selectState}
-                buttonText={name}
-                categoryKey={title}
-                onClick={() => onClick(name)}
-              />
+              isShow && (
+                <SelectButton
+                  buttonText={name}
+                  categoryKey={title}
+                  onClick={() => onClick(name)}
+                />
+              )
             );
           })}
         </Space>
@@ -42,4 +55,4 @@ function CollapseBox(props) {
   );
 }
 
-export default CollapseBox;
+export default SuggestionBox;
