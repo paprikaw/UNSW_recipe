@@ -161,6 +161,8 @@ def test_search_multiple_responses():
     # should be arranged according to num ingredients matched
     assert response['recipes'][0]['recipeName'] == 'Beef pie'
     assert response['recipes'][1]['recipeName'] == 'No Salt Beef pie' 
+    assert response['recipes'][0]['mealType'] == ['Breakfast']
+    assert response['recipes'][1]['mealType'] == ['Breakfast', 'Tea']
     assert response['recipes'][0]['liked'] == False
     assert response['recipes'][1]['liked'] == False
     assert response['recipes'][0]['numIngredientsMatched'] == 3
@@ -217,7 +219,7 @@ def test_details_valid_recipe_id():
     assert response1['recipe']['recipeId'] == 1
     assert response1['recipe']['username'] == 'user1'
     assert response1['recipe']['recipeName'] == 'Beef pie'
-    assert response1['recipe']['mealType'] == 'Breakfast'
+    assert response1['recipe']['mealType'] == ['Breakfast']
     assert response1['recipe']['cookTime'] == 60
     assert response1['recipe']['ingredients'] == [
         {
@@ -244,7 +246,7 @@ def test_details_valid_recipe_id():
     assert response2['recipe']['recipeId'] == 2
     assert response2['recipe']['username'] == 'user1'
     assert response2['recipe']['recipeName'] == 'No Salt Beef pie'
-    assert response2['recipe']['mealType'] == 'Breakfast'
+    assert response2['recipe']['mealType'] == ['Breakfast', 'Tea']
     assert response2['recipe']['cookTime'] == 60
     assert response2['recipe']['ingredients'] == [
         {

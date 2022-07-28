@@ -111,7 +111,7 @@ def recipe_update_remaining_info_at_creation(db_engine):
     recipeInfo = request.get_json()
     recipeId = recipeInfo['recipeId']
     recipeName = recipeInfo['recipeName']
-    mealType = recipeInfo['mealType']
+    mealTypes = recipeInfo['mealType']
     cookTime = recipeInfo['cookTime']
     token = recipeInfo['token']
     ingredientList = recipeInfo['ingredients']
@@ -123,7 +123,7 @@ def recipe_update_remaining_info_at_creation(db_engine):
             'msg': 'Recipe should be string'
         }
 
-    if not any(m in MEAL_TYPE for m in mealType):
+    if not any(m in MEAL_TYPE for m in mealTypes):
         return {
             'status': False,
             'msg': 'Meal type is not right'
@@ -146,13 +146,20 @@ def recipe_update_remaining_info_at_creation(db_engine):
         con.execute(
             text('''
                 update Recipes
-                set recipeName = :recipeName , mealType = :mealType, cookTime = :cookTime, accountId = :accountId
+                set recipeName = :recipeName, cookTime = :cookTime, accountId = :accountId
                 where recipeId = :recipeId
                 '''    
             ),
-            recipeName = recipeName, mealType = mealType, cookTime = cookTime, 
-            accountId = accountId, recipeId = recipeId, steps = steps
+            recipeName = recipeName, cookTime = cookTime, 
+            accountId = accountId, recipeId = recipeId
         )
+
+        # add meal types
+        for mealType in mealTypes:
+            con.execute(
+                text('insert into RecipeMealTypes(recipeId, mealType) values (:recipeId, :mealType)'),
+                recipeId = recipeId, mealType = mealType
+            )
 
         # search ingredientId based on their names in db
         for ingreInfo in ingredientList:
@@ -245,21 +252,31 @@ def search(db_engine):
         # get recipes that have matches
         searchResults = con.execute(
             text('''
-                select Recipes.recipeId, recipeName, mealType, likes, cookTime, thumbnailPath, numIngredientsMatched 
-                from IngredientsMatched left outer join Recipes on (IngredientsMatched.recipeId = Recipes.recipeId) 
+                select Recipes.recipeId, recipeName, likes, cookTime, thumbnailPath, numIngredientsMatched 
+                from IngredientsMatched left outer join Recipes on (IngredientsMatched.recipeId = Recipes.recipeId)
                 order by numIngredientsMatched desc;
             ''')
         ).fetchall()
 
         for result in searchResults:
+            mealTypes = []
+            
+            mealTypesResults = con.execute(
+                text('select mealType from RecipeMealTypes where recipeId = :recipeId'),
+                recipeId = result[0]
+            ).fetchall()
+
+            for m in mealTypesResults:
+                mealTypes.append(m[0])
+
             recipes.append({
                 'recipeId': result[0],
                 'recipeName': result[1],
-                'mealType': result[2],
-                'likes': result[3],
-                'cookTime': result[4], 
-                'thumbnail': result[5],
-                'numIngredientsMatched': result[6],
+                'mealType': mealTypes,
+                'likes': result[2],
+                'cookTime': result[3], 
+                'thumbnail': result[4],
+                'numIngredientsMatched': result[5],
                 'liked': isRecipeLiked(token, result[0], accountId, con)
             })
 
@@ -299,6 +316,16 @@ def details(db_engine):
         if recipeResult is None:
             return recipe
 
+        mealTypes = []
+        
+        mealTypesResults = con.execute(
+            text('select mealType from RecipeMealTypes where recipeId = :recipeId'),
+            recipeId = recipeId
+        ).fetchall()
+
+        for m in mealTypesResults:
+            mealTypes.append(m[0])
+
         ingredients = []
 
         ingredientsResult = con.execute(
@@ -337,7 +364,7 @@ def details(db_engine):
             'recipeId': recipeResult[0],
             'username': recipeResult[1],
             'recipeName': recipeResult[2],
-            'mealType': recipeResult[3],
+            'mealType': mealTypes,
             'cookTime': recipeResult[4],
             'likes': recipeResult[5],
             'thumbnailPath': recipeResult[6],
