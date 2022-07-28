@@ -388,3 +388,30 @@ def like(db_engine):
         'msg': 'LIKE_SUCCESS', 
         'error': ''
     }
+
+def showTopThreeNoResultIngredientSets(db_engine):
+    with db_engine.connect() as con:
+        # search the top 3 hitted ingredient sets which has no matching recipes.
+        ingredientSetIds =  con.execute(
+            text('select setId, hits from NoResultIngredientSets order by hits desc limit 3')
+        ).fetchall()
+
+        result = []
+        if len(ingredientSetIds) == 0:
+            return {
+                'ingredients': []
+            }
+        else:
+            for setId in ingredientSetIds:
+                ingredientNameSet = con.execute(
+                    text("""
+                    select ingredientName from Ingredients 
+                    inner join IngredientSets on IngredientSets.ingredientId = Ingredients.ingredientId
+                    where IngredientSets.setId := setId"""),
+                    setId = setId
+                ).fetchall()
+                print(ingredientNameSet)
+                result.append(ingredientNameSet)
+            return {
+                'ingredients': result 
+            }
