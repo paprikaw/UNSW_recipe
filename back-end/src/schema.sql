@@ -1,5 +1,5 @@
 -- use this file to reset database schema
-drop table if exists AccountSessions, Accounts, RecipeIngredients, RecipeSteps, RecipeLikes,
+drop table if exists AccountSessions, Accounts, RecipeMealTypes, RecipeIngredients, RecipeSteps, RecipeLikes,
     Recipes, IngredientSets, NoResultIngredientSets, Ingredients, Categories;
 
 drop view if exists IngredientsMatched;
@@ -49,12 +49,18 @@ create table IngredientSets (
 create table Recipes (
     recipeId        serial primary key,
     recipeName      text,
-    mealType        text, 
     cookTime        int, -- in minutes
     likes           int default 0,
     accountId       bigint unsigned,
     thumbnailPath   text not null,
     foreign key (accountId) references Accounts(accountId)
+);
+
+create table RecipeMealTypes (
+    recipeId        bigint unsigned,
+    mealType        enum("Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Entree", "Main", "Tea"),
+    primary key (recipeId, mealType),
+    foreign key (recipeId) references Recipes(recipeId)
 );
 
 create table RecipeIngredients (

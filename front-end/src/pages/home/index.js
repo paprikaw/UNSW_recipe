@@ -37,6 +37,11 @@ const suffix = (
 const Home = () => {
   // left hand, ingredients menu set up
   const [ingredients, setIngredients] = useState({});
+  // ingredient suggestion data
+  const [sugIngredients, setSugIngredients] = useState({
+    apple: true,
+    pear: false,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
@@ -56,6 +61,10 @@ const Home = () => {
   const onSearch = (value) => setThumbnails(value);
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
+  };
+
+  const handleSuggestionIngre = (key) => {
+    setSugIngredients({ ...sugIngredients, [key]: false });
   };
 
   useEffect(() => {
@@ -101,6 +110,7 @@ const Home = () => {
       },
       body: JSON.stringify({
         ingredients: list.map((name) => getRidOfEmoji(name)),
+        token: token,
       }),
     });
     const data = await response.json();
@@ -111,8 +121,15 @@ const Home = () => {
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
-    fetch('/details?recipeId=' + recipeId, {
-      method: 'GET',
+    fetch('/details', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: token,
+        recipeId: recipeId,
+      }),
     })
       .then((v) => {
         return v.json();
@@ -129,7 +146,6 @@ const Home = () => {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         token: token,
