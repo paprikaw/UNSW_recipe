@@ -175,9 +175,9 @@ def like():
 def topThreeNoResultIngredientSets():
     '''
     return top 3 searched ingredients sets which has no matching recipes
-    return empty list if we only have less than three sets
+    return empty list shown as follows if we only have less than three sets
         {
-            'ingredients': [['ingre1', 'ingre2', 'ingre3'], [], []]
+            'ingredients': [['emoji ingre1', 'emoji ingre2', 'emoji ingre3'], ['empty'], ['empty]]
         }
     '''
     return recipes.showTopThreeNoResultIngredientSets(db_engine)
