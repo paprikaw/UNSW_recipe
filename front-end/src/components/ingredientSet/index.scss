@@ -1,0 +1,19 @@
+.ingredient-line {
+  gap: 20px;
+  align-items: baseline;
+  padding: 5px 20px;
+  width: 100%;
+}
+
+.ingredient-element {
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#my-card > .ant-card-body {
+  padding: 5px 0px;
+}

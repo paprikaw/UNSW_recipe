@@ -51,6 +51,7 @@ const Contributor = (props) => {
   };
   const { ingredients = [], onOk } = props;
   const [sliderInputValue, setSliderInputValue] = useState(1);
+  // Control the ingredient set
 
   // Control the uploader
   const [loading, setLoading] = useState(false);
