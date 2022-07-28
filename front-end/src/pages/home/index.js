@@ -110,6 +110,7 @@ const Home = () => {
       },
       body: JSON.stringify({
         ingredients: list.map((name) => getRidOfEmoji(name)),
+        token: token,
       }),
     });
     const data = await response.json();

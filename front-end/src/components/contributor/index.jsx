@@ -72,6 +72,7 @@ const Contributor = (props) => {
 
   const onUploadChange = (info) => {
     console.log('here');
+    console.log(info);
     if (info.file.status === 'uploading') {
       setLoading(true);
       console.log(info);
@@ -80,7 +81,7 @@ const Contributor = (props) => {
 
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      setRecipeId(info.file.response.value);
+      setRecipeId(info.file.response.recipeId);
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
