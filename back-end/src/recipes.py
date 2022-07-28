@@ -1,4 +1,5 @@
 import os
+import re
 from flask import request
 from sqlalchemy import text
 
@@ -318,7 +319,7 @@ def search(db_engine):
                     """), setId = i
                 )
                 break
-            
+
         # if no sets in db matches the input set
         # register this ingre set in db
         if not existenceFlag:
@@ -469,29 +470,39 @@ def like(db_engine):
     }
 
 def showTopThreeNoResultIngredientSets(db_engine):
+    result = {
+                'ingredientSets': [[], [], []],
+                'hits': [0, 0, 0] 
+            }
     with db_engine.connect() as con:
         # search the top 3 hitted ingredient sets which has no matching recipes.
-        ingredientSetIds =  con.execute(
+        response =  con.execute(
             text('select setId, hits from NoResultIngredientSets order by hits desc limit 3')
         ).fetchall()
 
-        result = []
-        if len(ingredientSetIds) == 0:
-            return {
-                'ingredients': []
-            }
-        else:
+        if len(response) != 0:
             # find ingredientName for each set of unmatched Ingredient sets
-            for setId in ingredientSetIds:
+            i = 0
+            for res in response:
                 ingredientNameSet = con.execute(
                     text("""
-                    select ingredientName from Ingredients 
-                    inner join IngredientSets on IngredientSets.ingredientId = Ingredients.ingredientId
-                    where IngredientSets.setId := setId"""),
-                    setId = setId
+                    select concat(Ingredients.emoji, ' ', Ingredients.ingredientName) from Ingredients 
+                    right join IngredientSets on IngredientSets.ingredientId = Ingredients.ingredientId
+                    where IngredientSets.setId = :setId
+                    order by Ingredients.numUses
+                    """),
+                    setId = res[0]
                 ).fetchall()
-                print(ingredientNameSet)
-                result.append(ingredientNameSet)
-            return {
-                'ingredients': result 
-            }
+                
+                if len(ingredientNameSet) != 0:
+                    for name in ingredientNameSet:
+                        result['ingredientSets'][i].append(name[0])
+                        result['hits'][i] = res[1]
+                i+=1
+
+            # display "empty" msg for empty list
+            for index in range(3):
+                if len(result['ingredientSets'][index]) == 0:
+                    result['ingredientSets'][index].append("empty")
+            print(result)
+        return result
