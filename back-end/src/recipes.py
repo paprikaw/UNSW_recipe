@@ -195,8 +195,52 @@ def recipe_update_remaining_info_at_creation(db_engine):
                 recipeId = recipeId, step = step
             )
         
-        # TODO: sprint 3, check if it is an existing NoResultsIngredientSets
+        # check if it is an existing NoResultsIngredientSets
         # if it is, remove entries from the table
+        ingreIdsInDb = set()
+        ingreIdsInUpdate = set()
+        ingredientNames = []
+        for item in ingredientList:
+            ingredientNames.append(item['name'])
+
+        # get ingredient ids from running list
+        result = con.execute(
+            text('select Ingredients.ingredientId from Ingredients where ingredientName in :ingredientName'), 
+            ingredientName = tuple(ingredientNames)
+        ).fetchall()
+        for id in result:
+            ingreIdsInUpdate.add(id[0])
+
+        maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchone()
+        maxSetId = maxSetId[0]
+        for i in range(1, maxSetId + 1):
+            ingreIdsInDb.clear()
+            result = con.execute(
+                text("""
+                    select ingredientId from IngredientSets where setId = :setId
+                """), setId = i
+            ).fetchall()
+            if len(result) != 0:
+                for id in result:
+                    ingreIdsInDb.add(id[0])
+
+            # compare the set difference here
+            # if two sets are same, delete it
+            difference = ingreIdsInUpdate.symmetric_difference(ingreIdsInDb)
+            if len(difference) == 0:
+                con.execute(
+                    text("""
+                        delete from IngredientSets where setId = :setId
+                    """), setId = i
+                )
+                con.execute(
+                    text("""
+                        delete from NoResultIngredientSets where setId = :setId
+                    """), setId = i
+                )
+                break
+
+
 
     return {
         'status': True,
@@ -223,7 +267,6 @@ def search(db_engine):
             return  recipesResult
 
         accountId = accountId[0]
-
         ingredientIds = []
         # get ingredient ids from running list
         ingredients = con.execute(
@@ -504,5 +547,4 @@ def showTopThreeNoResultIngredientSets(db_engine):
             for index in range(3):
                 if len(result['ingredientSets'][index]) == 0:
                     result['ingredientSets'][index].append("empty")
-            print(result)
         return result
