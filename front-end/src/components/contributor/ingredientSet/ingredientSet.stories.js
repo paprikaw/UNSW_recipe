@@ -13,4 +13,10 @@ export default {
 
 const Template = (args) => <IngredientSet {...args} />;
 export const ingredientSet = Template.bind({});
-ingredientSet.args = {};
+ingredientSet.args = {
+  ingredientSets: [
+    ['haha', 'niu', 'lihai'],
+    ['haha', 'niu', 'lihai'],
+    ['haha', 'niu', 'lihai'],
+  ],
+};
