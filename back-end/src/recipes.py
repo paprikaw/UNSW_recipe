@@ -195,15 +195,16 @@ def recipe_update_remaining_info_at_creation(db_engine):
                 recipeId = recipeId, step = step
             )
         
-        # TODO: sprint 3, check if it is an existing NoResultsIngredientSets
+        # check if it is an existing NoResultsIngredientSets
         # if it is, remove entries from the table
         ingreIdsInDb = set()
         ingreIdsInUpdate = set()
         ingredientNames = []
         for item in ingredientList:
             ingredientNames.append(item['name'])
-        #print(ingredientNames)
-        result = con.execute(# get ingredient ids from running list
+
+        # get ingredient ids from running list
+        result = con.execute(
             text('select Ingredients.ingredientId from Ingredients where ingredientName in :ingredientName'), 
             ingredientName = tuple(ingredientNames)
         ).fetchall()
@@ -224,9 +225,7 @@ def recipe_update_remaining_info_at_creation(db_engine):
                     ingreIdsInDb.add(id[0])
 
             # compare the set difference here
-            # if two sets are same, update the hits by 1
-            print(ingreIdsInUpdate)
-            print(ingreIdsInDb)
+            # if two sets are same, delete it
             difference = ingreIdsInUpdate.symmetric_difference(ingreIdsInDb)
             if len(difference) == 0:
                 con.execute(
