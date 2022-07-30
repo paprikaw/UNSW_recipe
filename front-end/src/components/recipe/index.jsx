@@ -1,30 +1,11 @@
-import {
-  Button,
-  Drawer,
-  Card,
-  Typography,
-  Image,
-  Collapse,
-  Space,
-  Divider,
-} from 'antd';
-import React, { useState } from 'react';
+import { Card, Typography, Image, Space, Divider } from 'antd';
+import React from 'react';
 import './index.scss';
 
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
-import { string } from 'prop-types';
-
-const { Meta } = Card;
 const { Text } = Typography;
-const { Panel } = Collapse;
 
 const Recipe = (props) => {
   const {
-    recipeId,
     username,
     recipeName,
     mealType,
@@ -34,10 +15,6 @@ const Recipe = (props) => {
     ingredients,
     steps,
   } = props;
-
-  const onChange = (key) => {
-    console.log(key);
-  };
 
   return (
     <>
@@ -73,7 +50,7 @@ const Recipe = (props) => {
 
           <h3>Ingredients needed:</h3>
           <Card size="default">
-            {ingredients.map((dict, index) => (
+            {ingredients.map((dict) => (
               <div className="line">
                 <Text>{dict.name}</Text>
                 <Text>
