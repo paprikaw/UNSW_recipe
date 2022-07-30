@@ -105,6 +105,7 @@ const Home = () => {
       }),
     });
     const data = await response.json();
+    console.log(data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
   };
