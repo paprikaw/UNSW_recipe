@@ -1,129 +1,145 @@
-import { React, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Select, Typography } from 'antd';
 import CollapseBox from './collapseBox';
 import './index.scss';
 import SuggestionBox from './suggestionBox';
+import { useRef } from '@storybook/addons';
 
 const { Title } = Typography;
 
-const Category = (props) => {
-  const { Option } = Select;
-  const { data, onChange } = props;
-  const children = [];
-  const iniState = {};
+const ingredientIniState = {};
+const suggestionIngredientIniState = {};
 
-  for (const key in data) {
-    data[key].map((value) =>
-      children.push(<Option key={value}>{value}</Option>)
-    );
-    data[key].map((value) => (iniState[value] = false));
-  }
-  const [opState, setOpState] = useState(iniState);
-  const [opStateList, setOpStateList] = useState([]);
-  const [sugIngredients, setSugIngredients] = useState({
-    '🍰 Baking Powder': true,
-    '🍰 Baking Soda': true,
-    '🌾 White Flour': true,
-  });
+/**
+ * Component for contributor page
+ *
+ * @component
+ * @example
+ * const ingredients = ['apple', 'pear']
+ * const ingredientData = {a: ["apple", "apple2"]}
+ * const suggustionIngredientData = ["apple", "pear"]
+ * const onChange = categoryList(selectedIngredients) => void
+ */
+const Category = React.memo(
+  ({ ingredientData = {}, suggustionIngredientData = [], onChange }) => {
+    const { Option } = Select;
 
-  const handleSuggestionIngre = (key) => {
-    setSugIngredients({ ...sugIngredients, [key]: false });
-    setOpState({ ...opState, [key]: true });
-  };
+    const [optionState, setOptionState] = useState({});
+    const [suggestionOptionState, setSuggestionOptionState] = useState({});
+    const [runningListState, setRunningListState] = useState([]);
+    const [runningListChildern, setRunningListChildren] = useState([]);
 
-  const handleOnSelectChange = (value) => {
-    console.log(value);
-    setOpStateList(value);
-    const newState = iniState;
-    value.map((value) => (newState[value] = true));
-    setOpState(newState);
-
-    value.map((value) => {
-      if (Object.keys(sugIngredients).includes(value)) {
-        setSugIngredients({ ...sugIngredients, [value]: false });
+    // Setting up initial state
+    useEffect(() => {
+      // Process data from input
+      const children = [];
+      for (const key in ingredientData) {
+        ingredientData[key].map((value) =>
+          children.push(<Option key={value}>{value}</Option>)
+        );
+        ingredientData[key].map((value) => (ingredientIniState[value] = false));
       }
-      newState[value] = true;
-    });
-  };
+      suggustionIngredientData.map(
+        (value) => (suggestionIngredientIniState[value] = true)
+      );
 
-  const handleOnSelectDeselect = (value) => {
-    if (Object.keys(sugIngredients).includes(value)) {
-      setSugIngredients((preValue) => {
-        const newValue = { ...preValue };
-        newValue[value] = true;
-        return newValue;
-      });
-    }
-  };
+      setOptionState(ingredientIniState);
+      setSuggestionOptionState(suggestionIngredientIniState);
+      setRunningListChildren(children);
+    }, [ingredientData, suggustionIngredientData]);
 
-  const handleOnRegBoxClick = (buttonText) => {
-    if (opState[buttonText]) {
-      setOpState({ ...opState, [buttonText]: false });
-    } else {
-      setOpState({ ...opState, [buttonText]: true });
-    }
+    useEffect(() => {
+      const list = Object.entries(optionState)
+        .filter(([_key, value]) => value)
+        .map(([key, _value]) => key);
+      setRunningListState(list);
+    }, [optionState]);
 
-    if (Object.keys(sugIngredients).includes(buttonText)) {
-      if (opState[buttonText]) {
-        setSugIngredients({ ...sugIngredients, [buttonText]: true });
+    const handleSuggestionIngre = (key) => {
+      setSuggestionOptionState({ ...suggestionOptionState, [key]: false });
+      setOptionState({ ...optionState, [key]: true });
+    };
+
+    const handleOnSelectChange = (value) => {
+      onChange(value);
+      setRunningListState(value);
+
+      const newState = { ...ingredientIniState };
+      value.map((key) => (newState[key] = true));
+      setOptionState(newState);
+
+      const newSugState = { ...suggestionIngredientIniState };
+      value.map((key) => newSugState[key] && (newSugState[key] = false));
+      setSuggestionOptionState(newSugState);
+    };
+
+    // Handle when ingredient box has changed
+    const handleOnRegBoxClick = (buttonText) => {
+      if (optionState[buttonText]) {
+        setOptionState({ ...optionState, [buttonText]: false });
       } else {
-        setSugIngredients({ ...sugIngredients, [buttonText]: false });
+        setOptionState({ ...optionState, [buttonText]: true });
       }
-    }
-  };
 
-  useEffect(() => {
-    const list = Object.entries(opState)
-      .filter(([_key, value]) => value)
-      .map(([key, _value]) => key);
-    setOpStateList(list);
-    onChange(list);
-  }, [opState]);
-
-  return (
-    <div className="main-component">
-      <Select
-        mode="multiple"
-        allowClear
-        style={{ width: '100%' }}
-        placeholder="Please select"
-        onChange={handleOnSelectChange}
-        onDeselect={handleOnSelectDeselect}
-        value={opStateList}
-        className="mySelect"
-        onDropdownVisibleChange={(open) =>
-          open
-            ? (document.getElementById('sider').style.overflow = 'hidden')
-            : (document.getElementById('sider').style.overflow = 'auto')
+      if (Object.keys(suggestionOptionState).includes(buttonText)) {
+        if (optionState[buttonText]) {
+          setSuggestionOptionState({
+            ...suggestionOptionState,
+            [buttonText]: true,
+          });
+        } else {
+          setSuggestionOptionState({
+            ...suggestionOptionState,
+            [buttonText]: false,
+          });
         }
-      >
-        {children}
-      </Select>
-      <br />
-      <br />
-      <div className="collapseBox">
-        <div key={'suggest'}>
-          <SuggestionBox
-            data={sugIngredients}
-            title={<Title level={5}>You might have these ingredients</Title>}
-            onClick={handleSuggestionIngre}
-          />
-          <br />
-        </div>
-        {Object.entries(data).map(([key, values]) => (
-          <div key={key}>
-            <CollapseBox
-              data={values}
-              title={<Title level={5}>{key}</Title>}
-              selectState={opState}
-              onClick={handleOnRegBoxClick}
+      }
+    };
+
+    return (
+      <div className="main-component">
+        <Select
+          mode="multiple"
+          allowClear
+          style={{ width: '100%' }}
+          placeholder="Please select"
+          onChange={handleOnSelectChange}
+          value={runningListState}
+          className="mySelect"
+          onDropdownVisibleChange={(open) =>
+            open
+              ? (document.getElementById('sider').style.overflow = 'hidden')
+              : (document.getElementById('sider').style.overflow = 'auto')
+          }
+        >
+          {runningListChildern}
+        </Select>
+        <br />
+        <br />
+        <div className="collapseBox">
+          <div key={'suggest'}>
+            <SuggestionBox
+              data={suggestionOptionState}
+              title={<Title level={5}>You might have these ingredients</Title>}
+              onClick={handleSuggestionIngre}
             />
             <br />
           </div>
-        ))}
+          {Object.entries(ingredientData).map(([key, values]) => (
+            <div key={key}>
+              <CollapseBox
+                data={values}
+                title={<Title level={5}>{key}</Title>}
+                selectState={optionState}
+                onClick={handleOnRegBoxClick}
+              />
+              <br />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default Category;

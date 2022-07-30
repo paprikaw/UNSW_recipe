@@ -79,7 +79,6 @@ const Contributor = (props) => {
   const onUploadChange = (info) => {
     if (info.file.status === 'uploading') {
       setLoading(true);
-      console.log(info);
       return;
     }
 

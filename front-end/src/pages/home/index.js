@@ -14,25 +14,18 @@ import {
   Row,
   Col,
 } from 'antd';
-import { UserOutlined, AudioOutlined, SearchOutlined } from '@ant-design/icons';
+import { UserOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
-import { React, useEffect, useState } from 'react';
+import { React, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
 import { getRidOfEmoji } from '@/utils/utils';
 import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
+import { useFetch } from '@/utils/useFetch';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: '#1890ff',
-    }}
-  />
-);
 
 const Home = () => {
   // left hand, ingredients menu set up
@@ -48,7 +41,6 @@ const Home = () => {
   const [categoryList, setCategoryList] = useState([]);
   // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
-  const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
   // page navigate and account info
   const [thumbnails, setThumbnails] = useState([]);
@@ -58,28 +50,15 @@ const Home = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  const onSearch = (value) => setThumbnails(value);
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
   };
 
-  const handleSuggestionIngre = (key) => {
-    setSugIngredients({ ...sugIngredients, [key]: false });
-  };
-
-  useEffect(() => {
-    fetch('/category', {
-      method: 'GET',
-    })
-      .then((v) => {
-        return v.json();
-      })
-      .then((data) => {
-        setIngredients(data);
-        setIsLoading(false);
-      })
-      .catch((e) => console.log(e));
-  }, []);
+  const [ingredientData, ingredientDataLoading] = useFetch('/category');
+  const [sugIngredientData, sugIngredientDataLoading] = useFetch(
+    '/top10',
+    (data) => data.ingredients
+  );
 
   //navigate to contribute page
   // const handleContribute = () => {
@@ -87,9 +66,9 @@ const Home = () => {
   // }
 
   // recipe detail funcs
-  const onCategoryChange = (list) => {
+  const onCategoryChange = useCallback((list) => {
     setCategoryList(list);
-  };
+  }, []);
 
   const showDrawer = () => {
     setVisible(true);
@@ -97,9 +76,6 @@ const Home = () => {
   const onClose = () => {
     setVisible(false);
   };
-
-  // a func of call recipe_detail route when click tiles  needed.
-  const onCheckRecipeDetail = () => {};
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
@@ -224,10 +200,14 @@ const Home = () => {
           >
             <div className="home-sider-childrens" style={{}}>
               <Title level={2}>Ingredients</Title>
-              {isLoading ? (
+              {sugIngredientDataLoading || ingredientDataLoading ? (
                 <Spin />
               ) : (
-                <Category data={ingredients} onChange={onCategoryChange} />
+                <Category
+                  ingredientData={ingredientData}
+                  suggustionIngredientData={sugIngredientData}
+                  onChange={onCategoryChange}
+                />
               )}
             </div>
             <Button

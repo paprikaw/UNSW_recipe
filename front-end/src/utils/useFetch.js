@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export const useFetch = (url, requestBody = { method: 'get' }) => {
+export const useFetch = (url, dataProcess, requestBody = { method: 'get' }) => {
   const [relData, setRelData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -10,8 +10,7 @@ export const useFetch = (url, requestBody = { method: 'get' }) => {
         return v.json();
       })
       .then((data) => {
-        console.log(data);
-        setRelData(data);
+        setRelData(dataProcess ? dataProcess(data) : data);
         setIsLoading(false);
       })
       .catch((e) => console.log(e));
