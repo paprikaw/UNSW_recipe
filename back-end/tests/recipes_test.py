@@ -1,4 +1,3 @@
-from fileinput import filename
 import pytest
 import requests
 import json
@@ -94,7 +93,7 @@ def test_update_failure_on_invalid_recipeName():
     jsonData = {
         "recipeId": rjson2["recipeId"],
         "recipeName": 12345,
-        "mealType": "Breakfast",
+        "mealType": ["Breakfast"],
         "cookTime": 60,
         "token": user1["token"],
         "ingredients": [
@@ -135,61 +134,6 @@ def test_update_failure_on_invalid_token():
     assert response['status'] == False
     assert response['error'] == 'Invalid token'
 
-def test_search_multiple_responses():
-    reset_server()
-
-    requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
-    user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
-    
-    files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
-    
-    thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData1 = getRecipeData1(thumbnailResponse1["recipeId"], user1["token"])
-
-    thumbnailResponse2 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData2 = getRecipeData2(thumbnailResponse2["recipeId"], user1["token"])
-
-    requests.post(url + 'update-recipe-info', json=recipeData1)
-    requests.post(url + 'update-recipe-info', json=recipeData2)
-
-    payload = {
-        'ingredients': ['Ground Beef', 'White Flour', 'Salt'],
-        'token': user1["token"]
-    }
-    response = json.loads(requests.post(url + 'search', json=payload).text)
-
-    # should be arranged according to num ingredients matched
-    assert response['recipes'][0]['recipeName'] == 'Beef pie'
-    assert response['recipes'][1]['recipeName'] == 'No Salt Beef pie' 
-    assert response['recipes'][0]['liked'] == False
-    assert response['recipes'][1]['liked'] == False
-    assert response['recipes'][0]['numIngredientsMatched'] == 3
-    assert response['recipes'][1]['numIngredientsMatched'] == 2
-
-def test_search_no_matches():
-    reset_server()
-
-    requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
-    user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
-    
-    files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
-    
-    thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData1 = getRecipeData1(thumbnailResponse1["recipeId"], user1["token"])
-
-    thumbnailResponse2 = requests.post(url + 'upload-thumbnail', files=files).json()
-    recipeData2 = getRecipeData2(thumbnailResponse2["recipeId"], user1["token"])
-
-    requests.post(url + 'update-recipe-info', json=recipeData1)
-    requests.post(url + 'update-recipe-info', json=recipeData2)
-
-    payload = {
-        'ingredients': ['Garlic', 'Onion', 'Potato'],
-        'token': user1["token"]
-    }
-    response = json.loads(requests.post(url + 'search', json=payload).text)
-
-    assert len(response['recipes']) == 0
 
 def test_details_valid_recipe_id():
     reset_server()
@@ -211,13 +155,13 @@ def test_details_valid_recipe_id():
     requests.post(url + 'update-recipe-info', json=recipeData1)
     requests.post(url + 'update-recipe-info', json=recipeData2)
 
-    response1 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
-    response2 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
+    response1 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
+    response2 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
 
     assert response1['recipe']['recipeId'] == 1
     assert response1['recipe']['username'] == 'user1'
     assert response1['recipe']['recipeName'] == 'Beef pie'
-    assert response1['recipe']['mealType'] == 'Breakfast'
+    assert response1['recipe']['mealType'] == ['Breakfast']
     assert response1['recipe']['cookTime'] == 60
     assert response1['recipe']['ingredients'] == [
         {
@@ -244,7 +188,7 @@ def test_details_valid_recipe_id():
     assert response2['recipe']['recipeId'] == 2
     assert response2['recipe']['username'] == 'user1'
     assert response2['recipe']['recipeName'] == 'No Salt Beef pie'
-    assert response2['recipe']['mealType'] == 'Breakfast'
+    assert response2['recipe']['mealType'] == ['Breakfast', 'Tea']
     assert response2['recipe']['cookTime'] == 60
     assert response2['recipe']['ingredients'] == [
         {
@@ -283,8 +227,8 @@ def test_details_invalid_recipe_id():
     requests.post(url + 'update-recipe-info', json=recipeData1)
     requests.post(url + 'update-recipe-info', json=recipeData2)
 
-    response1 = json.loads(requests.get(url + 'details', json={'recipeId': 3, 'token': token}).text)
-    response2 = json.loads(requests.get(url + 'details', json={'recipeId': -1, 'token': token}).text)
+    response1 = json.loads(requests.post(url + 'details', json={'recipeId': 3, 'token': token}).text)
+    response2 = json.loads(requests.post(url + 'details', json={'recipeId': -1, 'token': token}).text)
     
     assert response1 == {'recipe': {}}
     assert response2 == {'recipe': {}}
@@ -336,8 +280,8 @@ def test_like_success():
     assert response['recipes'][0]['liked'] == True
     assert response['recipes'][1]['liked'] == True
 
-    response1 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
-    response2 = json.loads(requests.get(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
+    response1 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
+    response2 = json.loads(requests.post(url + 'details', json={'recipeId': recipeId2, 'token': token}).text)
     assert response1['recipe']['liked'] == True
     assert response1['recipe']['liked'] == True
 

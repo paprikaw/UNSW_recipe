@@ -14,36 +14,33 @@ import {
   Row,
   Col,
 } from 'antd';
-import { UserOutlined, AudioOutlined, SearchOutlined } from '@ant-design/icons';
+import { UserOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
-import { React, useEffect, useState } from 'react';
+import { React, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
 import { getRidOfEmoji } from '@/utils/utils';
 import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
+import { useFetch } from '@/utils/useFetch';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: '#1890ff',
-    }}
-  />
-);
 
 const Home = () => {
   // left hand, ingredients menu set up
   const [ingredients, setIngredients] = useState({});
+  // ingredient suggestion data
+  const [sugIngredients, setSugIngredients] = useState({
+    apple: true,
+    pear: false,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
   // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
-  const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
   // page navigate and account info
   const [thumbnails, setThumbnails] = useState([]);
@@ -53,24 +50,15 @@ const Home = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  const onSearch = (value) => setThumbnails(value);
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
   };
 
-  useEffect(() => {
-    fetch('/category', {
-      method: 'GET',
-    })
-      .then((v) => {
-        return v.json();
-      })
-      .then((data) => {
-        setIngredients(data);
-        setIsLoading(false);
-      })
-      .catch((e) => console.log(e));
-  }, []);
+  const [ingredientData, ingredientDataLoading] = useFetch('/category');
+  const [sugIngredientData, sugIngredientDataLoading] = useFetch(
+    '/top10',
+    (data) => data.ingredients
+  );
 
   //navigate to contribute page
   // const handleContribute = () => {
@@ -78,9 +66,9 @@ const Home = () => {
   // }
 
   // recipe detail funcs
-  const onCategoryChange = (list) => {
+  const onCategoryChange = useCallback((list) => {
     setCategoryList(list);
-  };
+  }, []);
 
   const showDrawer = () => {
     setVisible(true);
@@ -88,9 +76,6 @@ const Home = () => {
   const onClose = () => {
     setVisible(false);
   };
-
-  // a func of call recipe_detail route when click tiles  needed.
-  const onCheckRecipeDetail = () => {};
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
@@ -113,8 +98,15 @@ const Home = () => {
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
-    fetch('/details?recipeId=' + recipeId, {
-      method: 'GET',
+    fetch('/details', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: token,
+        recipeId: recipeId,
+      }),
     })
       .then((v) => {
         return v.json();
@@ -131,7 +123,6 @@ const Home = () => {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         token: token,
@@ -210,10 +201,14 @@ const Home = () => {
           >
             <div className="home-sider-childrens" style={{}}>
               <Title level={2}>Ingredients</Title>
-              {isLoading ? (
+              {sugIngredientDataLoading || ingredientDataLoading ? (
                 <Spin />
               ) : (
-                <Category data={ingredients} onChange={onCategoryChange} />
+                <Category
+                  ingredientData={ingredientData}
+                  suggustionIngredientData={sugIngredientData}
+                  onChange={onCategoryChange}
+                />
               )}
             </div>
             <Button

@@ -9,12 +9,14 @@ import {
   Slider,
   Row,
   Col,
-  AutoComplete,
   message,
+  Spin,
 } from 'antd';
 
+import { useFetch } from '@/utils/useFetch';
+import IngredientSet from './ingredientSet';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { React, useState } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import './index.scss';
 import UploadPicture from '../upload/UploadPicture';
 import { getRidOfEmoji } from '../../utils/utils';
@@ -56,9 +58,13 @@ const Contributor = (props) => {
   // Control the uploader
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
-
   const [recipeId, setRecipeId] = useState(-1);
   const [form] = Form.useForm();
+  const [ingreSetData, isIngreSetLoading] = useFetch(
+    '/topThreeNoResultIngredientSets'
+  );
+  const [isRecommendClicked, setIsRecommendClicked] = useState(false);
+  const formRef = useRef();
 
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -71,11 +77,8 @@ const Contributor = (props) => {
   };
 
   const onUploadChange = (info) => {
-    console.log('here');
-    console.log(info);
     if (info.file.status === 'uploading') {
       setLoading(true);
-      console.log(info);
       return;
     }
 
@@ -89,8 +92,15 @@ const Contributor = (props) => {
     }
   };
 
+  const onIngreSetClick = (value) => {
+    const newValue = value.map((ingredient) => {
+      return { name: ingredient };
+    });
+    formRef.current.setFieldValue('ingredients', newValue);
+    setIsRecommendClicked(true);
+  };
+
   const onFormFinish = (values) => {
-    console.log(values);
     // Get rid of emoji in the recipe names
     values.ingredients.map(
       (element) => (element.name = getRidOfEmoji(element.name))
@@ -128,7 +138,22 @@ const Contributor = (props) => {
         onFinish={onFormFinish}
         autoComplete="off"
         form={form}
+        ref={formRef}
       >
+        {isIngreSetLoading ? (
+          <Spin />
+        ) : (
+          !isRecommendClicked && (
+            <IngredientSet
+              onClick={onIngreSetClick}
+              ingredientSets={ingreSetData.ingredientSets}
+            />
+          )
+        )}
+
+        <br />
+        <br />
+
         <UploadPicture
           onChange={onUploadChange}
           loading={loading}
