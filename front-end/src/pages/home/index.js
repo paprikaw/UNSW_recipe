@@ -28,14 +28,6 @@ const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
 
 const Home = () => {
-  // left hand, ingredients menu set up
-  const [ingredients, setIngredients] = useState({});
-  // ingredient suggestion data
-  const [sugIngredients, setSugIngredients] = useState({
-    apple: true,
-    pear: false,
-  });
-  const [isLoading, setIsLoading] = useState(true);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
@@ -269,7 +261,7 @@ const Home = () => {
         width={800}
       >
         <div>
-          <Contributor ingredients={ingredients} onOk={handleContirbuteOk} />
+          <Contributor ingredients={ingredientData} onOk={handleContirbuteOk} />
         </div>
       </Modal>
       <Drawer
