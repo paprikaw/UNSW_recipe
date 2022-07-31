@@ -51,4 +51,11 @@ Week 8
 - held retrospective after lab.
 
 Week 9
-- 
+- finalised write up and submitted retrospective B report.
+- completed bugfix in backend to remove uploaded images from server if contributor cancels their contribution. 
+- finished backend implementation for top 10 frequently used ingredients to be used as suggestions for the recipe explorer.
+- finished backend implementation to add support for assigning multiple meal types to a recipe.
+- finished backend implementation for likes system, where a user can like and remove their likes. A user's likes are tied to their account.
+- planned the structure for the report, talked it through with the team and assigned parts. 
+- planned the final demo structure with the team and assigned parts to everyone.
+- for week 10: finalise demo script and run-through by Wednesday. everyone is to write up a draft for their report parts by Thursday so I can edit it before submitting on Friday.
