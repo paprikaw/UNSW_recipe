@@ -43,6 +43,7 @@ const Home = () => {
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
 
   const [thumbnailFilterParam, setFilterParam] = useState([]);
+  const [isThumbailFiltered, setFilterStatus] = useState(false);
   const [filteredThumbnails, setFilteredThumbnails] = useState(['']);
   //
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
@@ -99,22 +100,30 @@ const Home = () => {
 
   const handleSelectFilter = (value) => {
     setFilterParam(value);
+
     console.log('the select list is: ', value);
     console.log(`selected ${value}`);
     // TODO    orignial data -> {thumbnails}
     const filteredData = [];
-    console.log(thumbnails);
+    // console.log(thumbnails);
+    const isMatched = false;
     if (thumbnails) {
-      thumbnails.array.forEach((recipe) => {
+      console.log('see:', thumbnails);
+      thumbnails.forEach((recipe) => {
         recipe.mealType.forEach((type) => {
           value.forEach((param) => {
             if (param === type) {
+              isMatched = true;
               filteredData.push(recipe);
             }
           });
         });
       });
+      if (isMatched !== true) {
+      }
       setFilteredThumbnails(filteredData);
+      setFilterStatus(true);
+      console.log('filtered', filteredData);
     }
   };
 
@@ -278,7 +287,7 @@ const Home = () => {
               <Spin />
             ) : (
               <Row gutter={[10, 20]}>
-                {thumbnails.map((data) => (
+                {filteredThumbnails.map((data) => (
                   <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                     <Thumbnail
                       recipeId={data.recipeId}
