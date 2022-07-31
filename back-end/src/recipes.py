@@ -52,7 +52,7 @@ def recipe_upload_thumbnail(db_engine):
             nameSuffix = 0
             for _,_,files in os.walk(FOLDER_THUMBNAIL):
                 for file in files:
-                    if(file.startswith(img.filename)):
+                    if(file.startswith(img.filename.split(".")[0])):
                         nameSuffix+=1
             splited = img.filename.split(".")
             newFileName = splited[0] + str(nameSuffix) + "." + splited[1]
