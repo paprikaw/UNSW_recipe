@@ -285,30 +285,44 @@ def test_like_success():
     assert response1['recipe']['liked'] == True
     assert response1['recipe']['liked'] == True
 
-def test_like_success_duplicate_like():
+def test_like_success_removes_like_on_duplicate_recipe_and_token():
     reset_server()
 
     requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
     user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
+    token = user1['token']
     
     files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
     
     thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
     recipeId1 = thumbnailResponse1["recipeId"]
-    recipeData1 = getRecipeData1(thumbnailResponse1["recipeId"], user1["token"])
+    recipeData1 = getRecipeData1(thumbnailResponse1["recipeId"], token)
 
     requests.post(url + 'update-recipe-info', json=recipeData1)
 
     likeData1 = {
         'recipeId': recipeId1, 
-        'token': user1['token']
+        'token': token
     }
 
+    # first like
     response1 = json.loads(requests.put(url + 'like', json=likeData1).text)
+    assert response1['msg'] == 'LIKE_SUCCESS'
+    assert response1['error'] == ''
+
+    recipeDetails = json.loads(requests.post(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
+
+    assert recipeDetails['recipe']['liked'] == True
+
+    # second like should remove the like
     response2 = json.loads(requests.put(url + 'like', json=likeData1).text)
 
     assert response2['msg'] == 'LIKE_SUCCESS'
     assert response2['error'] == ''
+
+    recipeDetails = json.loads(requests.post(url + 'details', json={'recipeId': recipeId1, 'token': token}).text)
+
+    assert recipeDetails['recipe']['liked'] == False
 
 def test_like_failure_on_invalid_token():
     reset_server()
