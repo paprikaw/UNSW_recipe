@@ -506,7 +506,7 @@ def like(db_engine):
 
         # update likes
         con.execute(
-            text('insert into RecipeLikes (recipeId, accountId) values (:recipeId, :accountId)'),
+            text('insert ignore into RecipeLikes (recipeId, accountId) values (:recipeId, :accountId)'),
             recipeId = recipeId, accountId = accountId
         )
 
