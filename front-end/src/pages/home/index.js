@@ -42,16 +42,35 @@ const Home = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
+  // whether the homepage is showed:
+  const [isHomePage, setIsHomePage] = useState(false);
+
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
   };
 
   const [ingredientData, ingredientDataLoading] = useFetch('/category');
+
   const [sugIngredientData, sugIngredientDataLoading] = useFetch(
     '/top10',
     (data) => data.ingredients
   );
 
+  const foodOfTimeBody = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mealTypes: ['Lunch'] }),
+  };
+
+  const [top3Recipe, top3RecipeLoading] = useFetch(
+    '/topThreeLikedRecipesOnMealType',
+    (data) => data.ingredients,
+    foodOfTimeBody
+  );
+
+  useEffect(() => {
+    console.log(top3Recipe);
+  }, [top3Recipe]);
   //navigate to contribute page
   // const handleContribute = () => {
   //   navigate('/contribute');
