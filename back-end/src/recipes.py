@@ -1,5 +1,4 @@
 import os
-import re
 from flask import request
 from sqlalchemy import text
 
@@ -212,7 +211,9 @@ def recipe_update_remaining_info_at_creation(db_engine):
             ingreIdsInUpdate.add(id[0])
 
         maxSetId = con.execute('select max(setId) from NoResultIngredientSets').fetchone()
-        maxSetId = maxSetId[0]
+        # init the setId == 1 if there's no record in the table
+        if type(maxSetId) != int:
+            maxSetId = 1
         for i in range(1, maxSetId + 1):
             ingreIdsInDb.clear()
             result = con.execute(
@@ -253,6 +254,8 @@ def search(db_engine):
         'recipes': recipes
     }
 
+    print("here")
+    print (request.get_json())
     ingredientNames = request.get_json()['ingredients']
     token = request.get_json()['token']
 
@@ -548,3 +551,34 @@ def showTopThreeNoResultIngredientSets(db_engine):
                 if len(result['ingredientSets'][index]) == 0:
                     result['ingredientSets'][index].append("empty")
         return result
+
+def showTopThreeLikedRecipesOnMealType(db_engine):
+    mealTypes = request.get_json()['mealTypes']
+    recipes = [{}, {}, {}]
+    recipesResult = {
+        'recipes': recipes
+    }
+    with db_engine.connect() as con:
+        result = con.execute(
+                text('''
+                    select Recipes.recipeId, Recipes.recipeName, Recipes.cookTime, Recipes.likes, Recipes.thumbnailPath, RecipeMealTypes.mealType
+                    from Recipes left join on RecipeMealTypes on Recipes.recipeId = RecipeMealTypes.recipeId
+                    where RecipeMealTypes.mealType in :mealType
+                    order by Recipes.likes 
+                    limit 3
+                '''),
+                mealType = tuple(mealTypes)
+            )
+        i = 0
+        for row in result:
+            recipes[i] = {
+                'recipeId': row[0],
+                'recipeName': row[1],
+                'cookTime': row[2], 
+                'likes': row[3],
+                'thumbnail': row[4],
+                'mealType': row[5],
+            }
+            i += 1
+
+    return recipesResult
