@@ -13,6 +13,7 @@ import {
   Drawer,
   Row,
   Col,
+  Select,
 } from 'antd';
 import { UserOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
@@ -23,9 +24,12 @@ import { getRidOfEmoji } from '@/utils/utils';
 import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
 import { useFetch } from '@/utils/useFetch';
+import { recipe } from '@/components/recipe/recipe.stories';
+import { element } from 'prop-types';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
+const { Option, OptGroup } = Select;
 
 const Home = () => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
@@ -34,10 +38,15 @@ const Home = () => {
   // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
-  // page navigate and account info
+
   const [thumbnails, setThumbnails] = useState([]);
-  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
+
+  const [thumbnailFilterParam, setFilterParam] = useState([]);
+  const [filteredThumbnails, setFilteredThumbnails] = useState(['']);
+  //
+  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
+
   // page navigate and account info
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -86,6 +95,27 @@ const Home = () => {
     console.log(data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
+  };
+
+  const handleSelectFilter = (value) => {
+    setFilterParam(value);
+    console.log('the select list is: ', value);
+    console.log(`selected ${value}`);
+    // TODO    orignial data -> {thumbnails}
+    const filteredData = [];
+    console.log(thumbnails);
+    if (thumbnails) {
+      thumbnails.array.forEach((recipe) => {
+        recipe.mealType.forEach((type) => {
+          value.forEach((param) => {
+            if (param === type) {
+              filteredData.push(recipe);
+            }
+          });
+        });
+      });
+      setFilteredThumbnails(filteredData);
+    }
   };
 
   const handleClickThumbnail = (recipeId) => {
@@ -223,6 +253,27 @@ const Home = () => {
               height: '90vh',
             }}
           >
+            <>Filtered by 🚬 </>
+            <Select
+              placeholder="All Types"
+              mode="multiple"
+              style={{
+                width: 200,
+                // border: none,
+                // position
+              }}
+              onChange={handleSelectFilter}
+            >
+              <Option value={'Breakfast'}>Breakfast</Option>
+              <Option value={'Lunch'}>Lunch</Option>
+              <Option value={'Dinner'}>Dinner</Option>
+              <Option value={'Dessert'}>Dessert</Option>
+              <Option value={'Snack'}>Snack</Option>
+              <Option value={'Entree'}>Entree</Option>
+              <Option value={'Main'}>Main</Option>
+              <Option value={'Tea'}>Tea</Option>
+            </Select>
+
             {isRecipeLoading ? (
               <Spin />
             ) : (

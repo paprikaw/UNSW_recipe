@@ -35,12 +35,12 @@ const columns = [
     sorter: (a, b) => a.name.length - b.name.length,
     sortDirections: ['descend'],
   },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
-  },
+  // {
+  //   title: 'Age',
+  //   dataIndex: 'age',
+  //   defaultSortOrder: 'descend',
+  //   sorter: (a, b) => a.age - b.age,
+  // },
   {
     title: 'Address',
     dataIndex: 'address',
