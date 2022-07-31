@@ -557,25 +557,36 @@ def showTopThreeLikedRecipesOnMealType(db_engine):
         'recipes': recipes
     }
     with db_engine.connect() as con:
-        result = con.execute(
+        con.execute(
                 text('''
-                    select Recipes.recipeId, Recipes.recipeName, Recipes.cookTime, Recipes.likes, Recipes.thumbnailPath, RecipeMealTypes.mealType
-                    from Recipes left join on RecipeMealTypes on Recipes.recipeId = RecipeMealTypes.recipeId
+                    create or replace view res as
+                    select Recipes.recipeId, Recipes.recipeName, Recipes.cookTime, Recipes.thumbnailPath, 
+                            group_concat(RecipeMealTypes.mealType separator ',')
+                    from Recipes 
+                    left join RecipeMealTypes on Recipes.recipeId = RecipeMealTypes.recipeId
                     where RecipeMealTypes.mealType in :mealType
-                    order by Recipes.likes 
-                    limit 3
+                    group by Recipes.recipeId
                 '''),
                 mealType = tuple(mealTypes)
             )
+        result = con.execute(
+            text('''
+                select res.*, count(RecipeLikes.recipeId) from res
+                left join RecipeLikes on res.recipeId=RecipeLikes.recipeId
+                group by res.recipeId
+                order by count(RecipeLikes.recipeId) desc
+                limit 3;            
+            ''')
+        )
         i = 0
         for row in result:
             recipes[i] = {
                 'recipeId': row[0],
                 'recipeName': row[1],
                 'cookTime': row[2], 
-                'likes': row[3],
-                'thumbnail': row[4],
-                'mealType': row[5],
+                'thumbnail': row[3],
+                'mealType': row[4],
+                'likes': row[5],
             }
             i += 1
 
