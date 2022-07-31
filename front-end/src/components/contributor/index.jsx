@@ -133,7 +133,9 @@ const Contributor = (props) => {
           return v.json();
         })
         .then((data) => {
-          message.success(data.msg);
+          console.log(data);
+          data.error && message.warning(data.error);
+          data.msg && message.success(data.msg);
           onOk();
           form.resetFields();
           setImageUrl();

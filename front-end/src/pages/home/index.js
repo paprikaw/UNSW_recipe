@@ -71,6 +71,7 @@ const Home = () => {
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
+    console.log(list);
     const response = await fetch('/search', {
       method: 'POST',
       headers: {

@@ -254,6 +254,8 @@ def search(db_engine):
         'recipes': recipes
     }
 
+    print("here")
+    print (request.get_json())
     ingredientNames = request.get_json()['ingredients']
     token = request.get_json()['token']
 
