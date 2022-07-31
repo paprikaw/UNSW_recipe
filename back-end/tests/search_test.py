@@ -3,7 +3,7 @@ import pytest
 import requests
 import json
 import os
-from common import url, reset_server, getRecipeData1, getRecipeData2
+from common import url, reset_server, getRecipeData1, getRecipeData2, getRecipeData3
 
 def test_search_multiple_responses():
     reset_server()
@@ -139,3 +139,153 @@ def test_top3_noResultIngredientSets_missing_sets():
     assert response["hits"][0] == 2
     assert response["hits"][1] == 0
     assert response["hits"][2] == 0
+
+def test_top3_likedRecipeOnMealType_on_success():
+    reset_server()
+
+    requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
+    requests.post(url + 'signup', json={'username': 'user2', 'email': 'user2@gmail.com', 'password': '123'})
+    requests.post(url + 'signup', json={'username': 'user3', 'email': 'user3@gmail.com', 'password': '123'})
+
+
+    user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
+    user2 = json.loads(requests.post(url + 'login', json={'email': 'user2@gmail.com', 'password': '123'}).text)
+    user3 = json.loads(requests.post(url + 'login', json={'email': 'user3@gmail.com', 'password': '123'}).text)
+
+    # user 1 upload recipe 1 and 2
+    # user 2 upload recipe 3
+    files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
+    thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
+    recipeId1 = thumbnailResponse1["recipeId"]
+    recipeData1 = getRecipeData1(recipeId1, user1['token'])
+
+    thumbnailResponse2 = requests.post(url + 'upload-thumbnail', files=files).json()
+    recipeId2 = thumbnailResponse2["recipeId"]
+    recipeData2 = getRecipeData2(recipeId2, user1['token'])
+
+    thumbnailResponse3 = requests.post(url + 'upload-thumbnail', files=files).json()
+    recipeId3 = thumbnailResponse3["recipeId"]
+    recipeData3 = getRecipeData3(recipeId3, user3['token'])
+
+    requests.post(url + 'update-recipe-info', json=recipeData1)
+    requests.post(url + 'update-recipe-info', json=recipeData2)
+    requests.post(url + 'update-recipe-info', json=recipeData3)
+
+    # user1 like both recipes
+    likeData1 = {
+        'recipeId': recipeId1, 
+        'token': user1['token']
+    }
+    likeData2 = {
+        'recipeId': recipeId2, 
+        'token': user1['token']
+    }
+
+    # user 2 like the second recipe
+    likeData3 = {
+        'recipeId': recipeId2, 
+        'token': user2['token']
+    }
+
+    # user 3 like the first and third recipe
+    likeData4 = {
+        'recipeId': recipeId1, 
+        'token': user3['token']
+    }
+
+    likeData5 = {
+        'recipeId': recipeId3, 
+        'token': user3['token']
+    }
+    requests.put(url + 'like', json=likeData1)
+    requests.put(url + 'like', json=likeData2)
+    requests.put(url + 'like', json=likeData3)
+    requests.put(url + 'like', json=likeData4)
+    requests.put(url + 'like', json=likeData5)
+
+    mealTypes = {
+        'mealTypes': ['Breakfast', 'Tea', 'Lunch'],
+    }
+    response = json.loads(requests.post(url + 'topThreeLikedRecipesOnMealType', json=mealTypes).text)
+    print(response)
+
+    assert len(response['recipes']) == 3
+    assert response['recipes'][0] != {}
+    assert response['recipes'][1] != {}
+    assert response['recipes'][2] != {}
+    assert response['recipes'][0]['likes'] >= response['recipes'][1]['likes']
+    assert response['recipes'][1]['likes'] >= response['recipes'][2]['likes']
+
+def test_top3_likedRecipeOnMealType_on_two_results_only():
+    reset_server()
+
+    requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
+    requests.post(url + 'signup', json={'username': 'user2', 'email': 'user2@gmail.com', 'password': '123'})
+    requests.post(url + 'signup', json={'username': 'user3', 'email': 'user3@gmail.com', 'password': '123'})
+
+
+    user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
+    user2 = json.loads(requests.post(url + 'login', json={'email': 'user2@gmail.com', 'password': '123'}).text)
+    user3 = json.loads(requests.post(url + 'login', json={'email': 'user3@gmail.com', 'password': '123'}).text)
+
+    # user 1 upload recipe 1 and 2
+    # user 2 upload recipe 3
+    files = {'recipeThumbnail': open(os.path.join(os.path.dirname(__file__), "imgs/thumbnails/index.png"), "rb")}
+    thumbnailResponse1 = requests.post(url + 'upload-thumbnail', files=files).json()
+    recipeId1 = thumbnailResponse1["recipeId"]
+    recipeData1 = getRecipeData1(recipeId1, user1['token'])
+
+    thumbnailResponse2 = requests.post(url + 'upload-thumbnail', files=files).json()
+    recipeId2 = thumbnailResponse2["recipeId"]
+    recipeData2 = getRecipeData2(recipeId2, user1['token'])
+
+    requests.post(url + 'update-recipe-info', json=recipeData1)
+    requests.post(url + 'update-recipe-info', json=recipeData2)
+
+    # user1 like both recipes
+    likeData1 = {
+        'recipeId': recipeId1, 
+        'token': user1['token']
+    }
+    likeData2 = {
+        'recipeId': recipeId2, 
+        'token': user1['token']
+    }
+
+    # user 2 like the second recipe
+    likeData3 = {
+        'recipeId': recipeId2, 
+        'token': user2['token']
+    }
+
+    # user 3 like the first and third recipe
+    likeData4 = {
+        'recipeId': recipeId1, 
+        'token': user3['token']
+    }
+
+    likeData5 = {
+        'recipeId': recipeId1, 
+        'token': user3['token']
+    }
+    requests.put(url + 'like', json=likeData1)
+    requests.put(url + 'like', json=likeData2)
+    requests.put(url + 'like', json=likeData3)
+    requests.put(url + 'like', json=likeData4)
+    requests.put(url + 'like', json=likeData5)
+
+    mealTypes = {
+        'mealTypes': ['Breakfast', 'Tea', 'Lunch'],
+    }
+    response = json.loads(requests.post(url + 'topThreeLikedRecipesOnMealType', json=mealTypes).text)
+    print(response)
+
+    assert len(response['recipes']) == 3
+    assert response['recipes'][0] != {}
+    assert response['recipes'][1] != {}
+    assert response['recipes'][2] == {}
+    assert response['recipes'][0]['likes'] >= response['recipes'][1]['likes']
+
+
+
+
