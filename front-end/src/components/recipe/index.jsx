@@ -8,6 +8,7 @@ const { Text } = Typography;
 const Recipe = (props) => {
   const {
     username,
+    recipeId,
     recipeName,
     mealType,
     likes,
@@ -15,7 +16,9 @@ const Recipe = (props) => {
     thumbnailPath,
     ingredients,
     steps,
+    liked,
   } = props;
+  console.log('how many likes:', likes);
 
   return (
     <>
@@ -26,7 +29,12 @@ const Recipe = (props) => {
         <div className="header">
           <h1>{recipeName}</h1>
           <div className="likes">
-            <LikesButton>{likes}👍</LikesButton>
+            <LikesButton
+              recipeId={recipeId}
+              // token={}
+              likes={likes}
+              liked={liked}
+            />
           </div>
         </div>
         <div style={{ textAlign: 'end' }}>

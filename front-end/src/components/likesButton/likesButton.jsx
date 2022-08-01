@@ -1,42 +1,40 @@
+import { Primary } from '@/stories/Button.stories';
 import { Button } from 'antd';
 import React, { useState } from 'react';
 
 const token = localStorage.getItem('token');
 
-const LikesButton = () => {
-  const [likes, setLikes] = useState(null);
-  const [isClicked, setIsClicked] = useState(false);
+const LikesButton = (props) => {
+  const { recipeId, likes, liked } = props;
 
-  const handleClick = async () => {
-    if (isClicked) {
-      setLikes(true);
-      const response = await fetch('/like', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } else {
-      setLikes(false);
-      const response = await fetch('/like', {
-        method: 'DELETE',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-    setIsClicked(!isClicked);
+  const [like, setLike] = useState(likes);
+  const [isLike, setIsLike] = useState(liked);
+
+  const onLikeButtonClick = async () => {
+    setLike(like + (isLike ? -1 : 1));
+
+    const response = await fetch('/like', {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        token: token,
+        recipeId: recipeId,
+      }),
+    });
+
+    setIsLike(!isLike);
   };
 
   return (
     <Button
-      className={`like-button ${isClicked && 'liked'}`}
-      onClick={handleClick}
-      type="text"
+      className={'like-button ' + (isLike ? 'liked' : '')}
+      onClick={onLikeButtonClick}
+      type={isLike ? 'primary' : 'default'}
     >
-      <span className="likes-counter">{`Like | ${likes}`}</span>
+      {'Like'} | {like}
     </Button>
   );
 };
