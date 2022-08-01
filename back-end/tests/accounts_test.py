@@ -53,9 +53,9 @@ def test_logout_success():
 
     requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
     token = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)['token']
-    user1 = json.loads(requests.delete(url + 'logout', json={'token': token}).text)
+    response = json.loads(requests.delete(url + 'logout', json={'token': token}).text)
 
-    assert user1 == {
+    assert response == {
         'msg': 'LOGOUT_SUCCESS',
         'error': ''
     }
@@ -65,9 +65,27 @@ def test_logout_failure_on_invalid_token():
 
     requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
     requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'})
-    user1 = json.loads(requests.delete(url + 'logout', json={'token': 'invalid token'}).text)
+    response = json.loads(requests.delete(url + 'logout', json={'token': 'invalid token'}).text)
 
-    assert user1 == {
+    assert response == {
         'msg': 'LOGOUT_FAILURE',
         'error': 'Invalid token'
     }
+
+def test_authenticate_success_on_valid_token():
+    reset_server()
+
+    requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
+    token = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)['token']
+    response = json.loads(requests.get(url + 'authenticate', json={'token': token}).text)
+
+    assert response['authenticate'] == True
+
+def test_authenticate_failure_on_invalid_token():
+    reset_server()
+
+    requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
+    requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'})
+    response = json.loads(requests.get(url + 'authenticate', json={'token': 'invalid token'}).text)
+
+    assert response['authenticate'] == False
