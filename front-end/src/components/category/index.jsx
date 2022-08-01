@@ -53,7 +53,7 @@ const Category = React.memo(
         .filter(([_key, value]) => value)
         .map(([key, _value]) => key);
       setRunningListState(list);
-      console.log(list);
+      // console.log(list);
       onChange(list);
     }, [optionState]);
 

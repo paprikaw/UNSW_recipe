@@ -81,7 +81,7 @@ const Home = () => {
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
-    console.log(list);
+    console.log('Selected ->', list);
     const response = await fetch('/search', {
       method: 'POST',
       headers: {
@@ -99,14 +99,13 @@ const Home = () => {
   };
 
   const handleSelectFilter = (value) => {
-    setFilterParam(value);
-
+    // setFilterParam(value);
     console.log('the select list is: ', value);
     console.log(`selected ${value}`);
     // TODO    orignial data -> {thumbnails}
     const filteredData = [];
     // console.log(thumbnails);
-    const isMatched = false;
+    let isMatched = false;
     if (thumbnails) {
       console.log('see:', thumbnails);
       thumbnails.forEach((recipe) => {
@@ -120,9 +119,10 @@ const Home = () => {
         });
       });
       if (isMatched !== true) {
+        setFilteredThumbnails(thumbnails);
       }
       setFilteredThumbnails(filteredData);
-      setFilterStatus(true);
+      // setFilterStatus(true);
       console.log('filtered', filteredData);
     }
   };
