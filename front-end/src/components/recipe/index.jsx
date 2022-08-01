@@ -1,5 +1,6 @@
 import { Card, Typography, Image, Space, Divider } from 'antd';
 import React from 'react';
+import LikesButton from '../likesButton/likesButton';
 import './index.scss';
 
 const { Text } = Typography;
@@ -25,7 +26,7 @@ const Recipe = (props) => {
         <div className="header">
           <h1>{recipeName}</h1>
           <div className="likes">
-            <Text>{likes}👍</Text>
+            <LikesButton>{likes}👍</LikesButton>
           </div>
         </div>
         <div style={{ textAlign: 'end' }}>

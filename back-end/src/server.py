@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder='static')
 
 # database credential to the MySQL in Google Cloud Storage
 # abbreviation: rrs -> Recipe Recommendation System
-db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/testDb'
+db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/rrs'
 db_engine = create_engine(db_url)#, echo=True)
 
 __location__ = os.path.realpath(
@@ -181,6 +181,27 @@ def topThreeNoResultIngredientSets():
         }
     '''
     return recipes.showTopThreeNoResultIngredientSets(db_engine)
-    
+
+@app.route("/topThreeLikedRecipesOnMealType", methods={'POST'})
+def showTopThreeLikedRecipesOnMealType():
+    '''
+    return top 3 liked recipes based on the given Meal types
+    return recipes shown as follows
+        {
+            'recipes': {
+                'recipeId': xxx,
+                'recipeName': xxx,
+                'cookTime': xxx, 
+                'likes': xxx,
+                'thumbnail': xxx,
+                'mealType': xxx,
+            }, 
+            {...}, 
+            {...}
+        }
+        if the result is less than 3, then empty result will be shown as empty dict {}
+    '''
+    return recipes.showTopThreeLikedRecipesOnMealType(db_engine)
+
 if __name__ == "__main__":
     app.run(debug = True, port = 8080)
