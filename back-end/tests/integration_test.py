@@ -276,7 +276,8 @@ def test_top3_likedRecipeOnMealType_on_two_results_only():
     }
     response = json.loads(requests.post(url + 'topThreeLikedRecipesOnMealType', json=mealTypes).text)
 
-    assert len(response['recipes']) == 2
+    assert len(response['recipes']) == 3
     assert response['recipes'][0] != {}
     assert response['recipes'][1] != {}
+    assert response['recipes'][2] == {}
     assert response['recipes'][0]['likes'] >= response['recipes'][1]['likes']

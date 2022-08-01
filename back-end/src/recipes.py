@@ -562,7 +562,7 @@ def showTopThreeNoResultIngredientSets(db_engine):
 
 def showTopThreeLikedRecipesOnMealType(db_engine):
     mealTypes = request.get_json()['mealTypes']
-    recipes = []
+    recipes = [{}, {}, {}]
     with db_engine.connect() as con:
         result = con.execute(
             text('''
@@ -580,14 +580,14 @@ def showTopThreeLikedRecipesOnMealType(db_engine):
 
         i = 0
         for row in result:
-            recipes.append({
+            recipes[i] = {
                 'recipeId': row[0],
                 'recipeName': row[1],
                 'cookTime': row[2], 
                 'thumbnail': row[3],
                 'likes': row[4],
                 'mealType': row[5]
-            })
+            }
             i += 1
 
     recipesResult = {
