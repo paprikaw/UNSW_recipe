@@ -166,6 +166,7 @@ def details():
 def like():
     '''
     given a recipeId and an existing user's token, update the user's likes.
+    if the user has already liked the recipe, remove the like.
     return success message on success.
     return error message on invalid recipeId or invalid token.
     '''
