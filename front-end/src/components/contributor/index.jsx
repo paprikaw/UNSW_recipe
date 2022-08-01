@@ -64,11 +64,13 @@ const Contributor = (props) => {
   const [recipeId, setRecipeId] = useState(-1);
   const [form] = Form.useForm();
   const [ingreSetData, isIngreSetLoading] = useFetch(
-    '/topThreeNoResultIngredientSets'
+    '/topThreeNoResultIngredientSets',
+    (data) => data.ingredientSets.filter((arr) => arr[0] !== 'empty')
   );
   const [isRecommendClicked, setIsRecommendClicked] = useState(false);
   const formRef = useRef();
 
+  useEffect(() => console.log(ingreSetData), [ingreSetData]);
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -158,10 +160,11 @@ const Contributor = (props) => {
         {isIngreSetLoading ? (
           <Spin />
         ) : (
+          ingreSetData &&
           !isRecommendClicked && (
             <IngredientSet
               onClick={onIngreSetClick}
-              ingredientSets={ingreSetData.ingredientSets}
+              ingredientSets={ingreSetData}
             />
           )
         )}
@@ -311,7 +314,6 @@ const Contributor = (props) => {
                       name={[name, 'unit']}
                       rules={[
                         {
-                          required: true,
                           message: 'Input required',
                         },
                       ]}
@@ -319,6 +321,7 @@ const Contributor = (props) => {
                     >
                       <Select
                         placeholder="Unit"
+                        defaultValue={''}
                         getPopupContainer={() =>
                           document.getElementById('contributor-card')
                         }

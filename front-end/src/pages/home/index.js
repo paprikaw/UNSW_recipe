@@ -23,6 +23,7 @@ import { getRidOfEmoji } from '@/utils/utils';
 import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
 import { useFetch } from '@/utils/useFetch';
+import FoodOfTime from '../foodOfTime';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
@@ -42,11 +43,15 @@ const Home = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
+  // whether the homepage is showed:
+  const [isHomePage, setIsHomePage] = useState(true);
+
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
   };
 
   const [ingredientData, ingredientDataLoading] = useFetch('/category');
+
   const [sugIngredientData, sugIngredientDataLoading] = useFetch(
     '/top10',
     (data) => data.ingredients
@@ -71,7 +76,7 @@ const Home = () => {
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
-    console.log(list);
+    setIsHomePage(false);
     const response = await fetch('/search', {
       method: 'POST',
       headers: {
@@ -83,6 +88,7 @@ const Home = () => {
       }),
     });
     const data = await response.json();
+    console.log(data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
   };
@@ -222,7 +228,9 @@ const Home = () => {
               height: '90vh',
             }}
           >
-            {isRecipeLoading ? (
+            {isHomePage ? (
+              <FoodOfTime onClick={handleClickThumbnail} />
+            ) : isRecipeLoading ? (
               <Spin />
             ) : (
               <Row gutter={[10, 20]}>
@@ -272,14 +280,6 @@ const Home = () => {
         onClose={onClose}
         visible={visible}
       >
-        {/*
-        <PageHeader
-          className="site-page-header"
-          onBack={onClose}
-          title="RecipeName"
-          subTitle={'recipe #42'}
-        ></PageHeader>
-          */}
         {isDrawerLoading ? (
           <Spin />
         ) : (
