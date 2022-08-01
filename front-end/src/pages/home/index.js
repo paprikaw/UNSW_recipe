@@ -13,6 +13,7 @@ import {
   Drawer,
   Row,
   Col,
+  Select,
 } from 'antd';
 import { UserOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
@@ -23,10 +24,13 @@ import { getRidOfEmoji } from '@/utils/utils';
 import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
 import { useFetch } from '@/utils/useFetch';
+import { recipe } from '@/components/recipe/recipe.stories';
+import { element } from 'prop-types';
 import FoodOfTime from '../foodOfTime';
 
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
+const { Option, OptGroup } = Select;
 
 const Home = () => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
@@ -35,10 +39,16 @@ const Home = () => {
   // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
-  // page navigate and account info
+
   const [thumbnails, setThumbnails] = useState([]);
-  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
+
+  const [thumbnailFilterParam, setFilterParam] = useState([]);
+  const [isThumbailFiltered, setFilterStatus] = useState(false);
+  const [filteredThumbnails, setFilteredThumbnails] = useState([]);
+  //
+  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
+
   // page navigate and account info
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -76,6 +86,7 @@ const Home = () => {
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
+    console.log('Selected ->', list);
     setIsHomePage(false);
     const response = await fetch('/search', {
       method: 'POST',
@@ -91,6 +102,32 @@ const Home = () => {
     console.log(data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
+    setFilteredThumbnails(data.recipes);
+  };
+
+  const handleSelectFilter = (value) => {
+    console.log('ingredient list ->', value);
+    if (value.length === 0) {
+      setFilteredThumbnails(thumbnails);
+      console.log('filter_OFF now ->', thumbnails);
+      return;
+    }
+    // TODO    orignial data -> {thumbnails}
+    const filteredData = [];
+    if (thumbnails) {
+      console.log('Original Result ->', thumbnails);
+      thumbnails.forEach((recipe) => {
+        recipe.mealType.forEach((type) => {
+          value.forEach((param) => {
+            if (param === type) {
+              filteredData.push(recipe);
+            }
+          });
+        });
+      });
+      setFilteredThumbnails(filteredData);
+      console.log('filter_ON now ->', filteredData);
+    }
   };
 
   const handleClickThumbnail = (recipeId) => {
@@ -228,13 +265,33 @@ const Home = () => {
               height: '90vh',
             }}
           >
+            <>Filtered by 🚬 </>
+            <Select
+              placeholder="All Types"
+              mode="multiple"
+              style={{
+                width: 200,
+                // border: none,
+                // position
+              }}
+              onChange={handleSelectFilter}
+            >
+              <Option value={'Breakfast'}>Breakfast</Option>
+              <Option value={'Lunch'}>Lunch</Option>
+              <Option value={'Dinner'}>Dinner</Option>
+              <Option value={'Dessert'}>Dessert</Option>
+              <Option value={'Snack'}>Snack</Option>
+              <Option value={'Entree'}>Entree</Option>
+              <Option value={'Main'}>Main</Option>
+              <Option value={'Tea'}>Tea</Option>
+            </Select>
             {isHomePage ? (
               <FoodOfTime onClick={handleClickThumbnail} />
             ) : isRecipeLoading ? (
               <Spin />
             ) : (
               <Row gutter={[10, 20]}>
-                {thumbnails.map((data) => (
+                {filteredThumbnails.map((data) => (
                   <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                     <Thumbnail
                       recipeId={data.recipeId}

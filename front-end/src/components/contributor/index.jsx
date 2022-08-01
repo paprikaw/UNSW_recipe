@@ -29,7 +29,7 @@ const { TextArea } = Input;
 function processContributeVal(value) {
   value.steps = value.steps.map((obj) => obj['step']);
   value.token = localStorage.getItem('token');
-  console.log(value.mealType);
+  // console.log(value.mealType);
   value.mealType = changeToList(value.mealType);
 }
 
@@ -113,7 +113,6 @@ const Contributor = (props) => {
     // values.mealTypes.map(
     //   (element) => (element.name = changeToList(element.name))
     // );
-
     // console.log(values);
     // console.log(values.mealTypes.split(" "));
     // const mealTypeList = [];
@@ -121,7 +120,7 @@ const Contributor = (props) => {
     // console.log(mealTypeList);
     // values.mealTypes = mealTypeList;
     if (recipeId !== -1) {
-      console.log(values);
+      console.log('Contributed:', values);
       values.recipeId = recipeId;
       processContributeVal(values);
       const requestOptions = {

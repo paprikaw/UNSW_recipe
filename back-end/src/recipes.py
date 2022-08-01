@@ -11,7 +11,7 @@ helpers
 
 def verifyFileType(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def verifyFileDuplicateName(filename):
     for _, _, files in os.walk(FOLDER_THUMBNAIL):
@@ -31,7 +31,7 @@ def isRecipeLiked(token, recipeId, accountId, con):
     ).fetchone()
 
     if isLiked is None:
-         return False
+        return False
     return True
 
 '''
