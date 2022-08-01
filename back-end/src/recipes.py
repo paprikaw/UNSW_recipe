@@ -52,7 +52,7 @@ def recipe_upload_thumbnail(db_engine):
             nameSuffix = 0
             for _,_,files in os.walk(FOLDER_THUMBNAIL):
                 for file in files:
-                    if(file.startswith(img.filename)):
+                    if(file.startswith(img.filename.split(".")[0])):
                         nameSuffix+=1
             splited = img.filename.split(".")
             newFileName = splited[0] + str(nameSuffix) + "." + splited[1]
@@ -504,9 +504,19 @@ def like(db_engine):
                 'error': 'Invalid recipe'
             }
 
-        # update likes
+        query = 'insert ignore into RecipeLikes (recipeId, accountId) values (:recipeId, :accountId)'
+
+        # check if currently liked, if so change query to delete like
+        check_like = con.execute(
+            text('select * from RecipeLikes where recipeId = :recipeId and accountId = :accountId'),
+            recipeId = recipeId, accountId = accountId
+        ).fetchall()
+
+        if len(check_like) != 0:
+            query = 'delete from RecipeLikes where recipeId = :recipeId and accountId = :accountId'
+
         con.execute(
-            text('insert into RecipeLikes (recipeId, accountId) values (:recipeId, :accountId)'),
+            text(query),
             recipeId = recipeId, accountId = accountId
         )
 
@@ -554,31 +564,43 @@ def showTopThreeNoResultIngredientSets(db_engine):
 
 def showTopThreeLikedRecipesOnMealType(db_engine):
     mealTypes = request.get_json()['mealTypes']
-    recipes = [{}, {}, {}]
-    recipesResult = {
-        'recipes': recipes
-    }
+    recipes = []
     with db_engine.connect() as con:
-        result = con.execute(
+        con.execute(
                 text('''
-                    select Recipes.recipeId, Recipes.recipeName, Recipes.cookTime, Recipes.likes, Recipes.thumbnailPath, RecipeMealTypes.mealType
-                    from Recipes left join on RecipeMealTypes on Recipes.recipeId = RecipeMealTypes.recipeId
+                    create or replace view res as
+                    select Recipes.recipeId, Recipes.recipeName, Recipes.cookTime, Recipes.thumbnailPath, 
+                            group_concat(RecipeMealTypes.mealType separator ',')
+                    from Recipes 
+                    left join RecipeMealTypes on Recipes.recipeId = RecipeMealTypes.recipeId
                     where RecipeMealTypes.mealType in :mealType
-                    order by Recipes.likes 
-                    limit 3
+                    group by Recipes.recipeId
                 '''),
                 mealType = tuple(mealTypes)
             )
+        result = con.execute(
+            text('''
+                select res.*, count(RecipeLikes.recipeId) from res
+                left join RecipeLikes on res.recipeId=RecipeLikes.recipeId
+                group by res.recipeId
+                order by count(RecipeLikes.recipeId) desc
+                limit 3;            
+            ''')
+        )
         i = 0
         for row in result:
-            recipes[i] = {
+            recipes.append({
                 'recipeId': row[0],
                 'recipeName': row[1],
                 'cookTime': row[2], 
-                'likes': row[3],
-                'thumbnail': row[4],
-                'mealType': row[5],
-            }
+                'thumbnail': row[3],
+                'mealType': row[4],
+                'likes': row[5],
+            })
             i += 1
+
+    recipesResult = {
+        'recipes': recipes
+    }
 
     return recipesResult

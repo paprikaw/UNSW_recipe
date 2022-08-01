@@ -35,6 +35,7 @@ const Thumbnail = (props) => {
     thumbnail,
     numIngredientsMatched,
     onClick,
+    isHome = true,
   } = props;
   // const onFinish = (values) => {
   //   if (recipeId !== -1) {
@@ -79,12 +80,14 @@ const Thumbnail = (props) => {
         {mealType}
       </Text>
       <div className="thumbnail-content">
-        <div className="line">
-          <DeploymentUnitOutlined />
-          <Text className="description" type="primary">
-            {numIngredientsMatched} matched ingredients
-          </Text>
-        </div>
+        {isHome && (
+          <div className="line">
+            <DeploymentUnitOutlined />
+            <Text className="description" type="primary">
+              {numIngredientsMatched} matched ingredients
+            </Text>
+          </div>
+        )}
         <div className="line">
           <HourglassOutlined />
           <Text className="description" type="primary">

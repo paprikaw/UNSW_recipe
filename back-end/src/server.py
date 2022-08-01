@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder='static')
 
 # database credential to the MySQL in Google Cloud Storage
 # abbreviation: rrs -> Recipe Recommendation System
-db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/testDb'
+db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/rrs'
 db_engine = create_engine(db_url)#, echo=True)
 
 __location__ = os.path.realpath(
@@ -166,6 +166,7 @@ def details():
 def like():
     '''
     given a recipeId and an existing user's token, update the user's likes.
+    if the user has already liked the recipe, remove the like.
     return success message on success.
     return error message on invalid recipeId or invalid token.
     '''
