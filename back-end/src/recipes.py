@@ -504,7 +504,8 @@ def like(db_engine):
                 'error': 'Invalid recipe'
             }
 
-        query = 'insert ignore into RecipeLikes (recipeId, accountId) values (:recipeId, :accountId)'
+        recipeLikesQuery = 'insert ignore into RecipeLikes (recipeId, accountId) values (:recipeId, :accountId)'
+        recipeDetailsQuery = 'update Recipes set likes = likes + 1 where recipeId = :recipeId'
 
         # check if currently liked, if so change query to delete like
         check_like = con.execute(
@@ -513,11 +514,17 @@ def like(db_engine):
         ).fetchall()
 
         if len(check_like) != 0:
-            query = 'delete from RecipeLikes where recipeId = :recipeId and accountId = :accountId'
+            recipeLikesQuery = 'delete from RecipeLikes where recipeId = :recipeId and accountId = :accountId'
+            recipeDetailsQuery = 'update Recipes set likes = likes - 1 where recipeId = :recipeId and likes > 0'
 
         con.execute(
-            text(query),
+            text(recipeLikesQuery),
             recipeId = recipeId, accountId = accountId
+        )
+
+        con.execute(
+            text(recipeDetailsQuery),
+            recipeId = recipeId
         )
 
     return {
