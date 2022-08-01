@@ -147,7 +147,6 @@ def test_top3_likedRecipeOnMealType_on_success():
     requests.post(url + 'signup', json={'username': 'user2', 'email': 'user2@gmail.com', 'password': '123'})
     requests.post(url + 'signup', json={'username': 'user3', 'email': 'user3@gmail.com', 'password': '123'})
 
-
     user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
     user2 = json.loads(requests.post(url + 'login', json={'email': 'user2@gmail.com', 'password': '123'}).text)
     user3 = json.loads(requests.post(url + 'login', json={'email': 'user3@gmail.com', 'password': '123'}).text)
@@ -171,7 +170,7 @@ def test_top3_likedRecipeOnMealType_on_success():
     requests.post(url + 'update-recipe-info', json=recipeData2)
     requests.post(url + 'update-recipe-info', json=recipeData3)
 
-    # user1 like both recipes
+    # user1 like the first and second recipes
     likeData1 = {
         'recipeId': recipeId1, 
         'token': user1['token']
@@ -192,11 +191,11 @@ def test_top3_likedRecipeOnMealType_on_success():
         'recipeId': recipeId1, 
         'token': user3['token']
     }
-
     likeData5 = {
         'recipeId': recipeId3, 
         'token': user3['token']
     }
+    
     requests.put(url + 'like', json=likeData1)
     requests.put(url + 'like', json=likeData2)
     requests.put(url + 'like', json=likeData3)
@@ -207,7 +206,6 @@ def test_top3_likedRecipeOnMealType_on_success():
         'mealTypes': ['Breakfast', 'Tea', 'Lunch'],
     }
     response = json.loads(requests.post(url + 'topThreeLikedRecipesOnMealType', json=mealTypes).text)
-    print(response)
 
     assert len(response['recipes']) == 3
     assert response['recipes'][0] != {}
@@ -222,7 +220,6 @@ def test_top3_likedRecipeOnMealType_on_two_results_only():
     requests.post(url + 'signup', json={'username': 'user1', 'email': 'user1@gmail.com', 'password': '123'})
     requests.post(url + 'signup', json={'username': 'user2', 'email': 'user2@gmail.com', 'password': '123'})
     requests.post(url + 'signup', json={'username': 'user3', 'email': 'user3@gmail.com', 'password': '123'})
-
 
     user1 = json.loads(requests.post(url + 'login', json={'email': 'user1@gmail.com', 'password': '123'}).text)
     user2 = json.loads(requests.post(url + 'login', json={'email': 'user2@gmail.com', 'password': '123'}).text)
@@ -242,7 +239,7 @@ def test_top3_likedRecipeOnMealType_on_two_results_only():
     requests.post(url + 'update-recipe-info', json=recipeData1)
     requests.post(url + 'update-recipe-info', json=recipeData2)
 
-    # user1 like both recipes
+    # user 1 like the first and second recipes
     likeData1 = {
         'recipeId': recipeId1, 
         'token': user1['token']
@@ -258,16 +255,16 @@ def test_top3_likedRecipeOnMealType_on_two_results_only():
         'token': user2['token']
     }
 
-    # user 3 like the first and third recipe
+    # user 3 like and removes like on first recipe
     likeData4 = {
         'recipeId': recipeId1, 
         'token': user3['token']
     }
-
     likeData5 = {
         'recipeId': recipeId1, 
         'token': user3['token']
     }
+
     requests.put(url + 'like', json=likeData1)
     requests.put(url + 'like', json=likeData2)
     requests.put(url + 'like', json=likeData3)
@@ -278,14 +275,8 @@ def test_top3_likedRecipeOnMealType_on_two_results_only():
         'mealTypes': ['Breakfast', 'Tea', 'Lunch'],
     }
     response = json.loads(requests.post(url + 'topThreeLikedRecipesOnMealType', json=mealTypes).text)
-    print(response)
 
-    assert len(response['recipes']) == 3
+    assert len(response['recipes']) == 2
     assert response['recipes'][0] != {}
     assert response['recipes'][1] != {}
-    assert response['recipes'][2] == {}
     assert response['recipes'][0]['likes'] >= response['recipes'][1]['likes']
-
-
-
-

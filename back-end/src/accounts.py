@@ -3,6 +3,18 @@ from flask import request
 from sqlalchemy import text
 from hashlib import sha256
 
+'''
+helper(s)
+'''
+
+def getAccountIdFromToken(token, con):
+    return con.execute(
+        text('select accountId from AccountSessions where token = :userToken'),
+        userToken = token
+    ).fetchone()
+
+''''''
+
 def signup(db_engine):
     payload = request.get_json()
     username = payload['username']
@@ -73,10 +85,8 @@ def logout(db_engine):
     token = request.get_json()['token']
 
     with db_engine.connect() as con:
-        check_token = con.execute(
-            text('select * from AccountSessions where token = :token'), token=token
-            ).fetchall()
-        if len(check_token) == 0:
+        accountId = getAccountIdFromToken(token, con)
+        if accountId is None:
             return {
                 'msg': 'LOGOUT_FAILURE',
                 'error': 'Invalid token'
@@ -92,3 +102,16 @@ def logout(db_engine):
         'error': ''
     }
     
+def authenticate(db_engine):
+    token = request.get_json()['token']
+
+    with db_engine.connect() as con:
+        accountId = getAccountIdFromToken(token, con)
+        if accountId is None:
+            return {
+                'authenticate': False
+            }
+        
+    return {
+        'authenticate': True
+    }

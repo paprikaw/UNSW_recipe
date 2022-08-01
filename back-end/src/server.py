@@ -115,7 +115,19 @@ def logout():
     return error message on invalid token.
     '''
     return accounts.logout(db_engine)
-    
+
+@app.route("/authenticate", methods={'GET'})
+def authenticate():
+    '''
+    authenticate an existing user's session.
+    given an existing user's token, return true on authentic session.
+    return false on invalid session.
+    {
+        'authenticate': Boolean
+    } 
+    '''
+    return accounts.authenticate(db_engine)
+
 '''
 Recipes
 '''

@@ -1,6 +1,7 @@
 import os
 from flask import request
 from sqlalchemy import text
+from accounts import getAccountIdFromToken
 
 FOLDER_THUMBNAIL = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -18,12 +19,6 @@ def verifyFileDuplicateName(filename):
         if filename in files:
             return True
 
-def getAccountIdFromToken(token, con):
-    return con.execute(
-        text('select accountId from AccountSessions where token = :userToken'),
-        userToken = token
-    ).fetchone()
-
 def isRecipeLiked(token, recipeId, accountId, con):
     isLiked = con.execute(
         text('select * from RecipeLikes where recipeId = :recipeId and accountId = accountId'),
@@ -34,9 +29,7 @@ def isRecipeLiked(token, recipeId, accountId, con):
         return False
     return True
 
-'''
-routes
-'''
+''''''
 
 def recipe_upload_thumbnail(db_engine):
     img = request.files['recipeThumbnail']
@@ -254,8 +247,6 @@ def search(db_engine):
         'recipes': recipes
     }
 
-    print("here")
-    print (request.get_json())
     ingredientNames = request.get_json()['ingredients']
     token = request.get_json()['token']
 
@@ -573,27 +564,20 @@ def showTopThreeLikedRecipesOnMealType(db_engine):
     mealTypes = request.get_json()['mealTypes']
     recipes = []
     with db_engine.connect() as con:
-        con.execute(
-                text('''
-                    create or replace view res as
-                    select Recipes.recipeId, Recipes.recipeName, Recipes.cookTime, Recipes.thumbnailPath, 
-                            group_concat(RecipeMealTypes.mealType separator ',')
-                    from Recipes 
-                    left join RecipeMealTypes on Recipes.recipeId = RecipeMealTypes.recipeId
-                    where RecipeMealTypes.mealType in :mealType
-                    group by Recipes.recipeId
-                '''),
-                mealType = tuple(mealTypes)
-            )
         result = con.execute(
             text('''
-                select res.*, count(RecipeLikes.recipeId) from res
-                left join RecipeLikes on res.recipeId=RecipeLikes.recipeId
-                group by res.recipeId
-                order by count(RecipeLikes.recipeId) desc
-                limit 3;            
-            ''')
-        )
+                select Recipes.recipeId, Recipes.recipeName, Recipes.cookTime, Recipes.thumbnailPath, Recipes.likes, 
+                    group_concat(RecipeMealTypes.mealType separator ',')
+                from Recipes 
+                left join RecipeMealTypes on Recipes.recipeId = RecipeMealTypes.recipeId
+                where RecipeMealTypes.mealType in :mealType
+                group by Recipes.recipeId
+                order by Recipes.likes desc
+                limit 3
+            '''),
+            mealType = tuple(mealTypes)
+        ).fetchall()
+
         i = 0
         for row in result:
             recipes.append({
@@ -601,8 +585,8 @@ def showTopThreeLikedRecipesOnMealType(db_engine):
                 'recipeName': row[1],
                 'cookTime': row[2], 
                 'thumbnail': row[3],
-                'mealType': row[4],
-                'likes': row[5],
+                'likes': row[4],
+                'mealType': row[5]
             })
             i += 1
 
