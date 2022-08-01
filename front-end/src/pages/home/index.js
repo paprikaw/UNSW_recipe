@@ -44,7 +44,7 @@ const Home = () => {
 
   const [thumbnailFilterParam, setFilterParam] = useState([]);
   const [isThumbailFiltered, setFilterStatus] = useState(false);
-  const [filteredThumbnails, setFilteredThumbnails] = useState(['']);
+  const [filteredThumbnails, setFilteredThumbnails] = useState([]);
   //
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
 
@@ -96,34 +96,31 @@ const Home = () => {
     console.log(data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
+    setFilteredThumbnails(data.recipes);
   };
 
   const handleSelectFilter = (value) => {
-    // setFilterParam(value);
-    console.log('the select list is: ', value);
-    console.log(`selected ${value}`);
+    console.log('ingredient list ->', value);
+    if (value.length === 0) {
+      setFilteredThumbnails(thumbnails);
+      console.log('filter_OFF now ->', thumbnails);
+      return;
+    }
     // TODO    orignial data -> {thumbnails}
     const filteredData = [];
-    // console.log(thumbnails);
-    let isMatched = false;
     if (thumbnails) {
-      console.log('see:', thumbnails);
+      console.log('Original Result ->', thumbnails);
       thumbnails.forEach((recipe) => {
         recipe.mealType.forEach((type) => {
           value.forEach((param) => {
             if (param === type) {
-              isMatched = true;
               filteredData.push(recipe);
             }
           });
         });
       });
-      if (isMatched !== true) {
-        setFilteredThumbnails(thumbnails);
-      }
       setFilteredThumbnails(filteredData);
-      // setFilterStatus(true);
-      console.log('filtered', filteredData);
+      console.log('filter_ON now ->', filteredData);
     }
   };
 
