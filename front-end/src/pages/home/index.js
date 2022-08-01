@@ -133,6 +133,7 @@ const Home = () => {
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
+
     fetch('/details', {
       method: 'POST',
       headers: {
@@ -149,6 +150,7 @@ const Home = () => {
       .then((data) => {
         setCurThumbnailDetails(data.recipe);
         setIsDrawerLoading(false);
+        console.log('Recipe detail data -> ', data.recipe);
       })
       .catch((e) => console.log(e));
   };
@@ -354,6 +356,7 @@ const Home = () => {
             thumbnailPath={curThumbnailDetails.thumbnailPath}
             ingredients={curThumbnailDetails.ingredients}
             steps={curThumbnailDetails.steps}
+            liked={curThumbnailDetails.liked}
           />
         )}
       </Drawer>
