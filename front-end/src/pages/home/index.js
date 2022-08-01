@@ -133,6 +133,7 @@ const Home = () => {
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
+
     fetch('/details', {
       method: 'POST',
       headers: {
@@ -149,6 +150,7 @@ const Home = () => {
       .then((data) => {
         setCurThumbnailDetails(data.recipe);
         setIsDrawerLoading(false);
+        console.log('Recipe detail data -> ', data.recipe);
       })
       .catch((e) => console.log(e));
   };
@@ -265,48 +267,54 @@ const Home = () => {
               height: '90vh',
             }}
           >
-            <>Filtered by 🚬 </>
-            <Select
-              placeholder="All Types"
-              mode="multiple"
-              style={{
-                width: 200,
-                // border: none,
-                // position
-              }}
-              onChange={handleSelectFilter}
-            >
-              <Option value={'Breakfast'}>Breakfast</Option>
-              <Option value={'Lunch'}>Lunch</Option>
-              <Option value={'Dinner'}>Dinner</Option>
-              <Option value={'Dessert'}>Dessert</Option>
-              <Option value={'Snack'}>Snack</Option>
-              <Option value={'Entree'}>Entree</Option>
-              <Option value={'Main'}>Main</Option>
-              <Option value={'Tea'}>Tea</Option>
-            </Select>
-            {isHomePage ? (
-              <FoodOfTime onClick={handleClickThumbnail} />
-            ) : isRecipeLoading ? (
-              <Spin />
-            ) : (
-              <Row gutter={[10, 20]}>
-                {filteredThumbnails.map((data) => (
-                  <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-                    <Thumbnail
-                      recipeId={data.recipeId}
-                      recipeName={data.recipeName}
-                      mealType={data.mealType}
-                      likes={data.likes}
-                      cookTime={data.cookTime}
-                      thumbnail={'/static/' + data.thumbnail}
-                      numIngredientsMatched={data.numIngredientsMatched}
-                      onClick={handleClickThumbnail}
-                    />
-                  </Col>
-                ))}
-              </Row>
-            )}
+            <div>
+              <>Filtered by </>
+              <Select
+                className="filter-box"
+                placeholder="All Types"
+                mode="multiple"
+                bordered={false}
+                style={{
+                  width: 250,
+                  // border: none,
+                  // position
+                }}
+                onChange={handleSelectFilter}
+              >
+                <Option value={'Breakfast'}>Breakfast</Option>
+                <Option value={'Lunch'}>Lunch</Option>
+                <Option value={'Dinner'}>Dinner</Option>
+                <Option value={'Dessert'}>Dessert</Option>
+                <Option value={'Snack'}>Snack</Option>
+                <Option value={'Entree'}>Entree</Option>
+                <Option value={'Main'}>Main</Option>
+                <Option value={'Tea'}>Tea</Option>
+              </Select>
+            </div>
+            <div>
+              {isHomePage ? (
+                <FoodOfTime onClick={handleClickThumbnail} />
+              ) : isRecipeLoading ? (
+                <Spin />
+              ) : (
+                <Row gutter={[10, 20]}>
+                  {filteredThumbnails.map((data) => (
+                    <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                      <Thumbnail
+                        recipeId={data.recipeId}
+                        recipeName={data.recipeName}
+                        mealType={data.mealType}
+                        likes={data.likes}
+                        cookTime={data.cookTime}
+                        thumbnail={'/static/' + data.thumbnail}
+                        numIngredientsMatched={data.numIngredientsMatched}
+                        onClick={handleClickThumbnail}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              )}
+            </div>
           </Content>
         </Layout>
       </Layout>
@@ -350,6 +358,7 @@ const Home = () => {
             thumbnailPath={curThumbnailDetails.thumbnailPath}
             ingredients={curThumbnailDetails.ingredients}
             steps={curThumbnailDetails.steps}
+            liked={curThumbnailDetails.liked}
           />
         )}
       </Drawer>
