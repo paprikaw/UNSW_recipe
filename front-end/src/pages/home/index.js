@@ -20,7 +20,7 @@ import Contributor from '@/components/contributor';
 import { React, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
-import { getRidOfEmoji } from '@/utils/utils';
+import { getRidOfEmoji, filterMatch, sortMatch } from '@/utils/utils';
 import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
 import { useFetch } from '@/utils/useFetch';
@@ -40,12 +40,12 @@ const Home = () => {
   const [visible, setVisible] = useState(false);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
 
-  const [thumbnails, setThumbnails] = useState([]);
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
+  const [thumbnails, setThumbnails] = useState([]);
 
-  const [thumbnailFilterParam, setFilterParam] = useState([]);
-  const [isThumbailFiltered, setFilterStatus] = useState(false);
   const [filteredThumbnails, setFilteredThumbnails] = useState([]);
+  const [sortedThumbnails, setSortedThumbnails] = useState([]);
+  const [displayingThumbails, setDisplayThumbnails] = useState([]);
   //
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
 
@@ -86,7 +86,7 @@ const Home = () => {
 
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
-    console.log('Selected ->', list);
+    console.log('Ingredients selected ->', list);
     setIsHomePage(false);
     const response = await fetch('/search', {
       method: 'POST',
@@ -103,31 +103,43 @@ const Home = () => {
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
     setFilteredThumbnails(data.recipes);
+    setSortedThumbnails(data.recipes);
+    setDisplayThumbnails(data.recipes);
   };
 
   const handleSelectFilter = (value) => {
-    console.log('ingredient list ->', value);
+    console.log('filter type selected ->', value);
     if (value.length === 0) {
       setFilteredThumbnails(thumbnails);
-      console.log('filter_OFF now ->', thumbnails);
+      console.log('filter_OFF -> result:', thumbnails);
       return;
-    }
-    // TODO    orignial data -> {thumbnails}
-    const filteredData = [];
+    } // TODO    orignial data -> {thumbnails}
+    let filteredData = [];
     if (thumbnails) {
       console.log('Original Result ->', thumbnails);
-      thumbnails.forEach((recipe) => {
-        recipe.mealType.forEach((type) => {
-          value.forEach((param) => {
-            if (param === type) {
-              filteredData.push(recipe);
-            }
-          });
-        });
-      });
+      filteredData = filterMatch(thumbnails, value);
       setFilteredThumbnails(filteredData);
-      console.log('filter_ON now ->', filteredData);
+      setDisplayThumbnails(filteredData);
+      console.log('filter_ON -> result:', filteredData);
     }
+  };
+  const handleSelectSorter = (value) => {
+    console.log('Sorter method selected ->', value);
+    let initialThumbnails = thumbnails;
+    let sortedData = [];
+    if (value.length === 0) {
+      if (filteredThumbnails) {
+        initialThumbnails = filteredThumbnails;
+      }
+      setSortedThumbnails(initialThumbnails);
+      console.log('Sort_OFF now ->', initialThumbnails);
+      return;
+    }
+
+    sortedData = sortMatch(initialThumbnails, value);
+
+    setDisplayThumbnails(sortedData);
+    console.log('sorted reulst -> ', sortedData);
   };
 
   const handleClickThumbnail = (recipeId) => {
@@ -289,6 +301,19 @@ const Home = () => {
                   <Option value={'Main'}>Main</Option>
                   <Option value={'Tea'}>Tea</Option>
                 </Select>
+
+                <Select
+                  placeholder="Default Sort"
+                  style={{
+                    width: 100,
+                    // border: none,
+                    // position
+                  }}
+                  onChange={handleSelectSorter}
+                >
+                  <Option value={'Ascending'}>Ascending</Option>
+                  <Option value={'Descending'}>Descending</Option>
+                </Select>
               </div>
             )}
             {isHomePage ? (
@@ -297,7 +322,7 @@ const Home = () => {
               <Spin />
             ) : (
               <Row gutter={[10, 20]}>
-                {filteredThumbnails.map((data) => (
+                {displayingThumbails.map((data) => (
                   <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                     <Thumbnail
                       recipeId={data.recipeId}
