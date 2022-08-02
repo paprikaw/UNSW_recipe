@@ -11,6 +11,9 @@ const LikesButton = (props) => {
   const [isLike, setIsLike] = useState(liked);
 
   const onLikeButtonClick = async () => {
+    // if (like === 0 && isLike ) {
+
+    // }
     setLike(like + (isLike ? -1 : 1));
 
     const response = await fetch('/like', {
@@ -26,6 +29,9 @@ const LikesButton = (props) => {
     });
 
     setIsLike(!isLike);
+
+    const data = await response.json();
+    console.log(data.msg, data.error);
   };
 
   return (
