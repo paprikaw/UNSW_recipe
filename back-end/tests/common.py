@@ -4,11 +4,6 @@ from sqlalchemy import create_engine, text
 port = 8080
 url = f"http://localhost:{port}/"
 
-# database credential to the MySQL in Google Cloud Storage
-# abbreviation: rrs -> Recipe Recommendation System
-db_url = 'mysql+pymysql://admin:123123@34.151.68.205:3306/rrs'
-db_engine = create_engine(db_url)#, echo=True)
-
 def reset_server():
     requests.delete(url + 'reset')
 
