@@ -60,6 +60,7 @@ const Home = () => {
   const [filteredThumbnails, setFilteredThumbnails] = useState([]);
   const [sortedThumbnails, setSortedThumbnails] = useState([]);
   const [displayingThumbails, setDisplayThumbnails] = useState([]);
+  const [sortAscending, setSortAscending] = useState(false);
   //
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
 
@@ -136,46 +137,81 @@ const Home = () => {
     const data = await response.json();
     console.log(data);
     setIsRecipeLoading(false);
+
     setThumbnails(data.recipes);
-    setFilteredThumbnails(data.recipes);
-    setSortedThumbnails(data.recipes);
-    setDisplayThumbnails(data.recipes);
+    let display = thumbnails;
+    if (!sortAscending && display) {
+      display = sortMatch(display, 'Ascending');
+    } else {
+      display = sortMatch(display, 'Descending');
+    }
+    // setFilteredThumbnails(data.recipes);
+    // setSortedThumbnails(data.recipes);
+    setDisplayThumbnails(display);
   };
 
-  const handleSelectFilter = (value) => {
-    console.log('filter type selected ->', value);
-    if (value.length === 0) {
-      setFilteredThumbnails(thumbnails);
-      console.log('filter_OFF -> result:', thumbnails);
-      return;
-    } // TODO    orignial data -> {thumbnails}
-    let filteredData = [];
-    if (thumbnails) {
-      console.log('Original Result ->', thumbnails);
-      filteredData = filterMatch(thumbnails, value);
-      setFilteredThumbnails(filteredData);
-      setDisplayThumbnails(filteredData);
-      console.log('filter_ON -> result:', filteredData);
-    }
-  };
-  const handleSelectSorter = (value) => {
-    console.log('Sorter method selected ->', value);
-    let initialThumbnails = thumbnails;
-    let sortedData = [];
-    if (value.length === 0) {
-      if (filteredThumbnails) {
-        initialThumbnails = filteredThumbnails;
+  const handleSelectFilterSorter = (value) => {
+    let display = displayingThumbails;
+
+    if (Array.isArray(value)) {
+      // do the filter display first
+      console.log('filter type selected ->', value);
+      if (value.length === 0) {
+        display = thumbnails;
+        console.log('filter_OFF -> result:', display);
+      } else {
+        display = filterMatch(displayingThumbails, value);
       }
-      setSortedThumbnails(initialThumbnails);
-      console.log('Sort_OFF now ->', initialThumbnails);
-      return;
+      // check sort method after
+      if (sortAscending && display) {
+        display = sortMatch(display, 'Ascending');
+      } else {
+        display = sortMatch(display, 'Descending');
+      }
+    } else {
+      if (value !== 'Ascending') {
+        setSortAscending(true);
+        console.log('Now display Descending');
+      } else {
+        setSortAscending(false);
+        console.log('Now display Ascending');
+      }
+      if (sortAscending && display) {
+        display = sortMatch(display, 'Ascending');
+      } else {
+        display = sortMatch(display, 'Descending');
+      }
     }
-
-    sortedData = sortMatch(initialThumbnails, value);
-
-    setDisplayThumbnails(sortedData);
-    console.log('sorted reulst -> ', sortedData);
+    setDisplayThumbnails(display);
+    console.log('Final filter -> result:', display);
+    // TODO    orignial data -> {thumbnails}
+    // let filteredData = [];
+    // if (thumbnails) {
+    //   console.log('Original Result ->', thumbnails);
+    //   filteredData = filterMatch(thumbnails, value);
+    //   setFilteredThumbnails(filteredData);
+    //   setDisplayThumbnails(filteredData);
+    //   console.log('filter_ON -> result:', filteredData);
+    // }
   };
+  // const handleSelectSorter = (value) => {
+  //   console.log('Sorter method selected ->', value);
+  //   let initialThumbnails = thumbnails;
+  //   let sortedData = [];
+  //   // if (value.length === 0) {
+  //   //   if (filteredThumbnails) {
+  //   //     initialThumbnails = filteredThumbnails;
+  //   //   }
+  //   //   setSortedThumbnails(initialThumbnails);
+  //   //   console.log('Sort_OFF now ->', initialThumbnails);
+  //   //   return;
+  //   // }
+  //   sortedData = sortMatch(initialThumbnails, value);
+
+  //   setSortedThumbnails(sortedData);
+  //   setDisplayThumbnails(sortedData);
+  //   console.log('sorted reulst -> ', sortedData);
+  // };
 
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
@@ -322,10 +358,8 @@ const Home = () => {
                   mode="multiple"
                   style={{
                     width: 200,
-                    // border: none,
-                    // position
                   }}
-                  onChange={handleSelectFilter}
+                  onChange={handleSelectFilterSorter}
                 >
                   <Option value={'Breakfast'}>Breakfast</Option>
                   <Option value={'Lunch'}>Lunch</Option>
@@ -337,17 +371,16 @@ const Home = () => {
                   <Option value={'Tea'}>Tea</Option>
                 </Select>
 
+                <>Sorted likes by</>
                 <Select
-                  placeholder="Default Sort"
+                  defaultValue="Descending"
                   style={{
-                    width: 100,
-                    // border: none,
-                    // position
+                    width: 150,
                   }}
-                  onChange={handleSelectSorter}
+                  onChange={handleSelectFilterSorter}
                 >
-                  <Option value={'Ascending'}>Ascending</Option>
                   <Option value={'Descending'}>Descending</Option>
+                  <Option value={'Ascending'}>Ascending</Option>
                 </Select>
               </div>
             )}
