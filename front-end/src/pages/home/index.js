@@ -67,7 +67,6 @@ const Home = () => {
   const contributor_ref = useRef();
   // page navigate and account info
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
 
   // whether the homepage is showed:
   const [isHomePage, setIsHomePage] = useState(true);
@@ -121,6 +120,7 @@ const Home = () => {
     });
   };
   const handleSearch = async (list) => {
+    const token = localStorage.getItem('token');
     setIsRecipeLoading(true);
     console.log('Ingredients selected ->', list);
     setIsHomePage(false);
@@ -216,7 +216,7 @@ const Home = () => {
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
-
+    const token = localStorage.getItem('token');
     fetch('/details', {
       method: 'POST',
       headers: {
@@ -239,6 +239,7 @@ const Home = () => {
   };
 
   const handleLogout = async () => {
+    const token = localStorage.getItem('token');
     const response = await fetch('/logout', {
       method: 'DELETE',
       headers: {
@@ -411,7 +412,8 @@ const Home = () => {
                     <Thumbnail
                       recipeId={data.recipeId}
                       recipeName={data.recipeName}
-                      mealType={data.mealType.join(', ')}
+                      mealType={data.mealType.join}
+                      // mealType={data.mealType.join(', ')}
                       likes={data.likes}
                       cookTime={data.cookTime}
                       thumbnail={'/static/' + data.thumbnail}
