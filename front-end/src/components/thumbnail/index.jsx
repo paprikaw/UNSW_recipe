@@ -77,7 +77,7 @@ const Thumbnail = (props) => {
       </div>
 
       <Text className="thumbnail-mealtype" type="primary">
-        {mealType.join(', ')}
+        {mealType}
       </Text>
       <div className="thumbnail-content">
         {isHome && (

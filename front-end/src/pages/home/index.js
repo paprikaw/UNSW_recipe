@@ -356,7 +356,7 @@ const Home = () => {
                     <Thumbnail
                       recipeId={data.recipeId}
                       recipeName={data.recipeName}
-                      mealType={data.mealType}
+                      mealType={data.mealType.join(', ')}
                       likes={data.likes}
                       cookTime={data.cookTime}
                       thumbnail={'/static/' + data.thumbnail}
