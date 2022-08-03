@@ -52,7 +52,7 @@ const Contributor = (props) => {
       label: <strong>200min</strong>,
     },
   };
-  const { ingredients = [], onOk } = props;
+  const { ingredients = [], onOk, addedIngredients } = props;
   const [sliderInputValue, setSliderInputValue] = useState(1);
   // Control the ingredient set
 
@@ -61,14 +61,12 @@ const Contributor = (props) => {
   const [imageUrl, setImageUrl] = useState();
   const [recipeId, setRecipeId] = useState(-1);
   const [form] = Form.useForm();
-  const [ingreSetData, isIngreSetLoading] = useFetch(
-    '/topThreeNoResultIngredientSets',
-    (data) => data.results.map((set) => set.ingredientSets)
-  );
-  const [isRecommendClicked, setIsRecommendClicked] = useState(false);
-  const formRef = useRef();
 
-  useEffect(() => console.log(ingreSetData), [ingreSetData]);
+  const ref = useRef();
+  useEffect(() => {
+    ref.current.setFieldValue('ingredients', addedIngredients);
+  }, [addedIngredients]);
+
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -93,14 +91,6 @@ const Contributor = (props) => {
         setImageUrl(url);
       });
     }
-  };
-
-  const onIngreSetClick = (value) => {
-    const newValue = value.map((ingredient) => {
-      return { name: ingredient };
-    });
-    formRef.current.setFieldValue('ingredients', newValue);
-    setIsRecommendClicked(true);
   };
 
   const onFormFinish = (values) => {
@@ -152,21 +142,8 @@ const Contributor = (props) => {
         onFinish={onFormFinish}
         autoComplete="off"
         form={form}
-        ref={formRef}
+        ref={ref}
       >
-        {isIngreSetLoading ? (
-          <Spin />
-        ) : (
-          ingreSetData &&
-          !isRecommendClicked && (
-            <IngredientSet
-              onClick={onIngreSetClick}
-              ingredientSets={ingreSetData}
-            />
-          )
-        )}
-
-        <br />
         <br />
 
         <UploadPicture
