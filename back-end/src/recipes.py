@@ -1,5 +1,4 @@
 import os
-from tty import setraw
 from flask import request
 from sqlalchemy import text
 from accounts import getAccountIdFromToken
