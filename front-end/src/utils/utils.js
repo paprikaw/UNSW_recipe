@@ -31,4 +31,3 @@ export function sortMatch(data, value) {
   }
   return result;
 }
-// initialThumbnails
