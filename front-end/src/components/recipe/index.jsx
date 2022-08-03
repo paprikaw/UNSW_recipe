@@ -51,7 +51,7 @@ const Recipe = (props) => {
         >
           <div className="line">
             <h4 style={{ display: 'inline' }}>Meal Type: </h4>
-            <Text>{mealType}</Text>
+            <Text>{mealType.join(', ')}</Text>
           </div>
 
           <div className="line">
