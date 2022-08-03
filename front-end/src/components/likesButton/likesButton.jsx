@@ -1,4 +1,3 @@
-import { Primary } from '@/stories/Button.stories';
 import { Button } from 'antd';
 import React, { useState } from 'react';
 
@@ -7,13 +6,12 @@ const LikesButton = (props) => {
 
   const [like, setLike] = useState(likes);
   const [isLike, setIsLike] = useState(liked);
+  const [loading, setLoading] = useState(false);
 
   const onLikeButtonClick = async () => {
-    // if (like === 0 && isLike ) {
-
-    // }
     setLike(like + (isLike ? -1 : 1));
     const token = localStorage.getItem('token');
+    setLoading(true);
     const response = await fetch('/like', {
       method: 'PUT',
       headers: {
@@ -25,12 +23,10 @@ const LikesButton = (props) => {
         recipeId: recipeId,
       }),
     });
-
-    console.log(token);
+    setLoading(false);
     onLikeChange(like + (isLike ? -1 : 1));
     setIsLike(!isLike);
     const data = await response.json();
-    console.log(data.msg, data.error);
   };
 
   return (
@@ -38,6 +34,7 @@ const LikesButton = (props) => {
       className={'like-button ' + (isLike ? 'liked' : '')}
       onClick={onLikeButtonClick}
       type={isLike ? 'primary' : 'default'}
+      loading={loading}
     >
       {'Like'} | {like}
     </Button>

@@ -15,7 +15,11 @@ import {
   Col,
   Select,
 } from 'antd';
-import { UserOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  SearchOutlined,
+  ControlOutlined,
+} from '@ant-design/icons';
 import Contributor from '@/components/contributor';
 import { React, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -50,39 +54,89 @@ const Home = () => {
     body: JSON.stringify({ mealTypes: curMealType() }),
   };
 
+  const [filteredThumbnails, setFilteredThumbnails] = useState([]);
+  const [sortedThumbnails, setSortedThumbnails] = useState([]);
+  const [displayingThumbails, setDisplayThumbnails] = useState([]);
+  const [sortAscending, setSortAscending] = useState(false);
+  // page navigate and account info
+  const navigate = useNavigate();
+  // whether the homepage is showed:
+  const [isHomePage, setIsHomePage] = useState(true);
+  // Ingredient data state
+  const [ingredientData, ingredientDataLoading] = useFetch('/category');
+  // Recommended ingredient state
+  const [sugIngredientData, sugIngredientDataLoading] = useFetch(
+    '/top10',
+    (data) => data.ingredients
+  );
+  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
+  // mealType filter state
+  const [mealTypeOptions, setMealTypeOptions] = useState([]);
+  const [sortingOption, setSortingOption] = useState([]);
+
+  // Recommended ingredient state
+  const [ingreSetData, isIngreSetLoading] = useFetch(
+    '/topThreeNoResultIngredientSets',
+    (data) => data.results.map((set) => set.ingredientSets)
+  );
+
+  // State for prefilled ingredient in the contributor page
+  // When ingredient set is clicked
+  const [prefillIngredient, setPrefillIngredient] = useState([]);
+
   const [thumbnails, isFoodTimeLoading, setThumbnails] = useFetch(
     '/topThreeLikedRecipesOnMealType',
     (data) => data.recipes,
     foodOfTimeBody,
     []
   );
+  const [originalThumbnail, setOriginalThumbnail] = useState([]);
+  // handle the filter case
+  useEffect(() => {
+    console.log(mealTypeOptions);
+    console.log(sortingOption);
+    handleFilter(mealTypeOptions);
+    handleSorter(sortingOption);
+  }, [mealTypeOptions]);
 
-  const [filteredThumbnails, setFilteredThumbnails] = useState([]);
-  const [sortedThumbnails, setSortedThumbnails] = useState([]);
-  const [displayingThumbails, setDisplayThumbnails] = useState([]);
-  const [sortAscending, setSortAscending] = useState(false);
-  //
-  const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
+  useEffect(() => {
+    console.log(mealTypeOptions);
+    console.log(sortingOption);
+    handleSorter(sortingOption);
+  }, [sortingOption]);
 
-  // page navigate and account info
-  const navigate = useNavigate();
+  const handleFilter = (value) => {
+    console.log(value);
+    console.log(originalThumbnail);
+    value.length > 0
+      ? setThumbnails(
+          originalThumbnail.filter((thumbnail) =>
+            thumbnail.mealType.some((_element) => value.includes(_element))
+          )
+        )
+      : originalThumbnail.length > 0 && setThumbnails(originalThumbnail);
+  };
 
-  // whether the homepage is showed:
-  const [isHomePage, setIsHomePage] = useState(true);
+  const handleSorter = (value) => {
+    if (value === 'descending') {
+      setThumbnails((prev) => [
+        ...prev.sort((a, b) => a.recipeName < b.recipeName),
+      ]);
+    } else if (value === 'ascending') {
+      setThumbnails((prev) => [
+        ...prev.sort((a, b) => a.recipeName >= b.recipeName),
+      ]);
+    } else {
+      setThumbnails((prev) => [...prev.sort((a, b) => a.likes < b.likes)]);
+    }
+  };
+  const onSorterChange = (value) => {
+    setSortingOption(value);
+  };
 
-  const [ingredientData, ingredientDataLoading] = useFetch('/category');
-
-  const [sugIngredientData, sugIngredientDataLoading] = useFetch(
-    '/top10',
-    (data) => data.ingredients
-  );
-
-  // State management for recommended ingredient sets
-  const [ingreSetData, isIngreSetLoading] = useFetch(
-    '/topThreeNoResultIngredientSets',
-    (data) => data.results.map((set) => set.ingredientSets)
-  );
-  const [prefillIngredient, setPrefillIngredient] = useState([]);
+  const onFilterChange = (value) => {
+    setMealTypeOptions(value);
+  };
 
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
@@ -134,54 +188,14 @@ const Home = () => {
     const data = await response.json();
     console.log(data);
     setIsRecipeLoading(false);
-
     setThumbnails(data.recipes);
-    let display = thumbnails;
-    if (!sortAscending && display) {
-      display = sortMatch(display, 'Ascending');
-    } else {
-      display = sortMatch(display, 'Descending');
-    }
-    // setFilteredThumbnails(data.recipes);
-    // setSortedThumbnails(data.recipes);
-    setDisplayThumbnails(display);
+    setOriginalThumbnail(data.recipes);
+
+    // If filter and sorter has already been selected, we filter them out.
+    mealTypeOptions && handleFilter(mealTypeOptions);
+    sortingOption && handleSorter(sortingOption);
   };
 
-  const handleSelectFilterSorter = (value) => {
-    let display = displayingThumbails;
-
-    if (Array.isArray(value)) {
-      // do the filter display first
-      console.log('filter type selected ->', value);
-      if (value.length === 0) {
-        display = thumbnails;
-        console.log('filter_OFF -> result:', display);
-      } else {
-        display = filterMatch(displayingThumbails, value);
-      }
-      // check sort method after
-      if (sortAscending && display) {
-        display = sortMatch(display, 'Ascending');
-      } else {
-        display = sortMatch(display, 'Descending');
-      }
-    } else {
-      if (value !== 'Ascending') {
-        setSortAscending(true);
-        console.log('Now display Descending');
-      } else {
-        setSortAscending(false);
-        console.log('Now display Ascending');
-      }
-      if (sortAscending && display) {
-        display = sortMatch(display, 'Ascending');
-      } else {
-        display = sortMatch(display, 'Descending');
-      }
-    }
-    setDisplayThumbnails(display);
-    console.log('Final filter -> result:', display);
-  };
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
@@ -327,7 +341,7 @@ const Home = () => {
                   style={{
                     width: 200,
                   }}
-                  onChange={handleSelectFilterSorter}
+                  onChange={onFilterChange}
                 >
                   <Option value={'Breakfast'}>Breakfast</Option>
                   <Option value={'Lunch'}>Lunch</Option>
@@ -345,10 +359,11 @@ const Home = () => {
                   style={{
                     width: 150,
                   }}
-                  onChange={handleSelectFilterSorter}
+                  onChange={onSorterChange}
                 >
-                  <Option value={'Descending'}>Descending</Option>
-                  <Option value={'Ascending'}>Ascending</Option>
+                  <Option value={'descending'}>Descending</Option>
+                  <Option value={'ascending'}>Ascending</Option>
+                  <Option value={'most_like'}>Most likes</Option>
                 </Select>
               </div>
             )}
@@ -374,7 +389,7 @@ const Home = () => {
               <Spin />
             ) : (
               <Row gutter={[10, 20]}>
-                {displayingThumbails.map((data) => (
+                {thumbnails.map((data) => (
                   <Col xs={24} sm={24} md={12} lg={8} xl={6}>
                     <Thumbnail
                       recipeId={data.recipeId}
