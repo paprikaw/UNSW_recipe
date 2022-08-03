@@ -1,10 +1,8 @@
-import os
-import sqlparse
 import accounts
 import recipes
+import homepage
 from flask import Flask, send_from_directory
-from flask_cors import CORS
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
 app = Flask(__name__, static_folder='static')
 
@@ -13,27 +11,14 @@ app = Flask(__name__, static_folder='static')
 db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/rrs'
 db_engine = create_engine(db_url)#, echo=True)
 
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
 @app.route("/category", methods={'GET'})
 def category(): 
     '''
     returns the categories and their ingredients ordered by number of uses, and then alphabetically
     in the form: {'CategoryName': ['emoji IngredientName1', 'emoji IngredientName2', ...], ...}
     '''
-    response = {}
-    with db_engine.connect() as con:
-        result = con.execute(text('''
-            select Categories.categoryName, group_concat(Ingredients.emoji, ' ', Ingredients.ingredientName 
-                order by Ingredients.numUses desc, Ingredients.ingredientName asc separator ',') 
-            from Categories left outer join Ingredients on Categories.categoryId = Ingredients.categoryId 
-            group by Categories.categoryName
-        ''')).fetchall()
-        for row in result:
-            response[row[0]] = [ingredient for ingredient in row[1].split(',')]
 
-    return response
+    return homepage.category(db_engine)
 
 @app.route("/top10", methods={'GET'})
 def top10():
@@ -42,19 +27,7 @@ def top10():
     ordered by number of uses, and then alphabetically in the form:
     {'ingredients': ['🧄 Garlic', ...]}
     '''
-    ingredients = []
-
-    with db_engine.connect() as con:
-        ingredientsResult = con.execute(text('''
-            select concat(emoji, ' ', ingredientName) 
-            from Ingredients 
-            order by numUses desc, ingredientName asc limit 10
-        ''')).fetchall()
-
-        for ingredient in ingredientsResult:
-            ingredients.append(ingredient[0])
-    
-    return {'ingredients': ingredients}
+    return homepage.top10(db_engine)
 
 
 @app.route("/reset", methods={'DELETE'})
@@ -63,21 +36,8 @@ def reset():
     resets the database
     returns empty dict
     '''
-    with db_engine.connect() as con:
-        with open(os.path.join(__location__, 'schema.sql')) as schema:
-            queries = sqlparse.split(sqlparse.format(schema.read(), strip_comments=True, reindent=True))
-            for query in queries:
-                con.execute(text(query))
 
-    thumbnails = os.path.abspath(
-        os.path.join(os.path.dirname(os.path.dirname(__file__)),'src/static')
-    )
-    
-    for file in os.scandir(thumbnails):
-        if not file.path.endswith('/.gitignore'):
-            os.remove(file.path)
-
-    return {}
+    return homepage.reset(db_engine)
 
 @app.route("/static/<path:filepath>")
 def send_static(filepath):
