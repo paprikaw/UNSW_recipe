@@ -17,6 +17,7 @@ const Recipe = (props) => {
     ingredients,
     steps,
     liked,
+    onLikeChange,
   } = props;
   console.log('how many likes:', likes);
 
@@ -34,6 +35,7 @@ const Recipe = (props) => {
               // token={}
               likes={likes}
               liked={liked}
+              onLikeChange={onLikeChange}
             />
           </div>
         </div>
