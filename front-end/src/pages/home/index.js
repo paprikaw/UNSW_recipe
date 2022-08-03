@@ -362,7 +362,7 @@ const Home = () => {
                 />
 
                 <Title level={3}>
-                  These ingredients needs you to contribute!{' '}
+                  These ingredients need you to contribute!{' '}
                 </Title>
                 <IngredientSet
                   onClick={onIngreSetClick}
