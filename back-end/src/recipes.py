@@ -1,4 +1,5 @@
 import os
+from tty import setraw
 from flask import request
 from sqlalchemy import text
 from accounts import getAccountIdFromToken
@@ -524,10 +525,8 @@ def like(db_engine):
     }
 
 def showTopThreeNoResultIngredientSets(db_engine):
-    result = {
-                'ingredientSets': [[], [], []],
-                'hits': [0, 0, 0] 
-            }
+    setsResult = []
+
     with db_engine.connect() as con:
         # search the top 3 hitted ingredient sets which has no matching recipes.
         response =  con.execute(
@@ -547,22 +546,25 @@ def showTopThreeNoResultIngredientSets(db_engine):
                     """),
                     setId = res[0]
                 ).fetchall()
-                
+
+                temp = []
                 if len(ingredientNameSet) != 0:
                     for name in ingredientNameSet:
-                        result['ingredientSets'][i].append(name[0])
-                        result['hits'][i] = res[1]
-                i+=1
+                        temp.append(name[0])
 
-            # display "empty" msg for empty list
-            for index in range(3):
-                if len(result['ingredientSets'][index]) == 0:
-                    result['ingredientSets'][index].append("empty")
-        return result
+                setsResult.append({
+                    'ingredientSets': temp,
+                    'hits': res[1]
+                })
+                i+=1
+                
+        return {
+            'results': setsResult
+        }
 
 def showTopThreeLikedRecipesOnMealType(db_engine):
     mealTypes = request.get_json()['mealTypes']
-    recipes = [{}, {}, {}]
+    recipes = []
     with db_engine.connect() as con:
         result = con.execute(
             text('''
@@ -580,14 +582,14 @@ def showTopThreeLikedRecipesOnMealType(db_engine):
 
         i = 0
         for row in result:
-            recipes[i] = {
+            recipes.append({
                 'recipeId': row[0],
                 'recipeName': row[1],
                 'cookTime': row[2], 
                 'thumbnail': row[3],
                 'likes': row[4],
                 'mealType': row[5]
-            }
+            })
             i += 1
 
     recipesResult = {
