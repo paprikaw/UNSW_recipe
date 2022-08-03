@@ -84,6 +84,17 @@ const Home = () => {
     setVisible(false);
   };
 
+  const onLikeChange = (likes) => {
+    setThumbnails((prevState) => {
+      prevState[
+        thumbnails.findIndex(
+          (ele) => ele.recipeId === curThumbnailDetails.recipeId
+        )
+      ].likes = likes;
+      console.log(prevState);
+      return [...prevState];
+    });
+  };
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
     console.log('Ingredients selected ->', list);
@@ -281,7 +292,7 @@ const Home = () => {
           >
             {isHomePage || (
               <div>
-                <>Filtered by 🚬 </>
+                <>Filtered by: </>
                 <Select
                   placeholder="All Types"
                   mode="multiple"
@@ -316,6 +327,7 @@ const Home = () => {
                 </Select>
               </div>
             )}
+            <br />
             {isHomePage ? (
               <FoodOfTime onClick={handleClickThumbnail} />
             ) : isRecipeLoading ? (
@@ -382,6 +394,7 @@ const Home = () => {
             ingredients={curThumbnailDetails.ingredients}
             steps={curThumbnailDetails.steps}
             liked={curThumbnailDetails.liked}
+            onLikeChange={onLikeChange}
           />
         )}
       </Drawer>

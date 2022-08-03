@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const token = localStorage.getItem('token');
 
 const LikesButton = (props) => {
-  const { recipeId, likes, liked } = props;
+  const { recipeId, likes, liked, onLikeChange } = props;
 
   const [like, setLike] = useState(likes);
   const [isLike, setIsLike] = useState(liked);
@@ -28,8 +28,8 @@ const LikesButton = (props) => {
       }),
     });
 
+    onLikeChange(like + (isLike ? -1 : 1));
     setIsLike(!isLike);
-
     const data = await response.json();
     console.log(data.msg, data.error);
   };
