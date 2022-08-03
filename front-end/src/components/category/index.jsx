@@ -6,7 +6,7 @@ import SuggestionBox from './suggestionBox';
 import { useRef } from '@storybook/addons';
 
 const { Title } = Typography;
-
+const { OptGroup } = Select;
 const ingredientIniState = {};
 const suggestionIngredientIniState = {};
 
@@ -113,7 +113,15 @@ const Category = React.memo(
               : (document.getElementById('sider').style.overflow = 'auto')
           }
         >
-          {runningListChildern}
+          {Object.entries(ingredientData)
+            .sort((a, b) => a[0] > b[0])
+            .map(([_key, values]) => (
+              <OptGroup label={_key}>
+                {values.map((value) => (
+                  <Option value={value}>{value}</Option>
+                ))}
+              </OptGroup>
+            ))}
         </Select>
         <br />
         <br />

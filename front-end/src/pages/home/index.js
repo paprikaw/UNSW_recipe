@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import { UserOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
-import { React, useCallback, useEffect, useState } from 'react';
+import { React, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
 import { getRidOfEmoji, filterMatch, sortMatch } from '@/utils/utils';
@@ -27,7 +27,9 @@ import { useFetch } from '@/utils/useFetch';
 import { recipe } from '@/components/recipe/recipe.stories';
 import { element } from 'prop-types';
 import FoodOfTime from '../foodOfTime';
+import IngredientSet from '@/components/contributor/ingredientSet';
 
+import { curMealType } from '@/utils/utils';
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
 const { Option, OptGroup } = Select;
@@ -41,7 +43,19 @@ const Home = () => {
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
 
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
-  const [thumbnails, setThumbnails] = useState([]);
+
+  const foodOfTimeBody = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mealTypes: curMealType() }),
+  };
+
+  const [thumbnails, isFoodTimeLoading, setThumbnails] = useFetch(
+    '/topThreeLikedRecipesOnMealType',
+    (data) => data.recipes,
+    foodOfTimeBody,
+    []
+  );
 
   const [filteredThumbnails, setFilteredThumbnails] = useState([]);
   const [sortedThumbnails, setSortedThumbnails] = useState([]);
@@ -50,16 +64,13 @@ const Home = () => {
   //
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
 
+  const contributor_ref = useRef();
   // page navigate and account info
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
   // whether the homepage is showed:
   const [isHomePage, setIsHomePage] = useState(true);
-
-  const handleContirbuteOk = () => {
-    setIsContriModalVisible(false);
-  };
 
   const [ingredientData, ingredientDataLoading] = useFetch('/category');
 
@@ -68,11 +79,16 @@ const Home = () => {
     (data) => data.ingredients
   );
 
-  //navigate to contribute page
-  // const handleContribute = () => {
-  //   navigate('/contribute');
-  // }
+  // State management for recommended ingredient sets
+  const [ingreSetData, isIngreSetLoading] = useFetch(
+    '/topThreeNoResultIngredientSets',
+    (data) => data.results.map((set) => set.ingredientSets)
+  );
+  const [prefillIngredient, setPrefillIngredient] = useState([]);
 
+  const handleContirbuteOk = () => {
+    setIsContriModalVisible(false);
+  };
   // recipe detail funcs
   const onCategoryChange = useCallback((list) => {
     setCategoryList(list);
@@ -85,6 +101,25 @@ const Home = () => {
     setVisible(false);
   };
 
+  const onIngreSetClick = (value) => {
+    const newValue = value.map((ingredient) => {
+      return { name: ingredient };
+    });
+    setIsContriModalVisible(true);
+    setPrefillIngredient(newValue);
+  };
+
+  const onLikeChange = (likes) => {
+    setThumbnails((prevState) => {
+      prevState[
+        thumbnails.findIndex(
+          (ele) => ele.recipeId === curThumbnailDetails.recipeId
+        )
+      ].likes = likes;
+      console.log(prevState);
+      return [...prevState];
+    });
+  };
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
     console.log('Ingredients selected ->', list);
@@ -317,7 +352,7 @@ const Home = () => {
           >
             {isHomePage || (
               <div>
-                <>Filtered by</>
+                <>Filtered by: </>
                 <Select
                   placeholder="All Types"
                   mode="multiple"
@@ -349,8 +384,24 @@ const Home = () => {
                 </Select>
               </div>
             )}
+            <br />
             {isHomePage ? (
-              <FoodOfTime onClick={handleClickThumbnail} />
+              <>
+                <FoodOfTime
+                  onClick={handleClickThumbnail}
+                  top3Recipe={thumbnails}
+                  top3RecipeLoading={isFoodTimeLoading}
+                />
+
+                <Title level={3}>
+                  These ingredients needs you to contribute!{' '}
+                </Title>
+                <IngredientSet
+                  onClick={onIngreSetClick}
+                  ingredientSets={ingreSetData}
+                  isLoading={isIngreSetLoading}
+                />
+              </>
             ) : isRecipeLoading ? (
               <Spin />
             ) : (
@@ -360,7 +411,7 @@ const Home = () => {
                     <Thumbnail
                       recipeId={data.recipeId}
                       recipeName={data.recipeName}
-                      mealType={data.mealType}
+                      mealType={data.mealType.join(', ')}
                       likes={data.likes}
                       cookTime={data.cookTime}
                       thumbnail={'/static/' + data.thumbnail}
@@ -391,7 +442,11 @@ const Home = () => {
         width={800}
       >
         <div>
-          <Contributor ingredients={ingredientData} onOk={handleContirbuteOk} />
+          <Contributor
+            ingredients={ingredientData}
+            onOk={handleContirbuteOk}
+            addedIngredients={prefillIngredient}
+          />
         </div>
       </Modal>
       <Drawer
@@ -415,6 +470,7 @@ const Home = () => {
             ingredients={curThumbnailDetails.ingredients}
             steps={curThumbnailDetails.steps}
             liked={curThumbnailDetails.liked}
+            onLikeChange={onLikeChange}
           />
         )}
       </Drawer>

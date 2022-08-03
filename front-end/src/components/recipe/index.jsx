@@ -17,6 +17,7 @@ const Recipe = (props) => {
     ingredients,
     steps,
     liked,
+    onLikeChange,
   } = props;
   console.log('how many likes:', likes);
 
@@ -34,6 +35,7 @@ const Recipe = (props) => {
               // token={}
               likes={likes}
               liked={liked}
+              onLikeChange={onLikeChange}
             />
           </div>
         </div>
@@ -49,7 +51,7 @@ const Recipe = (props) => {
         >
           <div className="line">
             <h4 style={{ display: 'inline' }}>Meal Type: </h4>
-            <Text>{mealType}</Text>
+            <Text>{mealType.join(', ')}</Text>
           </div>
 
           <div className="line">

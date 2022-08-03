@@ -9,11 +9,12 @@ export const useFetch = (url, dataProcess, requestBody, initData) => {
         return v.json();
       })
       .then((data) => {
+        console.log(data);
         setRelData(dataProcess && data ? dataProcess(data) : data);
         setIsLoading(false);
       })
       .catch((e) => console.log(e));
   }, []);
 
-  return [relData, isLoading];
+  return [relData, isLoading, setRelData];
 };
