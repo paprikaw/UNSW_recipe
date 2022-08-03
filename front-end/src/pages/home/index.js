@@ -118,16 +118,25 @@ const Home = () => {
   };
 
   const handleSorter = (value) => {
-    if (value === 'descending') {
+    // if (value === 'descending') {
+    //   setThumbnails((prev) => [
+    //     ...prev.sort((a, b) => a.recipeName < b.recipeName),
+    //   ]);
+    // } else if (value === 'ascending') {
+    //   setThumbnails((prev) => [
+    //     ...prev.sort((a, b) => a.recipeName >= b.recipeName),
+    //   ]);
+    // } else {
+    //   setThumbnails((prev) => [...prev.sort((a, b) => a.likes < b.likes)]);
+    // }
+    if (value === 'most_likes') {
+      setThumbnails((prev) => [...prev.sort((a, b) => b.likes - a.likes)]);
+    } else if (value === 'matched_ingredients') {
       setThumbnails((prev) => [
-        ...prev.sort((a, b) => a.recipeName < b.recipeName),
+        ...prev.sort(
+          (a, b) => b.numIngredientsMatched - a.numIngredientsMatched
+        ),
       ]);
-    } else if (value === 'ascending') {
-      setThumbnails((prev) => [
-        ...prev.sort((a, b) => a.recipeName >= b.recipeName),
-      ]);
-    } else {
-      setThumbnails((prev) => [...prev.sort((a, b) => a.likes < b.likes)]);
     }
   };
   const onSorterChange = (value) => {
@@ -353,17 +362,18 @@ const Home = () => {
                   <Option value={'Tea'}>Tea</Option>
                 </Select>
 
-                <>Sorted likes by</>
+                <>Sort by</>
                 <Select
-                  defaultValue="Descending"
+                  defaultValue="matched_ingredients"
                   style={{
                     width: 150,
                   }}
-                  onChange={onSorterChange}
+                  onChange={handleSorter}
                 >
-                  <Option value={'descending'}>Descending</Option>
-                  <Option value={'ascending'}>Ascending</Option>
-                  <Option value={'most_like'}>Most likes</Option>
+                  <Option value={'most_likes'}>Most likes</Option>
+                  <Option value={'matched_ingredients'}>
+                    Matched ingredients
+                  </Option>
                 </Select>
               </div>
             )}

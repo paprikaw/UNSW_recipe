@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 
-export default function useUser () {
+export default function useUser() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -13,16 +13,16 @@ export default function useUser () {
     }
   }, []);
 
-  function saveUser (user) {
+  function saveUser(user) {
     localStorage.setItem('user', JSON.stringify(user));
     setUser(user);
   }
 
-  function saveToken (token) {
+  function saveToken(token) {
     localStorage.setItem('user_token', token);
   }
 
-  function getUser () {
+  function getUser() {
     const user = localStorage.getItem('user');
     if (user) {
       setUser(JSON.parse(user));
@@ -30,11 +30,11 @@ export default function useUser () {
     return user;
   }
 
-  function logout () {
+  function logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('user_token');
     setUser(null);
-    message.success('退出登录成功', 0.5, () => {
+    message.success('Log out successfully', 0.5, () => {
       navigate('/login');
     });
   }
@@ -44,6 +44,6 @@ export default function useUser () {
     getUser,
     saveUser,
     logout,
-    saveToken
+    saveToken,
   };
 }
