@@ -29,8 +29,6 @@ const { TextArea } = Input;
 function processContributeVal(value) {
   value.steps = value.steps.map((obj) => obj['step']);
   value.token = localStorage.getItem('token');
-  // console.log(value.mealType);
-  value.mealType = changeToList(value.mealType);
 }
 
 /**
@@ -65,7 +63,7 @@ const Contributor = (props) => {
   const [form] = Form.useForm();
   const [ingreSetData, isIngreSetLoading] = useFetch(
     '/topThreeNoResultIngredientSets',
-    (data) => data.ingredientSets.filter((arr) => arr[0] !== 'empty')
+    (data) => data.results.map((set) => set.ingredientSets)
   );
   const [isRecommendClicked, setIsRecommendClicked] = useState(false);
   const formRef = useRef();
@@ -227,6 +225,7 @@ const Contributor = (props) => {
           ]}
         >
           <Select
+            mode="multiple"
             placeholder="please select"
             size="big"
             bordered={'false'}
@@ -319,8 +318,7 @@ const Contributor = (props) => {
                       style={{ flexGrow: 1 }}
                     >
                       <Select
-                        placeholder="Unit"
-                        defaultValue={''}
+                        placeholder={'Unit'}
                         getPopupContainer={() =>
                           document.getElementById('contributor-card')
                         }

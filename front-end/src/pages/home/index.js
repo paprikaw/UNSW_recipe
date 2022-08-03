@@ -28,6 +28,7 @@ import { recipe } from '@/components/recipe/recipe.stories';
 import { element } from 'prop-types';
 import FoodOfTime from '../foodOfTime';
 
+import { curMealType } from '@/utils/utils';
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
 const { Option, OptGroup } = Select;
@@ -41,7 +42,19 @@ const Home = () => {
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
 
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
-  const [thumbnails, setThumbnails] = useState([]);
+
+  const foodOfTimeBody = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mealTypes: curMealType() }),
+  };
+
+  const [thumbnails, isFoodTimeLoading, setThumbnails] = useFetch(
+    '/topThreeLikedRecipesOnMealType',
+    (data) => data.recipes,
+    foodOfTimeBody,
+    []
+  );
 
   const [filteredThumbnails, setFilteredThumbnails] = useState([]);
   const [sortedThumbnails, setSortedThumbnails] = useState([]);
@@ -329,7 +342,11 @@ const Home = () => {
             )}
             <br />
             {isHomePage ? (
-              <FoodOfTime onClick={handleClickThumbnail} />
+              <FoodOfTime
+                onClick={handleClickThumbnail}
+                top3Recipe={thumbnails}
+                top3RecipeLoading={isFoodTimeLoading}
+              />
             ) : isRecipeLoading ? (
               <Spin />
             ) : (

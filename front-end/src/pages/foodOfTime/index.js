@@ -5,6 +5,7 @@ import Thumbnail from '@/components/thumbnail';
 import { useFetch } from '@/utils/useFetch';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { curMealType } from '@/utils/utils';
 const { Title } = Typography;
 const responsive = {
   desktop: {
@@ -24,45 +25,8 @@ const responsive = {
   },
 };
 
-const curMealType = () => {
-  const cur_hour = new Date().getHours();
-  if (cur_hour <= 10 && cur_hour > 6) {
-    return ['breakfast'];
-  } else if (cur_hour <= 12 && cur_hour > 10) {
-    return ['tea', 'snack', 'dessert'];
-  } else if (cur_hour <= 14 && cur_hour > 12) {
-    return ['lunch'];
-  } else if (cur_hour <= 17 && cur_hour > 14) {
-    return ['tea', 'snack', 'dessert'];
-  } else if (cur_hour <= 20 && cur_hour > 17) {
-    return ['dinner'];
-  } else if (
-    (cur_hour < 24 && cur_hour > 17) ||
-    (cur_hour >= 0 && cur_hour <= 6)
-  ) {
-    return ['tea', 'snack', 'dessert'];
-  }
-};
-
 const FoodOfTime = (props) => {
-  const foodOfTimeBody = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ mealTypes: curMealType() }),
-  };
-
-  const [top3Recipe, top3RecipeLoading] = useFetch(
-    '/topThreeLikedRecipesOnMealType',
-    (data) => data.recipes,
-    foodOfTimeBody,
-    []
-  );
-
-  useEffect(() => {
-    console.log(top3Recipe);
-  }, [top3Recipe]);
-
-  const { onClick } = props;
+  const { top3Recipe, onClick, top3RecipeLoading } = props;
   return (
     <>
       {top3RecipeLoading ? (
@@ -81,7 +45,6 @@ const FoodOfTime = (props) => {
                     likes={recipe.likes}
                     cookTime={recipe.cookTime}
                     thumbnail={'/static/' + recipe.thumbnail}
-                    numIngredientsMatched={recipe.numIngredientsMatched}
                     onClick={onClick}
                     isHome={false}
                   ></Thumbnail>
