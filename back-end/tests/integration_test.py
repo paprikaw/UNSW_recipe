@@ -1,4 +1,3 @@
-from urllib import response
 import pytest
 import requests
 import json
@@ -104,19 +103,13 @@ def test_top3_noResultIngredientSets_ideal_case():
     json.loads(requests.post(url + 'search', json=payload).text)
     response = requests.get(url + 'topThreeNoResultIngredientSets').json()
     
-    assert len(response["ingredientSets"]) == 3
-    assert len(response["ingredientSets"][0]) == 4
-    assert len(response["ingredientSets"][1]) == 3
-    assert len(response["ingredientSets"][2]) == 4
-    assert response["hits"][0] == 5
-    assert response["hits"][1] == 3
-    assert response["hits"][2] == 2
-    assert '🍎 Apple' in response["ingredientSets"][0]
-    assert '🍎 Apple' in response["ingredientSets"][1]
-    assert '🍎 Apple' in response["ingredientSets"][2]
-
-    assert '🍍 Pineapple' not in response["ingredientSets"][1]
-    assert '🍍 Pineapple' not in response["ingredientSets"][2]
+    assert len(response["results"]) == 3
+    assert len(response["results"][0]["ingredientSets"]) == 4
+    assert len(response["results"][1]["ingredientSets"]) == 3
+    assert len(response["results"][2]["ingredientSets"]) == 4
+    assert response["results"][0]["hits"] == 5
+    assert response["results"][1]["hits"] == 3
+    assert response["results"][2]["hits"] == 2
 
 def test_top3_noResultIngredientSets_missing_sets():
     reset_server()
@@ -132,13 +125,9 @@ def test_top3_noResultIngredientSets_missing_sets():
     json.loads(requests.post(url + 'search', json=payload).text)
     response = requests.get(url + 'topThreeNoResultIngredientSets').json()
 
-    assert len(response["ingredientSets"]) == 3
-    assert len(response["ingredientSets"][0]) == 4
-    assert len(response["ingredientSets"][1]) == 1
-    assert len(response["ingredientSets"][2]) == 1
-    assert response["hits"][0] == 2
-    assert response["hits"][1] == 0
-    assert response["hits"][2] == 0
+    assert len(response["results"]) == 1
+    assert len(response["results"][0]["ingredientSets"]) == 4
+    assert response["results"][0]["hits"] == 2
 
 def test_top3_likedRecipeOnMealType_on_success():
     reset_server()
@@ -276,8 +265,7 @@ def test_top3_likedRecipeOnMealType_on_two_results_only():
     }
     response = json.loads(requests.post(url + 'topThreeLikedRecipesOnMealType', json=mealTypes).text)
 
-    assert len(response['recipes']) == 3
+    assert len(response['recipes']) == 2
     assert response['recipes'][0] != {}
     assert response['recipes'][1] != {}
-    assert response['recipes'][2] == {}
     assert response['recipes'][0]['likes'] >= response['recipes'][1]['likes']
