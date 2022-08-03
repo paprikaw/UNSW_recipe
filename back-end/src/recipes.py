@@ -172,7 +172,7 @@ def recipe_update_remaining_info_at_creation(db_engine):
                     """
                 ),
                 recipeId = recipeId, ingredientId = ingreId, 
-                quantity = ingreInfo['quantity'], unit = ingreInfo['unit']
+                quantity = ingreInfo['quantity'], unit = ingreInfo['unit'] if 'unit' in ingreInfo else ''
             )
 
             # update uses
