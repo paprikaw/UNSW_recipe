@@ -1,5 +1,6 @@
 import os
 from flask import request
+from pytest import console_main
 from sqlalchemy import text
 from accounts import getAccountIdFromToken
 
@@ -19,9 +20,9 @@ def verifyFileDuplicateName(filename):
         if filename in files:
             return True
 
-def isRecipeLiked(token, recipeId, accountId, con):
+def isRecipeLiked(recipeId, accountId, con):
     isLiked = con.execute(
-        text('select * from RecipeLikes where recipeId = :recipeId and accountId = accountId'),
+        text('select * from RecipeLikes where recipeId = :recipeId and accountId = :accountId'),
         recipeId = recipeId, accountId = accountId
     ).fetchone()
 
@@ -315,7 +316,7 @@ def search(db_engine):
                 'cookTime': result[3], 
                 'thumbnail': result[4],
                 'numIngredientsMatched': result[5],
-                'liked': isRecipeLiked(token, result[0], accountId, con)
+                'liked': isRecipeLiked(result[0], accountId, con)
             })
 
         '''
@@ -460,7 +461,7 @@ def details(db_engine):
             'thumbnailPath': recipeResult[5],
             'ingredients': ingredients,
             'steps': steps,
-            'liked': isRecipeLiked(token, recipeResult[0], accountId, con)
+            'liked': isRecipeLiked(recipeResult[0], accountId, con)
         }
 
     return {

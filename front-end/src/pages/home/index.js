@@ -64,7 +64,6 @@ const Home = () => {
   //
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
 
-  const contributor_ref = useRef();
   // page navigate and account info
   const navigate = useNavigate();
 
@@ -120,9 +119,7 @@ const Home = () => {
     });
   };
   const handleSearch = async (list) => {
-    const token = localStorage.getItem('token');
     setIsRecipeLoading(true);
-    console.log('Ingredients selected ->', list);
     setIsHomePage(false);
     const response = await fetch('/search', {
       method: 'POST',
@@ -131,7 +128,7 @@ const Home = () => {
       },
       body: JSON.stringify({
         ingredients: list.map((name) => getRidOfEmoji(name)),
-        token: token,
+        token: localStorage.getItem('token'),
       }),
     });
     const data = await response.json();
@@ -184,46 +181,17 @@ const Home = () => {
     }
     setDisplayThumbnails(display);
     console.log('Final filter -> result:', display);
-    // TODO    orignial data -> {thumbnails}
-    // let filteredData = [];
-    // if (thumbnails) {
-    //   console.log('Original Result ->', thumbnails);
-    //   filteredData = filterMatch(thumbnails, value);
-    //   setFilteredThumbnails(filteredData);
-    //   setDisplayThumbnails(filteredData);
-    //   console.log('filter_ON -> result:', filteredData);
-    // }
   };
-  // const handleSelectSorter = (value) => {
-  //   console.log('Sorter method selected ->', value);
-  //   let initialThumbnails = thumbnails;
-  //   let sortedData = [];
-  //   // if (value.length === 0) {
-  //   //   if (filteredThumbnails) {
-  //   //     initialThumbnails = filteredThumbnails;
-  //   //   }
-  //   //   setSortedThumbnails(initialThumbnails);
-  //   //   console.log('Sort_OFF now ->', initialThumbnails);
-  //   //   return;
-  //   // }
-  //   sortedData = sortMatch(initialThumbnails, value);
-
-  //   setSortedThumbnails(sortedData);
-  //   setDisplayThumbnails(sortedData);
-  //   console.log('sorted reulst -> ', sortedData);
-  // };
-
   const handleClickThumbnail = (recipeId) => {
     setIsDrawerLoading(true);
     showDrawer();
-    const token = localStorage.getItem('token');
     fetch('/details', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        token: token,
+        token: localStorage.getItem('token'),
         recipeId: recipeId,
       }),
     })
@@ -239,14 +207,13 @@ const Home = () => {
   };
 
   const handleLogout = async () => {
-    const token = localStorage.getItem('token');
     const response = await fetch('/logout', {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        token: token,
+        token: localStorage.getItem('token'),
       }),
     });
 
@@ -412,8 +379,7 @@ const Home = () => {
                     <Thumbnail
                       recipeId={data.recipeId}
                       recipeName={data.recipeName}
-                      mealType={data.mealType.join}
-                      // mealType={data.mealType.join(', ')}
+                      mealType={data.mealType.join(', ')}
                       likes={data.likes}
                       cookTime={data.cookTime}
                       thumbnail={'/static/' + data.thumbnail}
