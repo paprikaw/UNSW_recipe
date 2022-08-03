@@ -11,6 +11,17 @@ app = Flask(__name__, static_folder='static')
 db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/rrs'
 db_engine = create_engine(db_url)#, echo=True)
 
+@app.route("/static/<path:filepath>")
+def send_static(filepath):
+    '''
+    uploads file from static folder given a filename
+    '''
+    return send_from_directory(app.static_folder, filepath)
+
+'''
+Homepage
+'''
+
 @app.route("/category", methods={'GET'})
 def category(): 
     '''
@@ -38,13 +49,6 @@ def reset():
     '''
 
     return homepage.reset(db_engine)
-
-@app.route("/static/<path:filepath>")
-def send_static(filepath):
-    '''
-    uploads file from static folder given a filename
-    '''
-    return send_from_directory(app.static_folder, filepath)
 
 '''
 Accounts
