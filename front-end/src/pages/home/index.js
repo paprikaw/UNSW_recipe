@@ -14,6 +14,7 @@ import {
   Row,
   Col,
   Select,
+  Divider,
 } from 'antd';
 import {
   UserOutlined,
@@ -342,7 +343,7 @@ const Home = () => {
             }}
           >
             {isHomePage || (
-              <div>
+              <div className="filter-sorter">
                 <>Filtered by: </>
                 <Select
                   placeholder="All Types"
@@ -362,7 +363,7 @@ const Home = () => {
                   <Option value={'Tea'}>Tea</Option>
                 </Select>
 
-                <>Sort by</>
+                <>Sorted by: </>
                 <Select
                   defaultValue="matched_ingredients"
                   style={{
@@ -375,9 +376,9 @@ const Home = () => {
                     Matched ingredients
                   </Option>
                 </Select>
+                <Divider />
               </div>
             )}
-            <br />
             {isHomePage ? (
               <>
                 <FoodOfTime
@@ -386,9 +387,7 @@ const Home = () => {
                   top3RecipeLoading={isFoodTimeLoading}
                 />
 
-                <Title level={3}>
-                  These ingredients need you to contribute!{' '}
-                </Title>
+                <Title level={3}>People have been searching for... </Title>
                 <IngredientSet
                   onClick={onIngreSetClick}
                   ingredientSets={ingreSetData}

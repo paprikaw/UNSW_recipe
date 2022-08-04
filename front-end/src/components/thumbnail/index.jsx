@@ -1,8 +1,8 @@
 import { Card, Select, Input, Typography, Row, Col } from 'antd';
 
 import {
-  DeploymentUnitOutlined,
-  HourglassOutlined,
+  FileSearchOutlined,
+  FieldTimeOutlined,
   LikeFilled,
 } from '@ant-design/icons';
 import { React, useState } from 'react';
@@ -88,14 +88,14 @@ const Thumbnail = (props) => {
       <div className="thumbnail-content">
         {isHome && (
           <div className="line">
-            <DeploymentUnitOutlined />
+            <FileSearchOutlined />
             <Text className="description" type="primary">
               {numIngredientsMatched} matched ingredients
             </Text>
           </div>
         )}
         <div className="line">
-          <HourglassOutlined />
+          <FieldTimeOutlined />
           <Text className="description" type="primary">
             {cookTime} minutes to cook
           </Text>
