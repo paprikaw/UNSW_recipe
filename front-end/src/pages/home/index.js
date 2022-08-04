@@ -55,11 +55,6 @@ const Home = () => {
     body: JSON.stringify({ mealTypes: curMealType() }),
   };
 
-  const [filteredThumbnails, setFilteredThumbnails] = useState([]);
-  const [sortedThumbnails, setSortedThumbnails] = useState([]);
-  const [displayingThumbails, setDisplayThumbnails] = useState([]);
-  const [sortAscending, setSortAscending] = useState(false);
-  // page navigate and account info
   const navigate = useNavigate();
   // whether the homepage is showed:
   const [isHomePage, setIsHomePage] = useState(true);
@@ -91,7 +86,8 @@ const Home = () => {
     foodOfTimeBody,
     []
   );
-  const [originalThumbnail, setOriginalThumbnail] = useState([]);
+
+  let originalThumbnail = [];
   // handle the filter case
   useEffect(() => {
     console.log(mealTypeOptions);
@@ -119,17 +115,6 @@ const Home = () => {
   };
 
   const handleSorter = (value) => {
-    // if (value === 'descending') {
-    //   setThumbnails((prev) => [
-    //     ...prev.sort((a, b) => a.recipeName < b.recipeName),
-    //   ]);
-    // } else if (value === 'ascending') {
-    //   setThumbnails((prev) => [
-    //     ...prev.sort((a, b) => a.recipeName >= b.recipeName),
-    //   ]);
-    // } else {
-    //   setThumbnails((prev) => [...prev.sort((a, b) => a.likes < b.likes)]);
-    // }
     if (value === 'most_likes') {
       setThumbnails((prev) => [...prev.sort((a, b) => b.likes - a.likes)]);
     } else if (value === 'matched_ingredients') {
@@ -199,7 +184,7 @@ const Home = () => {
     console.log(data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
-    setOriginalThumbnail(data.recipes);
+    originalThumbnail = data.recipes;
 
     // If filter and sorter has already been selected, we filter them out.
     mealTypeOptions && handleFilter(mealTypeOptions);
@@ -350,6 +335,7 @@ const Home = () => {
                   mode="multiple"
                   style={{
                     width: 200,
+                    marginRight: '20px',
                   }}
                   onChange={onFilterChange}
                 >
@@ -367,13 +353,13 @@ const Home = () => {
                 <Select
                   defaultValue="matched_ingredients"
                   style={{
-                    width: 150,
+                    width: 200,
                   }}
                   onChange={handleSorter}
                 >
                   <Option value={'most_likes'}>Most likes</Option>
                   <Option value={'matched_ingredients'}>
-                    Matched ingredients
+                    Ingredients matched
                   </Option>
                 </Select>
                 <Divider />
