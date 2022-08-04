@@ -90,15 +90,11 @@ const Home = () => {
   const [originalThumbnail, setOriginalThumnail] = useState([]);
   // handle the filter case
   useEffect(() => {
-    console.log(mealTypeOptions);
-    console.log(sortingOption);
     handleFilter(mealTypeOptions);
     handleSorter(sortingOption);
   }, [mealTypeOptions]);
 
   useEffect(() => {
-    console.log(mealTypeOptions);
-    console.log(sortingOption);
     handleSorter(sortingOption);
   }, [sortingOption]);
 
@@ -108,8 +104,6 @@ const Home = () => {
   }, [originalThumbnail]);
 
   const handleFilter = (value) => {
-    console.log(value);
-    console.log(originalThumbnail);
     let oldThumbnail = [...originalThumbnail];
     value.length > 0
       ? setThumbnails(
