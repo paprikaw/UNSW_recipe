@@ -20,3 +20,32 @@ Week 4
 Week 5
 1. Finalise the frontend of sprint 1.
 2. Have meetings to solve the problems each one faced and practise the demo.
+3. Have a meeting on the retro of the sprint1 to reflect on what we can better in next sprint
+4. Have a meeting on the payload of sprint 2.
+
+Week 6
+1. Have a meeting with frontend to have each member to assign the works
+2. Finish the basic features of uploading a picture.
+
+Week 7
+1. Update the features of contributor page.
+2. Have a meeting to update everyone's process.
+3. Adjust the log out button to a user profile logo.
+4. Bug fix
+
+Week 8
+1. Polish some features in sprint 2 like the contributor window size, the cook time display
+2. Write scripts for the sprint 2 demo.
+3. Have meetings to practice demo before the lab session.
+4. Have a meeting on the retro of sprint 2.
+
+Week 9
+1. Create a frame work for the likes button.
+2. Weekly meeting to update everyone's process.
+3. Bug fix
+
+Week 10
+1. Write scripts for the final demo.
+2. Fix the bug of sorting by likes or matched ingredients and do some polish.
+3. Have meetings to practice the final demo.
+4. Finish the report.
