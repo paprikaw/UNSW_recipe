@@ -1,8 +1,15 @@
 ## Steps to setup enviroment:
 
+Note: This instruction is only worked under lubuntu
+
+Firstly you need to install pip in lubuntu:
+```
+sudo apt-get install python3-pip
+```
+
 In the back-end directory:
 ``` 
-pip install virtualenv (if you don't already have virtualenv installed)
+sudo apt install python3-virtualenv
 ``` 
 to create your new environment (called 'venv' here)
 ``` 
