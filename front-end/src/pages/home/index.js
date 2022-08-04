@@ -87,7 +87,7 @@ const Home = () => {
     []
   );
 
-  let originalThumbnail = [];
+  const [originalThumbnail, setOriginalThumnail] = useState([]);
   // handle the filter case
   useEffect(() => {
     console.log(mealTypeOptions);
@@ -105,9 +105,10 @@ const Home = () => {
   const handleFilter = (value) => {
     console.log(value);
     console.log(originalThumbnail);
+    let oldThumbnail = [...originalThumbnail];
     value.length > 0
       ? setThumbnails(
-          originalThumbnail.filter((thumbnail) =>
+          oldThumbnail.filter((thumbnail) =>
             thumbnail.mealType.some((_element) => value.includes(_element))
           )
         )
@@ -184,7 +185,7 @@ const Home = () => {
     console.log(data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
-    originalThumbnail = data.recipes;
+    setOriginalThumnail(data.recipes);
 
     // If filter and sorter has already been selected, we filter them out.
     mealTypeOptions && handleFilter(mealTypeOptions);
@@ -355,7 +356,7 @@ const Home = () => {
                   style={{
                     width: 200,
                   }}
-                  onChange={handleSorter}
+                  onChange={onSorterChange}
                 >
                   <Option value={'most_likes'}>Most likes</Option>
                   <Option value={'matched_ingredients'}>
