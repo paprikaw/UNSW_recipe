@@ -38,4 +38,18 @@ Week 7
 
 Week 8
 
-1. Complete Thumbnail components
+1. Complete tail components in the homepage
+2. Developed and finished the search feature on the website
+3. Developed and finished the contributor page
+4. Retrospect discussions with teammates after Demo.
+
+Week 9
+
+1. Complete the suggested ingredient sets
+2. Complete the ingredient suggestions when user searches
+
+Week 10
+
+1. Complete food of the time feature
+2. Final bug fixes with teammates
+3. Presented login, signupm running list, category features in the final demo
