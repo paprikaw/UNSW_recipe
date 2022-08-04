@@ -1,6 +1,10 @@
 import { Card, Select, Input, Typography, Row, Col } from 'antd';
 
-import { DeploymentUnitOutlined, HourglassOutlined } from '@ant-design/icons';
+import {
+  DeploymentUnitOutlined,
+  HourglassOutlined,
+  LikeFilled,
+} from '@ant-design/icons';
 import { React, useState } from 'react';
 import UploadPicture from '../upload/UploadPicture';
 import './index.scss';
@@ -72,7 +76,9 @@ const Thumbnail = (props) => {
           <Text>{recipeName}</Text>
         </div>
         <div className="likes">
-          <Text>{likes} 👍</Text>
+          <Text>
+            {likes} <LikeFilled />
+          </Text>
         </div>
       </div>
 

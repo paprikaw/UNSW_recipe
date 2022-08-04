@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import React, { useState } from 'react';
+import { LikeOutlined } from '@ant-design/icons';
 
 const LikesButton = (props) => {
   const { recipeId, likes, liked, onLikeChange } = props;
@@ -36,7 +37,7 @@ const LikesButton = (props) => {
       type={isLike ? 'primary' : 'default'}
       loading={loading}
     >
-      {'Like'} | {like}
+      <LikeOutlined /> | {like}
     </Button>
   );
 };
