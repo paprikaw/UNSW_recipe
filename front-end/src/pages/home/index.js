@@ -102,6 +102,11 @@ const Home = () => {
     handleSorter(sortingOption);
   }, [sortingOption]);
 
+  useEffect(() => {
+    handleFilter(mealTypeOptions);
+    handleSorter(sortingOption);
+  }, [originalThumbnail]);
+
   const handleFilter = (value) => {
     console.log(value);
     console.log(originalThumbnail);
