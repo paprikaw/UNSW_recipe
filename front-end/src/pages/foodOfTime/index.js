@@ -33,7 +33,7 @@ const FoodOfTime = (props) => {
         <Spin />
       ) : (
         <>
-          <Title level={2}>It's time for {curMealType()[0]}: </Title>
+          <Title level={2}>It's time for {curMealType()[0]}... </Title>
           <Carousel responsive={responsive}>
             {top3Recipe &&
               top3Recipe.map((recipe) => (
