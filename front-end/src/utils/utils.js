@@ -35,20 +35,18 @@ export function sortMatch(data, value) {
 
 export const curMealType = () => {
   const cur_hour = new Date().getHours();
-  if (cur_hour <= 10 && cur_hour > 6) {
+  console.log(cur_hour);
+  if (cur_hour < 10 && cur_hour >= 6) {
     return ['breakfast'];
-  } else if (cur_hour <= 12 && cur_hour > 10) {
+  } else if (cur_hour < 12 && cur_hour >= 10) {
     return ['tea', 'snack', 'dessert'];
-  } else if (cur_hour <= 14 && cur_hour > 12) {
+  } else if (cur_hour < 14 && cur_hour >= 12) {
     return ['lunch'];
-  } else if (cur_hour <= 17 && cur_hour > 14) {
+  } else if (cur_hour < 17 && cur_hour >= 14) {
     return ['tea', 'snack', 'dessert'];
-  } else if (cur_hour <= 20 && cur_hour > 17) {
+  } else if (cur_hour < 20 && cur_hour >= 17) {
     return ['dinner'];
-  } else if (
-    (cur_hour < 24 && cur_hour > 17) ||
-    (cur_hour >= 0 && cur_hour <= 6)
-  ) {
+  } else {
     return ['tea', 'snack', 'dessert'];
   }
 };
