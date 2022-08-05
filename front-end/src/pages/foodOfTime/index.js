@@ -1,8 +1,7 @@
 /* The login page start up code is from: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js */
 import { Typography, Spin, Divider } from 'antd';
-import { React, useEffect, useState } from 'react';
+import { React } from 'react';
 import Thumbnail from '@/components/thumbnail';
-import { useFetch } from '@/utils/useFetch';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { curMealType } from '@/utils/utils';

@@ -1,15 +1,6 @@
 /* The login page start up code is from: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js */
 import React from 'react';
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Avatar,
-  Space,
-  Badge,
-  message,
-} from 'antd';
+import { Button, Checkbox, Form, Input, Avatar, Badge, message } from 'antd';
 import { LockTwoTone } from '@ant-design/icons';
 import './index.scss';
 import { Link, useNavigate } from 'react-router-dom';
@@ -52,13 +43,11 @@ const Login = () => {
         wrapperCol={{ span: 8 }}
         initialValues={{ remember: true }}
         onFinish={handleOnFinsh}
-        //onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item
           label="Email"
           name="email"
-          // rules={[{ required: true, message: 'Please input your username!' }]}
           rules={[
             {
               required: true,
@@ -93,16 +82,9 @@ const Login = () => {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
-          {/* <Space size='large'> */}
           <Button type="primary" htmlType="submit" offset="8">
             login
           </Button>
-          {/* <Link to='/register'>
-          <Button type="primary">
-            Register
-          </Button>
-        </Link> */}
-          {/* </Space> */}
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
@@ -117,5 +99,4 @@ const Login = () => {
   );
 };
 
-/* Handler function */
 export default Login;

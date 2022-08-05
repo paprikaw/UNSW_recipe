@@ -1,9 +1,16 @@
 import { React } from 'react';
 import useCollapse from 'react-collapsed';
-import { Card, Button, Spin, Space } from 'antd';
+import { Card, Button, Space } from 'antd';
 import SelectButton from './selectButton';
 import './index.scss';
 
+/**
+ * * Component: Ingridents Category Box - collapsible
+ * @data ingredients data
+ * @title category name
+ * @selectState
+ * @onClick on click action
+ */
 function CollapseBox(props) {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     collapsedHeight: '80',

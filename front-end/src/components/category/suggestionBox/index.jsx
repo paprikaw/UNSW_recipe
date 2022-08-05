@@ -5,17 +5,10 @@ import SelectButton from './selectButton';
 import './index.scss';
 
 /**
- * Component for category page to suggest ingredient input
- *
- * @component
- * @example
- * const ingredients = {
- *    apple: true,
- *    pear: false
- * }
- * return (
- *   <CollapseBox data={ingredients} onClick=() title/>
- * )
+ * * Component: Ingridents Suggestion Box - collapsible
+ * @getCollapseProps
+ * @getToggleProps
+ * @isExpanded expand state
  */
 function SuggestionBox(props) {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({

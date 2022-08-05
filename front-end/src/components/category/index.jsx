@@ -3,7 +3,6 @@ import { Select, Typography } from 'antd';
 import CollapseBox from './collapseBox';
 import './index.scss';
 import SuggestionBox from './suggestionBox';
-import { useRef } from '@storybook/addons';
 
 const { Title } = Typography;
 const { OptGroup } = Select;
@@ -27,8 +26,6 @@ const Category = React.memo(
     const [optionState, setOptionState] = useState({});
     const [suggestionOptionState, setSuggestionOptionState] = useState({});
     const [runningListState, setRunningListState] = useState([]);
-    const [runningListChildern, setRunningListChildren] = useState([]);
-
     // Setting up initial state
     useEffect(() => {
       // Process data from input
@@ -45,7 +42,6 @@ const Category = React.memo(
 
       setOptionState(ingredientIniState);
       setSuggestionOptionState(suggestionIngredientIniState);
-      setRunningListChildren(children);
     }, [ingredientData, suggustionIngredientData]);
 
     useEffect(() => {
@@ -53,7 +49,6 @@ const Category = React.memo(
         .filter(([_key, value]) => value)
         .map(([key, _value]) => key);
       setRunningListState(list);
-      // console.log(list);
       onChange(list);
     }, [optionState]);
 

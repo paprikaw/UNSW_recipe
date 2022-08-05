@@ -16,28 +16,22 @@ import {
   Select,
   Divider,
 } from 'antd';
-import {
-  UserOutlined,
-  SearchOutlined,
-  ControlOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, SearchOutlined } from '@ant-design/icons';
 import Contributor from '@/components/contributor';
-import { React, useCallback, useEffect, useRef, useState } from 'react';
+import { React, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
-import { getRidOfEmoji, filterMatch, sortMatch } from '@/utils/utils';
+import { getRidOfEmoji } from '@/utils/utils';
 import Recipe from '@/components/recipe';
 import Thumbnail from '@/components/thumbnail';
 import { useFetch } from '@/utils/useFetch';
-import { recipe } from '@/components/recipe/recipe.stories';
-import { element } from 'prop-types';
 import FoodOfTime from '../foodOfTime';
 import IngredientSet from '@/components/contributor/ingredientSet';
 
 import { curMealType } from '@/utils/utils';
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
-const { Option, OptGroup } = Select;
+const { Option } = Select;
 
 const Home = () => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
@@ -46,7 +40,6 @@ const Home = () => {
   // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
-
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
 
   const foodOfTimeBody = {
@@ -181,7 +174,7 @@ const Home = () => {
       }),
     });
     const data = await response.json();
-    console.log(data);
+    console.log('searched data', data);
     setIsRecipeLoading(false);
     setThumbnails(data.recipes);
     setOriginalThumnail(data.recipes);
@@ -245,7 +238,6 @@ const Home = () => {
         {
           key: '1',
           label: (
-            // <Link to={'../'}>Log out</Link>
             <Button
               style={{ zIndex: 2 }}
               onClick={() => setIsLogoutModalVisible(true)}
