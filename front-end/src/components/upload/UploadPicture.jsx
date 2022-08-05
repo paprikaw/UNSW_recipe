@@ -3,6 +3,21 @@ import { message, Upload } from 'antd';
 import React from 'react';
 import ImgCrop from 'antd-img-crop';
 
+/***************************************************************************************
+ *    Title: Ant-design upload source code
+ *    Author: Ant-design group
+ *    Date: <date>
+ *    Availability: https://ant.design/components/upload/
+ *
+ ***************************************************************************************/
+
+/**
+ * * Component: upload picture in contributor window
+ * @file image file
+ * @onChange on Chang action
+ * @imageUrl image link
+ */
+
 /**
  * * Helper: image uploading checking function
  * @file image file

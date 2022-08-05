@@ -1,8 +1,12 @@
 import { Card, Typography, Image, Space, Divider } from 'antd';
 import React from 'react';
+import { Component } from 'react';
 import LikesButton from '../likesButton/likesButton';
 import './index.scss';
-
+/**
+Component: Recipe detail pop up window
+* @props recipe data
+*/
 const { Text } = Typography;
 /**
  * * Component: Recipe detail page
