@@ -5,3 +5,67 @@ Week 1
 
 Week 2
 - Setup the GitHub repo, reached out to tutor to get Maintainer status and also integration with Jira site.
+- Formed user stories using the project description as a group, led discussion of their details and some acceptance criteria for them.
+- Added user stories to Jira backlog, defined sprint structure and assigned some user stories to Sprint 1.
+- Began and uploaded a draft project proposal, added screenshots to the User Stories section.
+- Discussed/gave feedback on system architecture and interface/flow diagrams worked on by other team members
+
+Week 3
+- Worked on project proposal with the team. Wrote up the background, drawbacks of external systems, and justification for novel features. Edited others work on the proposal.
+- Revised what was to be worked on for Sprint 1, added and changed some user stories in the backlog.
+- Had team meetings to discuss progress on project proposal.
+- Finalised and submitted project proposal. 
+- Other team members worked on starting up a simple backend server with a simple frontend. 
+
+Week 4
+- Came up with database schema and SQL commands to populate the database. Worked with Ruiqi to apply this to the MySQL Google Cloud Storage Server.
+- Discussed endpoints between backend and frontend with team members, and what payload we need to transfer to and from each other. 
+- Completed homepage (returns categories and ingredients to the frontend) and signup (takes user account data and stores them into database) implementations for the backend. 
+- Restructured backend folder from Tian and Xu's simple backend server implemented in Week 3.
+- Also added a /reset route in the backend server that cleans and resets the SQL database, for use during testing.
+
+Week 5
+- Cleaned up the payload format and refactored account-related routes in server.py to accounts.py
+- Implemented logging out in the backend
+- Cleaned up Jira for Sprint 1 and setup Sprint 2
+- Planned what to present in the demo with all team members
+- Presented demo with Qing and Ruiqi
+- Conducted retro with all team members after demo
+
+Week 6
+- Wrote up and submitted retro report through email and webCMS
+- Discussed with team how to proceed for Sprint 2 for contributor and search functions
+
+Week 7
+- finished recipe search route on the backend
+- reviewed other team member's implementations of contributor route on backend and frontend, provided feedback for what could be fixed and improved on in a team meeting (we should use tokens not account ids, clarified what meal types we need, ui fixes)
+- our team is aiming to finish all contributor functionalities and recipe search on the frontend by monday week 8
+
+Week 8
+- completed full recipe details route on the backend. encountered some logic errors and bugs in the recipe update route and fixed them.
+- backend finished for sprint 2 on Monday.
+- frontend finished up their implementations for sprint 2 on Wednesday.
+- did a quick bugfix on the backend, created a new route to return images through a url to the frontend.
+- went through and reviewed the application as a team on Wednesday night, discussed who wants to demo and how to structure our demo.
+- ran through demo with Tian and the rest of the team, presented on Thursday lab.
+- held retrospective after lab.
+
+Week 9
+- finalised write up and submitted retrospective B report.
+- completed bugfix in backend to remove uploaded images from server if contributor cancels their contribution. 
+- finished backend implementation for top 10 frequently used ingredients to be used as suggestions for the recipe explorer.
+- finished backend implementation to add support for assigning multiple meal types to a recipe.
+- finished backend implementation for likes system, where a user can like and remove their likes. A user's likes are tied to their account.
+- planned the structure for the report, talked it through with the team and assigned parts. 
+- planned the final demo structure with the team and assigned parts to everyone.
+- for week 10: finalise demo script and run-through by Wednesday. everyone is to write up a draft for their report parts by Thursday so I can edit it before submitting on Friday.
+
+Week 10
+- small bugfixes on backend after frontend team encountered some errors in our logic.
+- wrote up demo script for likes system and full recipe details page.
+- drafted up the final report, wrote the Functionalities section going through our project's 10 functionalities, how they addresses project objectives and our user stories.
+- edited and formatted other members parts on the report.
+- team meeting on monday to check in progress of frontend team.
+- system was completed on wednesday.
+- demo dry run with all group members on wednesday, and thursday morning before tute. gave feedback on improvements to other team members demo parts.
+- peer feedback completed by saturday.
