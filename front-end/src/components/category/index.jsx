@@ -5,10 +5,9 @@ import './index.scss';
 import SuggestionBox from './suggestionBox';
 
 const { Title } = Typography;
-const { OptGroup } = Select;
+const { OptGroup, Option } = Select;
 const ingredientIniState = {};
 const suggestionIngredientIniState = {};
-
 /**
  * Component for contributor page
  *
@@ -21,11 +20,13 @@ const suggestionIngredientIniState = {};
  */
 const Category = React.memo(
   ({ ingredientData = {}, suggustionIngredientData = [], onChange }) => {
-    const { Option } = Select;
-
+    // Category options state
     const [optionState, setOptionState] = useState({});
+    // Ingredient suggestion states
     const [suggestionOptionState, setSuggestionOptionState] = useState({});
+    // Running list selected ingredient state
     const [runningListState, setRunningListState] = useState([]);
+
     // Setting up initial state
     useEffect(() => {
       // Process data from input
@@ -44,6 +45,7 @@ const Category = React.memo(
       setSuggestionOptionState(suggestionIngredientIniState);
     }, [ingredientData, suggustionIngredientData]);
 
+    // Running list state should change accordingly when category state is changed
     useEffect(() => {
       const list = Object.entries(optionState)
         .filter(([_key, value]) => value)
@@ -52,11 +54,13 @@ const Category = React.memo(
       onChange(list);
     }, [optionState]);
 
+    // Callback of the suggestion box
     const handleSuggestionIngre = (key) => {
       setSuggestionOptionState({ ...suggestionOptionState, [key]: false });
       setOptionState({ ...optionState, [key]: true });
     };
 
+    // Callback when running list selections change
     const handleOnSelectChange = (value) => {
       setRunningListState(value);
 
@@ -69,7 +73,7 @@ const Category = React.memo(
       setSuggestionOptionState(newSugState);
     };
 
-    // Handle when ingredient box has changed
+    // Callback of category boxes
     const handleOnRegBoxClick = (buttonText) => {
       if (optionState[buttonText]) {
         setOptionState({ ...optionState, [buttonText]: false });

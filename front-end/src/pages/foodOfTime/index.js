@@ -6,6 +6,8 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { curMealType } from '@/utils/utils';
 const { Title } = Typography;
+
+// Carousel responsive setting
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },

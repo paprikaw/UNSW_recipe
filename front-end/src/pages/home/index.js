@@ -34,32 +34,31 @@ const { Header, Sider, Content } = Layout;
 const { Option } = Select;
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  // General visible setting
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isContriModalVisible, setIsContriModalVisible] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
-  // right hand, thumbnail & recipe detail page set up
   const [visible, setVisible] = useState(false);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
   const [isRecipeLoading, setIsRecipeLoading] = useState(false);
 
-  const foodOfTimeBody = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ mealTypes: curMealType() }),
-  };
-
-  const navigate = useNavigate();
   // whether the homepage is showed:
   const [isHomePage, setIsHomePage] = useState(true);
+
   // Ingredient data state
   const [ingredientData, ingredientDataLoading] = useFetch('/category');
-  // Recommended ingredient state
+
+  // Fetch top 10 popular ingredients
   const [sugIngredientData, sugIngredientDataLoading] = useFetch(
     '/top10',
     (data) => data.ingredients
   );
+  // Detailed recipe data
   const [curThumbnailDetails, setCurThumbnailDetails] = useState({});
-  // mealType filter state
+
+  // mealType filter and sorter state
   const [mealTypeOptions, setMealTypeOptions] = useState([]);
   const [sortingOption, setSortingOption] = useState([]);
 
@@ -73,6 +72,13 @@ const Home = () => {
   // When ingredient set is clicked
   const [prefillIngredient, setPrefillIngredient] = useState([]);
 
+  // Fetch data for food of time
+  const foodOfTimeBody = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mealTypes: curMealType() }),
+  };
+
   const [thumbnails, isFoodTimeLoading, setThumbnails] = useFetch(
     '/topThreeLikedRecipesOnMealType',
     (data) => data.recipes,
@@ -80,22 +86,27 @@ const Home = () => {
     []
   );
 
+  // Original data of thumbnails when calling /search route
   const [originalThumbnail, setOriginalThumnail] = useState([]);
-  // handle the filter case
+
+  // handle the when filter state change
   useEffect(() => {
     handleFilter(mealTypeOptions);
     handleSorter(sortingOption);
   }, [mealTypeOptions]);
 
+  // handle the when sorter state change
   useEffect(() => {
     handleSorter(sortingOption);
   }, [sortingOption]);
 
+  // handle the when original data changes
   useEffect(() => {
     handleFilter(mealTypeOptions);
     handleSorter(sortingOption);
   }, [originalThumbnail]);
 
+  // Handle thumnail changes when filter state change
   const handleFilter = (value) => {
     let oldThumbnail = [...originalThumbnail];
     value.length > 0
@@ -107,6 +118,7 @@ const Home = () => {
       : setThumbnails(originalThumbnail);
   };
 
+  // Handle thumnail changes when sorter state change
   const handleSorter = (value) => {
     if (value === 'most_likes') {
       setThumbnails((prev) => [...prev.sort((a, b) => b.likes - a.likes)]);
@@ -118,29 +130,35 @@ const Home = () => {
       ]);
     }
   };
+
+  // Call back of sorter
   const onSorterChange = (value) => {
     setSortingOption(value);
   };
 
+  // Call back of filter
   const onFilterChange = (value) => {
     setMealTypeOptions(value);
   };
 
+  // Call back of contributor submit
   const handleContirbuteOk = () => {
     setIsContriModalVisible(false);
   };
-  // recipe detail funcs
+
   const onCategoryChange = useCallback((list) => {
     setCategoryList(list);
   }, []);
 
-  const showDrawer = () => {
-    setVisible(true);
-  };
-  const onClose = () => {
+  const onDrawerClose = () => {
     setVisible(false);
   };
 
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  // Callback when suggested ingredient set is clicked
   const onIngreSetClick = (value) => {
     const newValue = value.map((ingredient) => {
       return { name: ingredient };
@@ -149,6 +167,7 @@ const Home = () => {
     setPrefillIngredient(newValue);
   };
 
+  // Callback of like button
   const onLikeChange = (likes) => {
     setThumbnails((prevState) => {
       prevState[
@@ -160,6 +179,8 @@ const Home = () => {
       return [...prevState];
     });
   };
+
+  // Call back of searching functionality
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
     setIsHomePage(false);
@@ -227,7 +248,7 @@ const Home = () => {
     }
   };
 
-  //menu of the dropdown list of profile
+  // menu of the dropdown list of profile
   const menu = (
     <Menu
       items={[
@@ -424,7 +445,7 @@ const Home = () => {
         placement="right"
         width={400}
         closable={false}
-        onClose={onClose}
+        onClose={onDrawerClose}
         visible={visible}
       >
         {isDrawerLoading ? (

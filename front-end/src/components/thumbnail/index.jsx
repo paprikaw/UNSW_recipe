@@ -9,8 +9,7 @@ import './index.scss';
 const { Text } = Typography;
 /**
  *
- * Component for contributor page
- *
+ * Thumbnail Component 
  * @component
  * @example
  * const data = {
@@ -23,7 +22,17 @@ const { Text } = Typography;
  *    'numIngredientsMatched': 4
  * }
  * return (
- *   <Thumbnail data={data} />
+    <Thumbnail
+      recipeId,
+      recipeName,
+      mealType,
+      likes,
+      cookTime,
+      thumbnail,
+      numIngredientsMatched,
+      onClick,
+      isHome
+  />
  * )
  */
 const Thumbnail = (props) => {

@@ -16,6 +16,7 @@ const LikesButton = (props) => {
   const [isLike, setIsLike] = useState(liked);
   const [loading, setLoading] = useState(false);
 
+  // Callback for like button
   const onLikeButtonClick = async () => {
     setLike(like + (isLike ? -1 : 1));
     const token = localStorage.getItem('token');

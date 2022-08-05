@@ -48,17 +48,16 @@ const Contributor = (props) => {
       label: <strong>200min</strong>,
     },
   };
-  const { ingredients = [], onOk, addedIngredients } = props;
-  const [sliderInputValue, setSliderInputValue] = useState(1);
-  // Control the ingredient set
-
-  // Control the uploader
+  // form state
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [recipeId, setRecipeId] = useState(-1);
+  const { ingredients = [], onOk, addedIngredients } = props;
+  const [sliderInputValue, setSliderInputValue] = useState(1);
   const [form] = Form.useForm();
-
+  // form reference
   const ref = useRef();
+
   useEffect(() => {
     ref.current.setFieldValue('ingredients', addedIngredients);
   }, [addedIngredients]);
@@ -89,6 +88,7 @@ const Contributor = (props) => {
     }
   };
 
+  // Callback when form is going to submit
   const onFormFinish = (values) => {
     // Get rid of emoji in the recipe names
     values.ingredients.map(

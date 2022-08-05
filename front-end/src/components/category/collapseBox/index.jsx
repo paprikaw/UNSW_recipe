@@ -15,9 +15,7 @@ function CollapseBox(props) {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     collapsedHeight: '80',
   });
-  const newDic = {};
   const { data, title, selectState, onClick } = props;
-  data.map((name) => (newDic[name] = false));
 
   return (
     <Card
