@@ -104,7 +104,7 @@ const Home = () => {
             thumbnail.mealType.some((_element) => value.includes(_element))
           )
         )
-      : originalThumbnail.length > 0 && setThumbnails(originalThumbnail);
+      : setThumbnails(originalThumbnail);
   };
 
   const handleSorter = (value) => {
@@ -163,6 +163,7 @@ const Home = () => {
   const handleSearch = async (list) => {
     setIsRecipeLoading(true);
     setIsHomePage(false);
+    setThumbnails([]);
     const response = await fetch('/search', {
       method: 'POST',
       headers: {
@@ -175,13 +176,8 @@ const Home = () => {
     });
     const data = await response.json();
     console.log('searched data', data);
-    setIsRecipeLoading(false);
-    setThumbnails(data.recipes);
     setOriginalThumnail(data.recipes);
-
-    // If filter and sorter has already been selected, we filter them out.
-    mealTypeOptions && handleFilter(mealTypeOptions);
-    sortingOption && handleSorter(sortingOption);
+    setIsRecipeLoading(false);
   };
 
   const handleClickThumbnail = (recipeId) => {
@@ -372,24 +368,29 @@ const Home = () => {
                   isLoading={isIngreSetLoading}
                 />
               </>
-            ) : isRecipeLoading ? (
+            ) : isRecipeLoading && thumbnails ? (
               <Spin />
             ) : (
               <Row gutter={[10, 20]}>
-                {thumbnails.map((data) => (
-                  <Col xs={24} sm={24} md={12} lg={8} xl={6}>
-                    <Thumbnail
-                      recipeId={data.recipeId}
-                      recipeName={data.recipeName}
-                      mealType={data.mealType.join(', ')}
-                      likes={data.likes}
-                      cookTime={data.cookTime}
-                      thumbnail={'/static/' + data.thumbnail}
-                      numIngredientsMatched={data.numIngredientsMatched}
-                      onClick={handleClickThumbnail}
-                    />
-                  </Col>
-                ))}
+                {thumbnails &&
+                  thumbnails.map((data) => (
+                    <Col xs={24} sm={24} md={12} lg={8} xl={6}>
+                      <Thumbnail
+                        recipeId={data.recipeId}
+                        recipeName={data.recipeName}
+                        mealType={
+                          typeof data.mealType === 'string'
+                            ? data.mealType
+                            : data.mealType.join(', ')
+                        }
+                        likes={data.likes}
+                        cookTime={data.cookTime}
+                        thumbnail={'/static/' + data.thumbnail}
+                        numIngredientsMatched={data.numIngredientsMatched}
+                        onClick={handleClickThumbnail}
+                      />
+                    </Col>
+                  ))}
               </Row>
             )}
           </Content>
