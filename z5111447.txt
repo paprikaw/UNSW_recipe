@@ -4,3 +4,40 @@ Week 1
 Week 2
 - Github classroom intialization done, diray files created.
 - Joined the scheduled weekly team meeting on 6th, initial task on Proposal was discussed, all team members was assigned with user storys tasks.
+
+Week 3
+- sprint setup done by the team, further brainstorming on user stories and novel functionality.
+  - Fomer novel functionality had possible difficulties in actual implementing stage.
+  - proposaled new novel featuer. After trimming with team, all agreed on 'food of the (current) time'.
+- Conducted the low-fidelity prototype for the website design. prototype finalized+flow digram linked(Ruiqi put effort).
+- Other work done by team during the week: Jira all parts done. architacture finalized. propalsal work all complete.
+
+Week 4
+- Work done by the team:
+  - Sprint 1 implementaion ongoing. 
+  - Paylord/data format descision making.
+  - Team had attemptions on working initial backend signup/account route implementation/frontend page conduction.
+  - Backend Server/Frontend files finialization done. 
+
+Week 5
+- Work done by the team:
+  - Sprint 1 finialization. Sprint 1 feature/pages early version complete.
+  - Account: login/out route connection & UI design firstly done.
+    - data checking.
+    - database connection.
+  - Homepage: Ingredients menue implementation done.
+ - Complete frontend account:login/out feature. (with Eric's help and Tian's code resources)
+ - Complete account frontend data checking procedual.
+ 
+Week 6
+- Disscussion with team in reference to Retrospective topics in order to produce better work.
+- Next sprint prework discussion and preparing with the team.
+
+Week 7
+- bug fix from sprint 1 work regarding the home page features.
+- home page skleton work, set up the slot for recipe detail component in homepage.
+- recipe detail component darft done.
+
+Week 8
+- 
+Week 9
