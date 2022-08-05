@@ -39,5 +39,19 @@ Week 7
 - recipe detail component darft done.
 
 Week 8
-- 
+- recipe detail navigation through homepage thumbnails tiles link done.
+- Recipe page fully done.
+- Front end code comment adding.
+
 Week 9
+- search feature significant bug fixed. Home page different components navigation logic refined.
+- filter component added. Framework.
+- flter logic done.
+- bug fix: search function complies wrong with filter feature.
+
+Week 10
+- Like button framework refinement.
+- like feature done.
+- sort by like feature added. Frameworks.
+- Major bug fix.
+- UI improvement.
