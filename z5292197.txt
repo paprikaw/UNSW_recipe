@@ -53,3 +53,6 @@ Week 10
 1. Complete food of the time feature
 2. Final bug fixes with teammates
 3. Presented login, signupm running list, category features in the final demo
+4. Final tunes for the frontend codes
+5. Write frontend implementation challenges
+6. Write documentation part in the final report.
