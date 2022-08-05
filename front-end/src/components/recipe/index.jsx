@@ -4,7 +4,10 @@ import LikesButton from '../likesButton/likesButton';
 import './index.scss';
 
 const { Text } = Typography;
-
+/**
+ * * Component: Recipe detail page
+ * @props recipe data
+ */
 const Recipe = (props) => {
   const {
     username,
@@ -19,7 +22,6 @@ const Recipe = (props) => {
     liked,
     onLikeChange,
   } = props;
-  console.log('how many likes:', likes);
 
   return (
     <>
@@ -32,7 +34,6 @@ const Recipe = (props) => {
           <div className="likes">
             <LikesButton
               recipeId={recipeId}
-              // token={}
               likes={likes}
               liked={liked}
               onLikeChange={onLikeChange}
@@ -87,5 +88,3 @@ const Recipe = (props) => {
 };
 
 export default Recipe;
-// title={recipeName}
-// description={<Text>Devoted by {username}</Text> }

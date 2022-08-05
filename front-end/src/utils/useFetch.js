@@ -9,7 +9,6 @@ export const useFetch = (url, dataProcess, requestBody, initData) => {
         return v.json();
       })
       .then((data) => {
-        console.log(data);
         setRelData(dataProcess && data ? dataProcess(data) : data);
         setIsLoading(false);
       })

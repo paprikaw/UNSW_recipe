@@ -10,7 +10,7 @@ import {
   Badge,
   message,
 } from 'antd';
-import { LockTwoTone, LockOutlined } from '@ant-design/icons';
+import { LockTwoTone } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import './index.scss';
 import bcrypt from 'bcryptjs';
@@ -42,22 +42,10 @@ const Register = () => {
           navigate('/');
           message.success('Register successful!');
         } else {
-          // alert('something is wrong(email already used/username not valid...)');
           message.error(data.error + ', please try again');
         }
       });
-    // const data =  response.json();
-    // console.log(data);
-    // navigate('/');
-    // console.log(data);
   }
-
-  //   const handleEmail = (e) => {
-  //     let value = e.target.value;
-  //     if(!(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value))) {
-  //         console.log('Please enter correct email');
-  //     }
-  // }
 
   return (
     <div>
@@ -68,7 +56,6 @@ const Register = () => {
         wrapperCol={{ span: 8 }}
         initialValues={{ remember: true }}
         onFinish={handleOnFinsh}
-        // onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item
@@ -139,19 +126,6 @@ const Register = () => {
           <Input.Password />
         </Form.Item>
 
-        {/* <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
-          <Checkbox>Remember me</Checkbox>
-          <Link to="/">
-            <Badge dot>
-              <a href="#">Already have an account? Login</a>
-            </Badge>
-          </Link>
-        </Form.Item> */}
-
         <Form.Item
           name="remember"
           valuePropName="checked"
@@ -180,5 +154,4 @@ const Register = () => {
   );
 };
 
-/* Handler function */
 export default Register;

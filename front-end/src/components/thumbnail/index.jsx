@@ -1,14 +1,11 @@
-import { Card, Select, Input, Typography, Row, Col } from 'antd';
-
+import { Card, Typography } from 'antd';
 import {
   FileSearchOutlined,
   FieldTimeOutlined,
   LikeFilled,
 } from '@ant-design/icons';
-import { React, useState } from 'react';
-import UploadPicture from '../upload/UploadPicture';
+import { React } from 'react';
 import './index.scss';
-const { Meta } = Card;
 const { Text } = Typography;
 /**
  *
@@ -41,26 +38,6 @@ const Thumbnail = (props) => {
     onClick,
     isHome = true,
   } = props;
-  // const onFinish = (values) => {
-  //   if (recipeId !== -1) {
-  //     values.recipeId = recipeId;
-  //     processContributeVal(values);
-  //     const requestOptions = {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(values),
-  //     };
-
-  //     fetch('/update-recipe-info', requestOptions)
-  //       .then((v) => {
-  //         return v.json();
-  //       })
-  //       .then((data) => {
-  //         console.log(data);
-  //       })
-  //       .catch((e) => console.log(e));
-  //   }
-  // };
 
   return (
     <Card

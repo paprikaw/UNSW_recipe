@@ -3,6 +3,10 @@ import { message, Upload } from 'antd';
 import React from 'react';
 import ImgCrop from 'antd-img-crop';
 
+/**
+ * * Helper: image uploading checking function
+ * @file image file
+ */
 const beforeUpload = (file) => {
   const isJpgOrPng =
     file.type === 'image/jpeg' ||
@@ -19,10 +23,13 @@ const beforeUpload = (file) => {
   if (!isLt2M) {
     message.error('Image must smaller than 2MB!');
   }
-
   return isJpgOrPng && isLt2M;
 };
 
+/**
+ * * Component: image uploading checking function
+ * @imageUrl image link
+ */
 const UploadPicture = (props) => {
   const { onChange, loading, imageUrl } = props;
 

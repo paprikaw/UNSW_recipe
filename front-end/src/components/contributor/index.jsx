@@ -10,17 +10,13 @@ import {
   Row,
   Col,
   message,
-  Spin,
 } from 'antd';
 
-import { useFetch } from '@/utils/useFetch';
-import IngredientSet from './ingredientSet';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { React, useEffect, useState, useRef } from 'react';
 import './index.scss';
 import UploadPicture from '../upload/UploadPicture';
-import { getRidOfEmoji, changeToList } from '../../utils/utils';
-import { element } from 'prop-types';
+import { getRidOfEmoji } from '../../utils/utils';
 const { Text } = Typography;
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
@@ -98,15 +94,6 @@ const Contributor = (props) => {
     values.ingredients.map(
       (element) => (element.name = getRidOfEmoji(element.name))
     );
-    // values.mealTypes.map(
-    //   (element) => (element.name = changeToList(element.name))
-    // );
-    // console.log(values);
-    // console.log(values.mealTypes.split(" "));
-    // const mealTypeList = [];
-    // mealTypeList = values.mealTypes.split(" ");
-    // console.log(mealTypeList);
-    // values.mealTypes = mealTypeList;
     if (recipeId !== -1) {
       console.log('Contributed:', values);
       values.recipeId = recipeId;

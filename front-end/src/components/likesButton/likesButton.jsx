@@ -2,6 +2,13 @@ import { Button } from 'antd';
 import React, { useState } from 'react';
 import { LikeOutlined } from '@ant-design/icons';
 
+/**
+ * * Component: Like feature button for recipe - show on recipe detail page
+ * @recipeId recipe ID number
+ * @likes number of likes
+ * @liked boolean
+ * @onLikeChange like state param
+ */
 const LikesButton = (props) => {
   const { recipeId, likes, liked, onLikeChange } = props;
 
