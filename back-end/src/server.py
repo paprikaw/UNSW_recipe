@@ -8,7 +8,7 @@ app = Flask(__name__, static_folder='static')
 
 # database credential to the MySQL in Google Cloud Storage
 # abbreviation: rrs -> Recipe Recommendation System
-db_url = 'mysql+pymysql://admin:ultimate42@34.151.68.205:3306/rrs'
+db_url = 'mysql+pymysql://admin:ultimate42##@34.151.68.205:3306/rrs'
 db_engine = create_engine(db_url)#, echo=True)
 
 @app.route("/static/<path:filepath>")
