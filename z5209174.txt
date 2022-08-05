@@ -59,3 +59,13 @@ Week 9
 - planned the structure for the report, talked it through with the team and assigned parts. 
 - planned the final demo structure with the team and assigned parts to everyone.
 - for week 10: finalise demo script and run-through by Wednesday. everyone is to write up a draft for their report parts by Thursday so I can edit it before submitting on Friday.
+
+Week 10
+- small bugfixes on backend after frontend team encountered some errors in our logic.
+- wrote up demo script for likes system and full recipe details page.
+- drafted up the final report, wrote the Functionalities section going through our project's 10 functionalities, how they addresses project objectives and our user stories.
+- edited and formatted other members parts on the report.
+- team meeting on monday to check in progress of frontend team.
+- system was completed on wednesday.
+- demo dry run with all group members on wednesday, and thursday morning before tute. gave feedback on improvements to other team members demo parts.
+- peer feedback completed by saturday.
